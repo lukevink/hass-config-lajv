@@ -22,15 +22,16 @@ I first designed my whole UI in [Pixelmator](https://www.pixelmator.com/) so tha
 
 
 
-## The sidebar & Views
+## The sidebar
 
-Note, the sidebar is repeated across every view in the lovelace.yaml file.
+Note, the sidebar is repeated across every view in the lovelace.yaml file and includes buttons for the views.
 
-* Time and date with greeting based on time of day.
-* Lights and switches that are on, using natural language.
-* Temperature with emojis based on weather conditions.
-* Important calendar information.
-* Time since a person left home.
+* Control Rooms: Tap a room to turn on or off all lights, hold tap to show custom controls.
+* Control Lights: Tap a light icon to turn on or off individual lights, hold tap to show custom controls.
+* Cleanup: Direct control of Xiaomi Mi robot and preset zones for room based cleanup
+* All Devices: Show all devices in a familiar homekit UI, why not?
+* Media: Button shows currently playing media, if playing, view shows relevant views for Plex or Spotify.
+* Weather: Shows weather forecast and predicted rain from Buienradar.
 
 
 
