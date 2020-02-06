@@ -2,8 +2,8 @@
 
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
 
-
-
+![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-lights.gif?raw=true)
+![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-other.gif?raw=true)
 
 ## Features
 
@@ -46,6 +46,9 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file.
 
 
 ## Individual hue & brightness lights
+
+![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/hass-lajv-lights.png?raw=true)
+![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/mapped-lights-info1.png?raw=true)
 
 Individual Lights:
 To have multiple lights overlayed on top of each other, the solution is actually pretty simple. You render an image for each individual light and use the CSS property filter mix-blend-mode: lighten. This will make sure only the “light” part of the image is shown, and will blend together any amount of images on top.
