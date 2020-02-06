@@ -2,8 +2,8 @@
 
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
 
-![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-lights.gif?raw=true)
-![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-other.gif?raw=true)
+![lajv-ha-lights.gif](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-lights.gif?raw=true)
+![lajv-ha-other.gif](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-other.gif?raw=true)
 
 ## Features
 
@@ -20,6 +20,7 @@ This approach is heavily based on the [Picture Elements Card](https://www.home-a
 
 I first designed my whole UI in [Pixelmator](https://www.pixelmator.com/) so that I could export the button images and Xiaomi floorplan overlay images.
 
+The image transparent.png is used on state_image picture-elements to hide elements if not needed, though this was used before I realised I could conditionally display elements :) - will update this soon to clean it up.
 
 
 ## The sidebar
@@ -48,7 +49,7 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file and in
 
 ## Individual hue & brightness lights
 
-![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/mapped-lights-info1.png?raw=true)
+![mapped-lights-info1.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/mapped-lights-info1.png?raw=true)
 
 Individual Lights:
 To have multiple lights overlayed on top of each other, the solution is actually pretty simple. You render an image for each individual light and use the CSS property filter mix-blend-mode: lighten. This will make sure only the “light” part of the image is shown, and will blend together any amount of images on top.
@@ -72,3 +73,17 @@ To map opacity to the entity’s brightness, use this css template:
 style:
   opacity: '${ states[''light.table''].attributes.brightness / 255 }'
 ```
+
+## Cleanup
+
+This is a custom screen made up of picture-elements that interact with the [xiaomi robot vacuum component](https://www.home-assistant.io/integrations/vacuum.xiaomi_miio/). An input text is used to determine the vacuums current state (cleaning, returning home etc) and that is used to conditionally change the picture-elements.
+
+![screen-cleanup.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/screen-cleanup.png?raw=true)
+
+
+## Weather
+
+I built a custom card to display projected rain in the next 2 hours, using Buien Radar (Netherlands service).
+For more on this card, check out [this repo](https://github.com/lukevink/home-assistant-buienradar-forecast-card)
+
+![screen-cleanup.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/screen-weather.png?raw=true)
