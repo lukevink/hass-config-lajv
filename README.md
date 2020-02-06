@@ -86,4 +86,4 @@ This is a custom screen made up of picture-elements that interact with the [xiao
 I built a custom card to display projected rain in the next 2 hours, using Buien Radar (Netherlands service).
 For more on this card, check out [this repo](https://github.com/lukevink/home-assistant-buienradar-forecast-card)
 
-![screen-cleanup.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/screen-weather.png?raw=true)
+![screen-weather-rain.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/screen-weather-rain.png?raw=true)
