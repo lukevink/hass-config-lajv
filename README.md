@@ -2,6 +2,7 @@
 
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
 
+[Video of Full UI](https://www.youtube.com/watch?v=KcfZc1MXP_A)
 ![lajv-ha-lights.gif](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-lights.gif?raw=true)
 ![lajv-ha-other.gif](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-other.gif?raw=true)
 
