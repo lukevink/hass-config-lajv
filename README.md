@@ -47,7 +47,6 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file.
 
 ## Individual hue & brightness lights
 
-![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/hass-lajv-lights.png?raw=true)
 ![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/mapped-lights-info1.png?raw=true)
 
 Individual Lights:
