@@ -2,8 +2,8 @@
 
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
 
-
-
+![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-lights.gif?raw=true)
+![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/lajv-ha-other.gif?raw=true)
 
 ## Features
 
@@ -22,15 +22,16 @@ I first designed my whole UI in [Pixelmator](https://www.pixelmator.com/) so tha
 
 
 
-## The sidebar & Views
+## The sidebar
 
-Note, the sidebar is repeated across every view in the lovelace.yaml file.
+Note, the sidebar is repeated across every view in the lovelace.yaml file and includes buttons for the views.
 
-* Time and date with greeting based on time of day.
-* Lights and switches that are on, using natural language.
-* Temperature with emojis based on weather conditions.
-* Important calendar information.
-* Time since a person left home.
+* Control Rooms: Tap a room to turn on or off all lights, hold tap to show custom controls.
+* Control Lights: Tap a light icon to turn on or off individual lights, hold tap to show custom controls.
+* Cleanup: Direct control of Xiaomi Mi robot and preset zones for room based cleanup
+* All Devices: Show all devices in a familiar homekit UI, why not?
+* Media: Button shows currently playing media, if playing, view shows relevant views for Plex or Spotify.
+* Weather: Shows weather forecast and predicted rain from Buienradar.
 
 
 
@@ -46,6 +47,8 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file.
 
 
 ## Individual hue & brightness lights
+
+![screen.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/mapped-lights-info1.png?raw=true)
 
 Individual Lights:
 To have multiple lights overlayed on top of each other, the solution is actually pretty simple. You render an image for each individual light and use the CSS property filter mix-blend-mode: lighten. This will make sure only the “light” part of the image is shown, and will blend together any amount of images on top.
