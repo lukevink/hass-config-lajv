@@ -11,13 +11,13 @@ If you like anything here, Be sure to :star2: my repo!
 * Custom rain card to display predicted rain in the next 2 hours - [seperate repo here](https://github.com/lukevink/home-assistant-buienradar-forecast-card)
 * Custom Xiaomi View for rapid room based zone cleanup
 
-### Approach & Picture-Elements Styling
+## Approach & Picture-Elements Styling
 
 This approach is heavily based on the [Picture Elements Card](https://www.home-assistant.io/lovelace/picture-elements/) for each view, and does not work in a traditional "Card" based way. Most cards include a heavy amount of styling and positioning. Some of this styling overrides the custom cards to use [View Width](https://css-tricks.com/fun-viewport-units/) so that their fonts, widths and heights scale according to the width of the display, so that I can use my interface on any resolution.
 
 I first designed my whole UI in [Pixelmator](https://www.pixelmator.com/) so that I could export the button images and Xiaomi floorplan overlay images.
 
-### The sidebar & Views
+## The sidebar & Views
 
 Note, the sidebar is repeated across every view in the lovelace.yaml file.
 
@@ -27,7 +27,7 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file.
 * Important calendar information.
 * Time since a person left home.
 
-### Hardware in my Home
+## Hardware in my Home
 
 * Xgimi H1 PROJECTOR
 * Sound system (controlled by an IR Blaster)
@@ -36,7 +36,7 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file.
 * Xiaomi Mi Robot
 * Philips motion sensors
 
-### Individual hue & brightness lights
+## Individual hue & brightness lights
 
 Individual Lights:
 To have multiple lights overlayed on top of each other, the solution is actually pretty simple. You render an image for each individual light and use the CSS property filter mix-blend-mode: lighten. This will make sure only the “light” part of the image is shown, and will blend together any amount of images on top.
