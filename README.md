@@ -2,7 +2,8 @@
 
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
 
-If you like anything here, Be sure to :star2: my repo!
+
+
 
 ## Features
 
@@ -11,11 +12,15 @@ If you like anything here, Be sure to :star2: my repo!
 * Custom rain card to display predicted rain in the next 2 hours - [seperate repo here](https://github.com/lukevink/home-assistant-buienradar-forecast-card)
 * Custom Xiaomi View for rapid room based zone cleanup
 
+
+
 ## Approach & Picture-Elements Styling
 
 This approach is heavily based on the [Picture Elements Card](https://www.home-assistant.io/lovelace/picture-elements/) for each view, and does not work in a traditional "Card" based way. Most cards include a heavy amount of styling and positioning. Some of this styling overrides the custom cards to use [View Width](https://css-tricks.com/fun-viewport-units/) so that their fonts, widths and heights scale according to the width of the display, so that I can use my interface on any resolution.
 
 I first designed my whole UI in [Pixelmator](https://www.pixelmator.com/) so that I could export the button images and Xiaomi floorplan overlay images.
+
+
 
 ## The sidebar & Views
 
@@ -27,6 +32,8 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file.
 * Important calendar information.
 * Time since a person left home.
 
+
+
 ## Hardware in my Home
 
 * Xgimi H1 PROJECTOR
@@ -35,6 +42,8 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file.
 * Osram Garden Poles (used for roof, outdoors)
 * Xiaomi Mi Robot
 * Philips motion sensors
+
+
 
 ## Individual hue & brightness lights
 
