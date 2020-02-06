@@ -1,0 +1,271 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+#customize: !include customize.yaml
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+browser_mod:
+
+frontend:
+  themes: !include themes.yaml
+  extra_html_url:
+    - /local/custom-icons.html
+    
+homekit: !include homekit.yaml
+    
+
+#################################################################
+## Components
+#################################################################
+
+
+google:
+  client_id: !secret google_client_id
+  client_secret: !secret google_secret
+
+## Spotify
+media_player:
+  - platform: spotify
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_secret
+    
+## For robot vacuum & automation status
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.178.227
+    token: !secret xiaomi_robot_token
+    
+input_text:
+  room_cleaning:
+    name: Currently Cleaning Room
+    initial: charging
+
+## Basic Presence
+device_tracker:
+  - platform: bluetooth_tracker
+    track_new_devices: true
+  - platform: upc_connect
+    password: !secret wifi_admin_password
+    track_new_devices: false
+    host: 192.168.178.1
+    interval_seconds: 10
+    consider_home: 180
+    
+
+## Weather
+weather:
+  - platform: buienradar
+    name: 'buienWeather'
+    latitude: !secret home_latitude
+    longitude: !secret home_longitude
+    forecast: true
+
+binary_sensor:
+  - platform: workday
+    country: NL   
+    
+
+## For IR Blaster / Speaker remote control through homekit    
+switch:
+  - platform: broadlink
+    host: 192.168.178.185
+    mac: '78:0F:77:18:54:CB'
+    friendly_name: 'Speakers'
+    switches:
+       power:
+         friendly_name: Speakers
+         command_on: 'JgBYAAABJ5UVEBUREhQUERUREhMVERI4FRAVEhEUFBEVNRI4FTUWEBITFRESExURFBISExU1FDYSOBQ2FDYSOBQ1FjUSExUREQAFpgABKkgSAAxVAAEnSxUADQU='
+         command_off: 'JgBYAAABKJMTExQRFRIRFBITExMTEhQ2ExMVEBUSERQTNxU1EjgTEhI4EjgVNRI4EzcWDxMTFTUWEBITFBISFBITEzcSOBUQFQAFogABKkgSAAxWAAEnSxUADQU='
+       speakers_vol_up:
+         friendly_name: Speakers Up
+         command_on: 'JgBQAAABJ5UTEhQSEhQUERMTEhMVERI4EhMVERIUFBETNxI4EzcUEhE4FTUVNRIUExITExM3EzcSFBMSFhASOBM2FjURFBMSEgAFpgABKkgSAA0FAAAAAAAAAAA='
+         command_off: 'JgBQAAABJ5UTEhQSEhQUERMTEhMVERI4EhMVERIUFBETNxI4EzcUEhE4FTUVNRIUExITExM3EzcSFBMSFhASOBM2FjURFBMSEgAFpgABKkgSAA0FAAAAAAAAAAA='
+       speakers_vol_down:
+         friendly_name: Speakers Down
+         command_on: 'JgB4AAABKJMVERQQFREVERQRFREVEBU2FREUEBURFREUNRU2FDUVERURFBEVEhQ1FBEVERY1EzYUNxQ1FDYUERU1FTUVERQRFAAFpAABKUgUAAxTAAEqSBQADFMAASpIFAAMUwABKkgUAAxUAAEpSBQADFMAASpIFAANBQ=='
+         command_off: 'JgB4AAABKJMVERQQFREVERQRFREVEBU2FREUEBURFREUNRU2FDUVERURFBEVEhQ1FBEVERY1EzYUNxQ1FDYUERU1FTUVERQRFAAFpAABKUgUAAxTAAEqSBQADFMAASpIFAAMUwABKkgUAAxUAAEpSBQADFMAASpIFAANBQ=='
+    
+    
+#################################################################
+## Sensors
+#################################################################    
+    
+sensor:
+
+  - platform: plex_recently_added
+    name: Recently Added Movies # will create sensor.recently_added_movies
+    token: !secret plex_token
+    host: 192.168.178.46
+    port: 32400
+    section_types:
+    - movie
+
+  - platform: plex_recently_added
+    name: Recently Added TV  # will create sensor.recently_added_tv
+    token: !secret plex_token
+    host: 192.168.178.46
+    port: 32400
+    section_types:
+    - show
+
+  - platform: postnl
+    username: !secret postnl_user
+    password: !secret postnl_password
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'date_time_utc'
+      - 'date_time_iso'
+      - 'time_date'
+      - 'time_utc'
+      - 'beat'
+  - platform: buienradar
+    name: 'buienradar'
+    latitude: home_latitude
+    longitude: home_longitude
+    timeframe: 120
+    monitored_conditions:
+      - stationname
+      - barometerfc
+      - barometerfcname
+      - conditioncode
+      - condition
+      - conditiondetailed
+      - conditionexact
+      - conditionexact_1d
+      - symbol
+      - feeltemperature
+      - temperature
+      - groundtemperature
+      - windspeed
+      - windforce
+      - windgust
+      - rain_1d 
+      - windspeed_1d 
+      - rainchance_1d
+      - precipitation
+      - irradiance
+      - precipitation_forecast_average
+      - precipitation_forecast_total
+      - rainlast24hour
+      - rainlasthour
+      
+  - platform: template
+    sensors:
+      vacuum_status:
+        friendly_name: "Vacuum - Status"
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
+
+      day:
+        entity_id: sensor.date
+        value_template: >
+          {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+          {{ days[now().weekday()] }}
+
+      month:
+        value_template: >
+          {% set months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
+          {{ strptime(states('sensor.date'), '%Y-%m-%d').day }}
+          {{ months[now().month-1] }} 
+          
+      date_string:
+        friendly_name: "Full Date"
+        value_template: "{{ states('sensor.day') }}, {{ states('sensor.month') }} {{ now().year }}"
+
+      vacuum_battery:
+        friendly_name: "Vacuum - Battery"
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_level }}"
+        device_class: battery
+        unit_of_measurement: '%'
+
+      vacuum_fan:
+        friendly_name: "Vacuum - Fan Speed"
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.fan_speed }}"
+
+      vacuum_battery_icon:
+        friendly_name: "Vacuum - Battery Icon"
+        icon_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}"
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}"
+
+      vacuum_cleaning_time:
+        friendly_name: "Vacuum - Cleaning Time"
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaning_time }}"
+
+      vacuum_cleaned_area:
+        friendly_name: "Vacuum - Cleaned Area"
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
+        
+
+
+#################################################################
+## Light Groups
+#################################################################
+
+        
+light:
+ - platform: group
+   name: Kitchen Lights
+   entities:
+    - light.kitchen_1
+    - light.kitchen_2
+    - light.kitchen_3
+    - light.kitchen_4
+    
+ - platform: group
+   name: Roof Lights
+   entities:
+     - light.roof_garden
+     - light.roof_plants
+    
+ - platform: group
+   name: Kitchen Fridge Lights
+   entities:
+     - light.kitchen_1
+     - light.kitchen_2
+ - platform: group
+   name: Kitchen Sink Lights
+   entities:
+     - light.kitchen_3
+     - light.kitchen_4   
+
+ - platform: group
+   name: Living Room Lights
+   entities:
+     - light.couch
+     - light.table
+     - light.plant_table 
+    
+ - platform: group
+   name: Toilet Lights
+   entities:
+     - light.toilet_1
+     - light.toilet_2    
+    
+ - platform: group
+   name: Bedroom Lights
+   entities:
+     - light.bedroom_roof
+     - light.bed
+     
+ - platform: group
+   name: Stairs Lights
+   entities:
+     - light.stairs_2
+     - light.door
+ 
+
+

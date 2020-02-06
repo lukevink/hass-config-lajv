@@ -1,0 +1,102 @@
+- id: '1579037817900'
+  name: plex
+  entities:
+    light.bed:
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Bed
+      max_mireds: 500
+      min_mireds: 153
+      state: 'off'
+      supported_features: 63
+    light.bedroom_roof:
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Bedroom Roof
+      max_mireds: 500
+      min_mireds: 153
+      state: 'off'
+      supported_features: 63
+    light.couch:
+      friendly_name: Couch
+      state: 'off'
+      supported_features: 40
+    light.kitchen_1:
+      friendly_name: Kitchen 1
+      state: 'off'
+      supported_features: 41
+    light.kitchen_2:
+      friendly_name: Kitchen 2
+      state: 'off'
+      supported_features: 41
+    light.kitchen_3:
+      friendly_name: Kitchen 3
+      state: 'off'
+      supported_features: 41
+    light.kitchen_4:
+      friendly_name: Kitchen 4
+      state: 'off'
+      supported_features: 41
+    light.plant_table:
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Cabinet
+      max_mireds: 500
+      min_mireds: 153
+      state: 'off'
+      supported_features: 63
+    light.study_2:
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Study
+      max_mireds: 500
+      min_mireds: 153
+      state: 'off'
+      supported_features: 63
+    light.table:
+      brightness: 94
+      color_temp: 422
+      effect: none
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Table
+      max_mireds: 500
+      min_mireds: 153
+      state: 'on'
+      supported_features: 63
+- id: '1579037859497'
+  name: noplex
+  entities:
+    light.couch:
+      friendly_name: Couch
+      state: 'on'
+      supported_features: 40
+    light.plant_table:
+      brightness: 150
+      color_temp: 396
+      effect: none
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Cabinet
+      max_mireds: 500
+      min_mireds: 153
+      state: 'on'
+      supported_features: 63
+    light.table:
+      brightness: 150
+      color_temp: 354
+      effect: none
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Table
+      max_mireds: 500
+      min_mireds: 153
+      state: 'on'
+      supported_features: 63

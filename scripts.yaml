@@ -1,0 +1,137 @@
+####  Only one media player play at a time ####  
+plex_moviestarted:
+  alias: 'Pause Music'
+  sequence:
+    - service: scene.turn_on
+      data:
+        entity_id:  scene.plex
+    - service: media_player.media_pause
+      data:
+        entity_id: media_player.spotify
+
+####  Slowly lighten the room when a movie ends ####  
+slowly_turn_on_livingroom:
+  alias: 'Slowly On Living Room'
+  sequence:
+    - service: light.turn_on
+      data: 
+        entity_id: light.plant_table
+        brightness: 150
+        color_temp: 360
+        transition: 5
+    - service: light.turn_on
+      data:
+        entity_id: light.table
+        brightness: 150
+        color_temp: 360
+        transition: 4
+        
+    
+####  Automations for Xiaomi Robot room by room cleaning ####  
+## (To do this, robot must ONLY use zoned cleaning, otherwise the map will reorient itself! :S )
+        
+    
+clean_kitchen:
+  alias: 'Clean Kitchen'
+  sequence:
+    - condition: template
+      value_template: "{{ is_state('input_text.room_cleaning','charging') or is_state('input_text.room_cleaning','none') or is_state('input_text.room_cleaning','goinghome') }}"
+    - service: vacuum.send_command
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        command: app_zoned_clean
+        params:
+          - [25200, 21500, 28400, 24100, 1]
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "kitchen"
+          
+clean_livingroom:
+  alias: 'Clean Living Room'
+  sequence:
+    - condition: template
+      value_template: "{{ is_state('input_text.room_cleaning','charging') or is_state('input_text.room_cleaning','none') or is_state('input_text.room_cleaning','goinghome') }}"
+    - service: vacuum.send_command
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        command: app_zoned_clean
+        params:
+          - [25200,18600, 25200,18600, 1]
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "livingroom"         
+          
+          
+clean_study:
+  alias: 'Clean Study'
+  sequence:
+    - condition: template
+      value_template: "{{ is_state('input_text.room_cleaning','charging') or is_state('input_text.room_cleaning','none') or is_state('input_text.room_cleaning','goinghome') }}"
+    - service: vacuum.send_command
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        command: app_zoned_clean
+        params:
+          - [31000, 20900, 34000, 22800, 1]
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "study"          
+          
+          
+clean_bedroom:
+  alias: 'Clean Bedroom'
+  sequence:
+    - condition: template
+      value_template: "{{ is_state('input_text.room_cleaning','charging') or is_state('input_text.room_cleaning','none') or is_state('input_text.room_cleaning','goinghome') }}"
+    - service: vacuum.send_command
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        command: app_zoned_clean
+        params:
+          - [31000, 22900 ,34000, 28000, 1]
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "bedroom"
+          
+          
+clean_house:
+  alias: 'Clean House'
+  sequence:
+    - condition: template
+      value_template: "{{ is_state('input_text.room_cleaning','charging') or is_state('input_text.room_cleaning','none') or is_state('input_text.room_cleaning','goinghome') }}"
+    - service: vacuum.send_command
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        command: app_zoned_clean
+        params:
+          - [25600, 25200 ,34000, 18600, 1]
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "house"        
+        
+
+stop_cleaning:
+  alias: 'Stop Cleaning'
+  sequence:
+    - service: vacuum.return_to_base
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner   
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "none"
+        
+        
+
+clean_nothing:
+  alias: 'Clean Stopping'
+  sequence:
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "none"    

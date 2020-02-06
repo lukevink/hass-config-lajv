@@ -1,0 +1,149 @@
+
+#### Homekit make toggle a button:
+#### This controls my IR blaster to send volume commands, so I can just keep tapping the button like it was an actual remote in Homekit.
+
+  - alias: Sound Up
+    trigger:
+      - platform: state
+        entity_id: switch.speakers_vol_up
+        to: 'on'
+    action:
+      service:  switch.turn_off
+      entity_id: switch.speakers_vol_up
+
+  - alias: Sound Down
+    trigger:
+      - platform: state
+        entity_id: switch.speakers_vol_down
+        to: 'on'
+    action:
+      service: switch.turn_off
+      entity_id: switch.speakers_vol_down
+
+
+#### Automate lights when watching movies, pause on toilet break ####  
+
+  - alias: Plex Playing
+    trigger:
+      - platform: state
+        entity_id: media_player.plex_projector
+        to: '1'
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+      service:  script.turn_on
+      entity_id: script.plex_moviestarted
+      
+  - alias: Plex Playing Break
+    trigger:
+      - platform: state
+        entity_id: light.toilet_1
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: media_player.plex_projector
+        state: 'playing'
+    action:
+      service:  media_player.media_pause
+      entity_id: media_player.plex_projector
+      
+  - alias: Plex Playing Break Study
+    trigger:
+      - platform: state
+        entity_id: light.study
+        to: 'on'        
+    condition:
+      - condition: state
+        entity_id: media_player.plex_projector
+        state: 'playing'
+    action:
+      service:  media_player.media_pause
+      entity_id: media_player.plex_projector
+      
+      
+  - alias: Plex Playing Continue
+    trigger:
+      - platform: state
+        entity_id: light.toilet_1
+        to: 'unavailable'
+    condition:
+      - condition: state
+        entity_id: media_player.plex_projector
+        state: 'paused'
+      - condition: state
+        entity_id: light.study
+        state: 'off'          
+    action:
+      service:  media_player.media_play
+      entity_id: media_player.plex_projector        
+
+  - alias: Plex Playing Continue Study
+    trigger:
+      - platform: state
+        entity_id: light.study
+        to: 'off'
+    condition:
+      - condition: state
+        entity_id: light.toilet_1
+        state: 'off'       
+      - condition: state
+        entity_id: media_player.plex_projector
+        state: 'paused'
+    action:
+      service:  media_player.media_play
+      entity_id: media_player.plex_projector            
+    
+
+
+  - alias: Plex Stopped
+    trigger:
+      - platform: state
+        entity_id: media_player.plex_projector
+        to: '0'
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+      service: script.turn_on
+      entity_id: script.slowly_turn_on_livingroom
+      
+
+####  Updating status of Room Cleaning input ####  
+      
+  - alias: Vacuum Returning
+    trigger:
+      - platform: state
+        entity_id: sensor.vacuum_status
+        to: 'Returning home'
+    action:
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "goinghome"
+        
+  - alias: Vacuum Idle
+    trigger:
+      - platform: state
+        entity_id: sensor.vacuum_status
+        to: 'Idle'
+    action:
+      service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "paused"   
+        
+  - alias: Vacuum Charging
+    trigger:
+      - platform: state
+        entity_id: sensor.vacuum_status
+        to: 'Charging'
+    action:
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.room_cleaning
+        value: "charging"
+          
+          

@@ -1,0 +1,41 @@
+
+lajv_muses:
+  hide_if_away: false
+  icon:
+  mac: !secret
+  name: LAJV Muses
+  picture:
+  track: true
+
+luke_phone:
+  hide_if_away: false
+  icon: mdi:account-circle
+  mac: !secret
+  name: Luke
+  picture:
+  track: true
+
+
+gimi_h1_bt_speaker:
+  hide_if_away: false
+  icon:
+  mac: !secret
+  name: Gimi H1 BT Speaker
+  picture:
+  track: true
+
+lajv_mouse:
+  hide_if_away: false
+  icon:
+  mac: !secret
+  name: LAJV Mouse
+  picture:
+  track: true
+
+lajv_dionysus:
+  hide_if_away: false
+  icon:
+  mac: !secret
+  name: LAJV Dionysus
+  picture:
+  track: true

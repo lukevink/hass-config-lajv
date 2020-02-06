@@ -1,0 +1,16 @@
+#################################################################
+## HomeKit
+#################################################################
+
+  auto_start: true
+  
+  port: 51829
+
+  filter:
+    include_entities:
+      - switch.power
+      - switch.speakers_vol_up
+      - switch.speakers_vol_down
+      - light.couch
+      - light.roof_garden
+      - light.roof_plants
