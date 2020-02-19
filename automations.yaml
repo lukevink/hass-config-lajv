@@ -1,4 +1,27 @@
+## Set custom theme on startup
+  - alias: 'System - Set Custom Theme at Startup'
+    initial_state: 'true'
+    trigger:
+      platform: homeassistant
+      event: start
+    action:
+      service: frontend.set_theme
+      data:
+        name: slate
 
+## Browser-mod Switch views when something happens
+  - alias: Sound Up
+    trigger:
+      - platform: state
+        entity_id: media_player.plex_lajv_aphrodite
+        to: 'playing'
+      - platform: state
+        entity_id: media_player.spotify
+        to: 'playing'        
+    action:
+      service:  script.turn_on
+      entity_id: script.navigate_to_media
+        
 #### Homekit make toggle a button:
 #### This controls my IR blaster to send volume commands, so I can just keep tapping the button like it was an actual remote in Homekit.
 
@@ -20,7 +43,26 @@
       service: switch.turn_off
       entity_id: switch.speakers_vol_down
 
-
+  - alias: Projector Off
+    trigger:
+      - platform: state
+        entity_id: device_tracker.projector
+        to: 'not_home'
+    action:
+      service: switch.turn_off
+      entity_id: switch.speakers_input
+ 
+ 
+  - alias: Projector On
+    trigger:
+      - platform: state
+        entity_id: device_tracker.projector
+        to: 'home'
+    action:
+      service: switch.turn_on
+      entity_id: switch.speakers_input           
+      
+      
 #### Automate lights when watching movies, pause on toilet break ####  
 
   - alias: Plex Playing
@@ -145,5 +187,67 @@
       data_template:
         entity_id: input_text.room_cleaning
         value: "charging"
+        
+ 
+ 
+ 
+  - alias: ui_sound_on
+    trigger:
+    - platform: state
+      entity_id:
+        ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.plant_table', 
+        'light.table', 'light.couch', 'light.kitchen_4', 'light.kitchen_3', 'light.kitchen_2', 'light.kitchen_1', 'light.roof_plants',
+        'light.roof_garden', 'switch.speakers_vol_up', 'switch.speakers_vol_down', 'switch.power', 'switch.speakers_input',
+        'light.balcony','light.study']
+      from: 'off'
+      to: 'on'
+    action:
+    - service: media_player.play_media
+      data:
+        entity_id: media_player.tablet
+        media_content_id: /local/ui/sound/on.m4a
+        media_content_type: music
+
+  - alias: ui_sound_off
+    trigger:
+    - platform: state
+      entity_id:
+        ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.plant_table', 
+        'light.table', 'light.couch', 'light.kitchen_4', 'light.kitchen_3', 'light.kitchen_2', 'light.kitchen_1', 'light.roof_plants',
+        'light.roof_garden', 'switch.speakers_vol_up', 'switch.speakers_vol_down', 'switch.power', 'switch.speakers_input',
+        'light.balcony','light.study']
+      from: 'on'
+      to: 'off'
+    action:
+    - service: media_player.play_media
+      data:
+        entity_id: media_player.tablet
+        media_content_id: /local/ui/sound/off.m4a
+        media_content_type: music
+
+  - alias: ui_sound_popup
+    trigger:
+      platform: event
+      event_type: call_service
+      event_data: 
+        domain: browser_mod
+        service: popup
+    action:
+    - service: media_player.play_media
+      data:
+        entity_id: media_player.tablet
+        media_content_id: /local/ui/sound/popup.m4a
+        media_content_type: music
+        
+  - alias: ui_sound_view
+    trigger:
+      platform: state
+      entity_id: sensor.tablet_view
+    action:
+    - service: media_player.play_media
+      data:
+        entity_id: media_player.tablet
+        media_content_id: /local/ui/sound/popup.m4a
+        media_content_type: music     
           
           

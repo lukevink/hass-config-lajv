@@ -17,14 +17,18 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 browser_mod:
+  devices:
+    fce10b49-92cd38df:
+      name: mac_chrome
+    ca49e139-5ccf9f14:
+      name: tablet
 
 frontend:
   themes: !include themes.yaml
-  extra_html_url:
-    - /local/custom-icons.html
-    
+
 homekit: !include homekit.yaml
-    
+lovelace:
+  mode: yaml
 
 #################################################################
 ## Components
@@ -38,15 +42,23 @@ google:
 ## Spotify
 media_player:
   - platform: spotify
+    name: Spotify Luke
     client_id: !secret spotify_client_id
     client_secret: !secret spotify_secret
-    
+    cache_path: '.spotify_luke'
+
+  - platform: spotify
+    name: Spotify Santa
+    client_id: !secret spotify_s_client_id
+    client_secret: !secret spotify_s_secret
+    cache_path: '.spotify_santa'
+
 ## For robot vacuum & automation status
 vacuum:
   - platform: xiaomi_miio
     host: 192.168.178.227
     token: !secret xiaomi_robot_token
-    
+
 input_text:
   room_cleaning:
     name: Currently Cleaning Room
@@ -56,28 +68,32 @@ input_text:
 device_tracker:
   - platform: bluetooth_tracker
     track_new_devices: true
+    interval_seconds: 5
+    consider_home: 30
   - platform: upc_connect
     password: !secret wifi_admin_password
     track_new_devices: false
     host: 192.168.178.1
-    interval_seconds: 10
-    consider_home: 180
-    
+    interval_seconds: 3
+    consider_home: 30
+
 
 ## Weather
 weather:
   - platform: buienradar
     name: 'buienWeather'
-    latitude: !secret home_latitude
-    longitude: !secret home_longitude
+    latitude: 52.365150
+    longitude: 4.934230
     forecast: true
 
 binary_sensor:
   - platform: workday
-    country: NL   
-    
+    country: NL
 
-## For IR Blaster / Speaker remote control through homekit    
+
+
+
+## For IR Blaster / Speaker remote control through homekit
 switch:
   - platform: broadlink
     host: 192.168.178.185
@@ -94,15 +110,31 @@ switch:
          command_off: 'JgBQAAABJ5UTEhQSEhQUERMTEhMVERI4EhMVERIUFBETNxI4EzcUEhE4FTUVNRIUExITExM3EzcSFBMSFhASOBM2FjURFBMSEgAFpgABKkgSAA0FAAAAAAAAAAA='
        speakers_vol_down:
          friendly_name: Speakers Down
-         command_on: 'JgB4AAABKJMVERQQFREVERQRFREVEBU2FREUEBURFREUNRU2FDUVERURFBEVEhQ1FBEVERY1EzYUNxQ1FDYUERU1FTUVERQRFAAFpAABKUgUAAxTAAEqSBQADFMAASpIFAAMUwABKkgUAAxUAAEpSBQADFMAASpIFAANBQ=='
-         command_off: 'JgB4AAABKJMVERQQFREVERQRFREVEBU2FREUEBURFREUNRU2FDUVERURFBEVEhQ1FBEVERY1EzYUNxQ1FDYUERU1FTUVERQRFAAFpAABKUgUAAxTAAEqSBQADFMAASpIFAAMUwABKkgUAAxUAAEpSBQADFMAASpIFAANBQ=='
-    
-    
+         command_on: 'JgBYAAABK5EUEhUQFhASFRQQFREUExM1FBIVEBYRERQVNBY1EzcVEBURExQTERU1FRAVERQ2FTUVNRQ2FTUVERM2FjQVERQTEwAFowABJ0sVAAxUAAEpSRMADQU==='
+         command_off: 'JgBYAAABK5EUEhUQFhASFRQQFREUExM1FBIVEBYRERQVNBY1EzcVEBURExQTERU1FRAVERQ2FTUVNRQ2FTUVERM2FjQVERQTEwAFowABJ0sVAAxUAAEpSRMADQU==='
+       speakers_input:
+         friendly_name: Projector Audio
+         command_on: 'JgBYAAABJ5UUERMTFRAVERIUFBETExI4FRATExURFBESOBU1FTUSFBMSFTUSFBM3EhQSExQ2EzcSOBQREzgSExM3EjgTEhMUEAAFpwABKEoTAAxVAAEnSxUADQU==='
+         command_off: 'JgBYAAABKpEVERIUFBETExUQFRIRFBQ2FBIRFBQRExMVNRU1EjgVEBUREjgVNRU1EhQUERU2ETgVNRUREhMVERI4EzcUERMTFAAFpAABKkgSAAxWAAEnSxMADQU==='
+
+
 #################################################################
 ## Sensors
-#################################################################    
-    
+#################################################################
+
 sensor:
+
+
+  - platform: spotify-playlist-sensor
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_secret
+    number_of_playlists: 12
+
+  - platform: spotify-playlist-sensor
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_secret
+    number_of_playlists: 12
+    name: SpotifyPlaylist_Santa
 
   - platform: plex_recently_added
     name: Recently Added Movies # will create sensor.recently_added_movies
@@ -135,8 +167,8 @@ sensor:
       - 'beat'
   - platform: buienradar
     name: 'buienradar'
-    latitude: home_latitude
-    longitude: home_longitude
+    latitude: 52.365150
+    longitude: 4.934230
     timeframe: 120
     monitored_conditions:
       - stationname
@@ -154,8 +186,8 @@ sensor:
       - windspeed
       - windforce
       - windgust
-      - rain_1d 
-      - windspeed_1d 
+      - rain_1d
+      - windspeed_1d
       - rainchance_1d
       - precipitation
       - irradiance
@@ -163,13 +195,73 @@ sensor:
       - precipitation_forecast_total
       - rainlast24hour
       - rainlasthour
-      
+
+  - platform: darksky
+    api_key: !secret dark_sky_key
+    latitude: 52.365150
+    longitude: 4.934230
+    forecast:
+      - 0
+    hourly_forecast:
+      - 0
+    monitored_conditions:
+      - summary
+      - icon
+      - temperature
+      - cloud_cover
+      - dew_point
+      - uv_index
+      - moon_phase
+      - alerts
+
+
+#######################################################################################
+## Templates (Used for updating text in the UI and converting sensors to CSS values )
+#######################################################################################
+
   - platform: template
     sensors:
-      vacuum_status:
-        friendly_name: "Vacuum - Status"
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
 
+      ## to get the current view of my tablet for UI automations
+      tablet_view:
+           value_template: "{{ states.sensor.tablet.attributes['path'] | default('/lovelace/0') }}"
+           friendly_name: Tablet View
+
+
+      ## Calculates daylight brightness out of 100%
+      sunlight_pct:
+        entity_id:
+          - sun.sun
+          - sensor.dark_sky_cloud_coverage
+        value_template: >-
+          {%- set elevation = state_attr('sun.sun','elevation') | float %}
+          {%- set cloud_coverage = states('sensor.dark_sky_cloud_coverage') | float %}
+          {%- set cloud_factor = (1 - (0.75 * ( cloud_coverage / 100) ** 3 )) %}
+          {%- set min_elevation = -6 %}
+          {%- set max_elevation = 90 %}
+          {%- set adjusted_elevation = elevation - min_elevation %}
+          {%- set adjusted_elevation = [adjusted_elevation,0] | max %}
+          {%- set adjusted_elevation = [adjusted_elevation,max_elevation - min_elevation] | min %}
+          {%- set adjusted_elevation = adjusted_elevation / (max_elevation - min_elevation) %}
+          {%- set adjusted_elevation = adjusted_elevation %}
+          {%- set adjusted_elevation = adjusted_elevation * 100 %}
+          {%- set brightness = adjusted_elevation * cloud_factor %}
+          {{ brightness | round }}
+        unit_of_measurement: '%'
+        device_class: 'illuminance'
+
+
+      ## Daylight brightness converted to opacity for CSS
+      sunlight_opacity:
+        entity_id:
+          - sensor.sunlight_pct
+        value_template: >-
+          {%- set sunpct = states('sensor.sunlight_pct') | float %}
+          {%- set opacity = sunpct / 100 | float %}
+          {{ opacity }}
+
+
+      ## Converts time and date into sentence for UI
       day:
         entity_id: sensor.date
         value_template: >
@@ -180,11 +272,22 @@ sensor:
         value_template: >
           {% set months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
           {{ strptime(states('sensor.date'), '%Y-%m-%d').day }}
-          {{ months[now().month-1] }} 
-          
+          {{ months[now().month-1] }}
+
       date_string:
         friendly_name: "Full Date"
         value_template: "{{ states('sensor.day') }}, {{ states('sensor.month') }} {{ now().year }}"
+
+
+      ## Vaccuum templates, for showing attributes as sensors, etc.
+
+      vacuum_status:
+        friendly_name: "Vacuum - Status"
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
+
+      vacuum_cleaning_status:
+        friendly_name: "Vacuum - Cleaning Status"
+        value_template: "Cleaning {{ states('input_text.room_cleaning') }}"
 
       vacuum_battery:
         friendly_name: "Vacuum - Battery"
@@ -208,14 +311,14 @@ sensor:
       vacuum_cleaned_area:
         friendly_name: "Vacuum - Cleaned Area"
         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
-        
+
 
 
 #################################################################
-## Light Groups
+## Light Groups   (used to control rooms in floor plan view)
 #################################################################
 
-        
+
 light:
  - platform: group
    name: Kitchen Lights
@@ -224,13 +327,13 @@ light:
     - light.kitchen_2
     - light.kitchen_3
     - light.kitchen_4
-    
+
  - platform: group
    name: Roof Lights
    entities:
      - light.roof_garden
      - light.roof_plants
-    
+
  - platform: group
    name: Kitchen Fridge Lights
    entities:
@@ -240,32 +343,29 @@ light:
    name: Kitchen Sink Lights
    entities:
      - light.kitchen_3
-     - light.kitchen_4   
+     - light.kitchen_4
 
  - platform: group
    name: Living Room Lights
    entities:
      - light.couch
      - light.table
-     - light.plant_table 
-    
+     - light.plant_table
+
  - platform: group
    name: Toilet Lights
    entities:
      - light.toilet_1
-     - light.toilet_2    
-    
+     - light.toilet_2
+
  - platform: group
    name: Bedroom Lights
    entities:
      - light.bedroom_roof
      - light.bed
-     
+
  - platform: group
    name: Stairs Lights
    entities:
      - light.stairs_2
      - light.door
- 
-
-

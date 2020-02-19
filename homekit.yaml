@@ -11,6 +11,7 @@
       - switch.power
       - switch.speakers_vol_up
       - switch.speakers_vol_down
+      - switch.speakers_input
       - light.couch
       - light.roof_garden
       - light.roof_plants

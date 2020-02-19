@@ -10,9 +10,16 @@ custom_header:
         disable_sidebar: true
         hide_header: true
         kiosk_mode: true
+    - conditions:
+        user: tablet
+      config:
+        hidden_tab_redirect: false
+        kiosk_mode: true
+
+
 resources:
 
-    ##### CUSTOM CARDS / COMPONENTS #####
+    ###### CUSTOM CARDS / COMPONENTS #####
 
   - type: module
     url: /local/js/card-mod.js
@@ -56,6 +63,8 @@ resources:
     url: /local/js/auto-entities.js
   - type: module
     url: /local/js/now-playing-card.js
+  - type: module
+    url: /local/js/spotify-playlist-card.js
 
     ##### CARDS I CREATED OR MODIFIED FOR STYLING #####
 
@@ -66,20 +75,63 @@ resources:
   - type: js
     url: /local/js/light-slider-card-lajv.js
 
+
+
+
+
+
 title: Lust & Freud
 views:
 
+    #############################################################################################################################################
+    #                                                                                                                                           #
+    #                                                              Floorplan View                                                               #
+    #                                                                                                                                           #
+    #############################################################################################################################################
 
-          #############################################################################################################################################
-          #                                                                                                                                           #
-          #                                                            Control Rooms View                                                             #
-          #                                                                                                                                           #
-          #############################################################################################################################################
-
-
-  - badges: []
+  - title: Control Rooms
+    icon: 'mdi:floor-plan'
+    panel: true
+    badges: []
     cards:
-      - card:
+
+        ###################   config-template-card    #####################
+        #########################   IMPORTANT!    #########################
+
+        # To use the styling templates for individual lights, I have used
+        # Config Template Card. Config template card passes the entities it
+        # uses into the card. Make sure you change these entities below to
+        # your own and include any light entities you use above.
+
+        # To understand why, check: https://github.com/iantrich/config-template-card
+
+      - type: 'custom:config-template-card'
+        entities:
+          - light.roof_garden
+          - light.roof_plants
+          - light.kitchen_1
+          - light.kitchen_2
+          - light.kitchen_3
+          - light.kitchen_4
+          - light.couch
+          - light.table
+          - light.plant_table
+          - light.toilet_1
+          - light.toilet_2
+          - light.study
+          - light.bedroom_roof
+          - light.bed
+          - light.stairs_2
+          - light.door
+          - light.balcony
+        card:
+          ###################   Picture Elements Card    #####################
+          type: 'custom:hui-picture-elements-card'
+          image: /local/ui/floorplan/floorplan_night.png
+          style: |
+            ha-card:first-child {
+              background: rgba(42, 46, 48, 1)
+            }
           elements:
 
               #########################    DAY BASE FLOORPLAN OVERLAY    #########################
@@ -94,15 +146,15 @@ views:
               style:
                 height: 100%
                 left: 50%
+                mix-blend-mode: lighten
+                opacity: '${ states[''sensor.sunlight_opacity''].state }'
                 top: 50%
                 width: 100%
               tap_action:
                 action: none
               type: image
 
-
-              #########################    INDIVIDUAL LIGHT OVERLAYS    #########################
-
+              #########################    INDIVIDUAL LIGHTS - BLENDED IMAGE OVERLAYS    #########################
 
             - action: none
               entity: light.table
@@ -386,7 +438,7 @@ views:
                 action: none
               type: image
             - action: none
-              entity: light.balcony_2
+              entity: light.balcony
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/balcony.png
@@ -396,17 +448,25 @@ views:
               style:
                 filter: >-
                   ${ "hue-rotate(" +
-                  (states['light.balcony_2'].attributes.hs_color  ?
-                  states['light.balcony_2'].attributes.hs_color[0] : 0) +
-                  "deg)"}
+                  (states['light.balcony'].attributes.hs_color  ?
+                  states['light.balcony'].attributes.hs_color[0] : 0) + "deg)"}
                 left: 76.85%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.balcony_2''].attributes.brightness / 255 }'
+                opacity: '${ states[''light.balcony''].attributes.brightness / 255 }'
                 top: 78.2%
                 width: 46.1328125%
               tap_action:
                 action: none
               type: image
+
+              #########################    ROOM/GROUP CONTROL TRANSPARENT IMAGES    #########################
+
+              #  Used to create tap areas and popups for each room, referring to light groups.
+              #  Because the above images overlap each other, I used seperate transparent images
+              #. to handle the control of the room, so you always tap the right room.
+              #
+              #  browser_mod.popup is used for a tap and hold for a custom popup card
+
             - entity: light.living_room_lights
               hold_action:
                 action: call-service
@@ -916,810 +976,14 @@ views:
                 action: toggle
               type: image
 
-              #########################    NOW PLAYING ON PROJECTOR IN FLOORPLAN    #########################
+              #########################    INDIVIDUAL LIGHT ICONS    #########################
 
-            - entity: media_player.plex_lajv_aphrodite
-              style:
-                left: 68.5%
-                perspective-origin: '70%, 50%'
-                top: 37.5%
-                transform: >-
-                  perspective(210px) scale(3.7, 1.8)  rotateX(34deg)
-                  rotateY(86deg) rotateZ(-86deg) translateY(-2px)  skewX(20deg)
-                  skewY(-10deg)
-                width: 10%
-              type: 'custom:now-playing-poster'
-
-
-              #################################################################
-              #                                                               #
-              #                             SIDEBAR                           #
-              #                                                               #
-              #################################################################
-
-            - action: none
-              hold_action:
-                action: none
-              image: /local/ui/sidebarBG2.png
-              style:
-                height: 100%
-                left: 11.73828125%
-                top: 50%
-                width: 23.4765625%
-              tap_action:
-                action: none
-              type: image
-            - entity: sensor.time
-              hold_action:
-                action: none
-              style:
-                color: 'rgba(255, 255, 255, 0.7)'
-                font-size: 5.41vw
-                font-weight: 200
-                left: 2.7%
-                letter-spacing: '-0.05vw'
-                max-width: 1px
-                top: 10%
-              tap_action:
-                action: none
-              type: state-label
-            - entity: sensor.date_string
-              hold_action:
-                action: none
-              style:
-                color: 'rgba(255, 255, 255, 0.3)'
-                font-size: 1.3vw
-                font-weight: 300
-                left: 18.1%
-                letter-spacing: '-0.05vw'
-                text-align: left
-                top: 17%
-                width: 30%
-              tap_action:
-                action: none
-              type: state-label
-
-              #########################    MENU BUTTONS    #########################
-
-            - action: none
-              image: /local/ui/side/rooms_on.png
-              style:
-                border-radius: 5vw
-                box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
-                left: 11.7%
-                top: 26%
-                width: 20.5078125%
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/0
-              type: image
-            - action: none
-              image: /local/ui/side/lights_off.png
-              style:
-                left: 11.7%
-                top: 34%
-                width: 20.5078125%
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/1
-              type: image
-            - action: none
-              image: /local/ui/side/cleanUp_off.png
-              style:
-                left: 11.7%
-                top: 42%
-                width: 20.5078125%
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/2
-              type: image
-            - action: none
-              image: /local/ui/side/all_off.png
-              style:
-                left: 11.7%
-                top: 50%
-                width: 20.5078125%
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/3
-              type: image
-            - action: none
-              image: /local/ui/side/media_off.png
-              style:
-                left: 11.7%
-                top: 58%
-                width: 20.5078125%
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/4
-              type: image
-
-              #########################    PEOPLE    #########################
-
-            - style:
-                color: white
-                font-size: 1vw
-                font-weight: 300
-                left: 8.8%
-                opacity: 0
-                top: 66%
-                width: 10%
-              text: 'People at home:'
-              type: 'custom:text-element'
-            - action: none
-              entity: person.luke_vink
-              state_image:
-                home: /local/people/luke.png
-                not_home: /local/people/lukeGone.png
-              style:
-                background-color: 'rgba(255, 255, 255, 0.0)'
-                border-radius: 10vw
-                height: 4.5vw
-                left: 5.8%
-                top: 72%
-                width: 4.5vw
-              tap_action: null
-              type: image
-            - action: none
-              entity: person.santa_stibe
-              state_image:
-                home: /local/people/santa.png
-                not_home: /local/people/santaGone.png
-              style:
-                background-color: 'rgba(255, 255, 255, 0.0)'
-                border-radius: 10vw
-                height: 4.5vw
-                left: 10.8%
-                top: 72%
-                width: 4.5vw
-              tap_action: null
-              type: image
-            - action: none
-              image: /local/transparent.png
-              style:
-                background-color: 'rgba(255, 255, 255, 0.0)'
-                border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
-                border-radius: 10vw
-                height: 4.2vw
-                left: 15.9%
-                top: 72.2%
-                width: 4.2vw
-              tap_action: null
-              type: image
-            - action: none
-              image: /local/transparent.png
-              style:
-                background-color: 'rgba(255, 255, 255, 0.0)'
-                border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
-                border-radius: 10vw
-                height: 4.2vw
-                left: 21.1%
-                top: 72.2%
-                width: 4.2vw
-              tap_action: null
-              type: image
-
-              #########################    TEMPERATURE GRAPH (INSIDE / OUTSIDE)    #########################
-
-            - color_thresholds:
-                - color: '#4dd2ff'
-                  value: 10
-                - color: '#ffa31a'
-                  value: 15
-                - color: '#ff1a1a'
-                  value: 20
-              entities:
-                - sensor.stairs_detector_temperature
-                - sensor.buienradar_ground_temperature
-              icon: 'mdi:home-thermometer-outline'
-              show:
-                icon: true
-                legend: false
-                name: false
-              style: |
-                :host {
-                  left: 11.6%;
-                  top:  92.9%;
-                  width: 23.5%;
-                  overflow: hidden;
-                  height: 15%;
-                  background: none  !important;
-                  box-shadow: none !important;
-                }
-                .header {
-                  font-size: 1vw;
-                  position: absolute !important;
-                  width: 5% !important;
-                  padding: 0 !important;
-                  right: 20% !important;
-                  top: 15% !important;
-                }
-                ha-card {
-                  background: none  !important;
-                  padding: 0 !important;
-                }
-                .icon > ha-icon {
-                  width:1.8vw !important;
-                  height:1.8vw !important;
-                }
-                .state__time{
-                  font-size:0.9vw !important;
-                  margin-top: 0.2vw;
-                  font-weight: 300 !important;
-                  opacity: 0.4 !important;
-                }
-                .states {
-                  font-size: 0.5vw !important;
-                  padding: 1vw 0vw 0vw 0vw  !important;
-                  margin: auto !important;
-                  width: 68%;
-                }
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/5
-              type: 'custom:mini-graph-card'
-
-              #########################    WEATHER SIDEBAR CARD    #########################
-
-            - backdrop: false
-              entity: weather.buienweather
-              name: ' '
-              style: |
-                :host {
-                  left: 11.4%;
-                  top:  85.5%;
-                  width: 17%;
-                  height: 7% !important;
-                  overflow: hidden;
-                  height: 8.5vw;
-                  background: none  !important;
-                  box-shadow: none !important;
-                  font-size: 1vw !important;
-                }
-                ha-card {
-                  background: none  !important;
-                  box-shadow: none !important;
-                  flex-flow: row-reverse !important;
-                  padding: 0 !important;
-                }
-                .weather__info--add{
-                  display : none !important;
-                }
-                .weather__info{
-                  flex-grow: 1;
-                  min-height: 0 !important;
-                  height: 2.4vw;
-                  margin-left: 0.6vw;
-                }
-                .weather__icon{
-                  margin-right:0.5% !important;
-                  margin-top: -3%;
-                  width: 2vw !important;
-                  height: 2vw !important;
-                  flex: 0 0 2vw !important;
-                }
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/5
-              type: 'custom:simple-weather-card'
-
-              #########################    VISUAL SHADOW OVERLAYS    #########################
-
-            - action: none
-              image: /local/ui/side/sideShadow.png
-              style:
-                height: 35%
-                left: 18.45%
-                pointer-events: none
-                top: 83%
-                width: 10%
-              type: image
-            - action: none
-              image: /local/ui/side/sidebarInnerShadow.png
-              style:
-                left: 22.83%
-                opacity: 0.7
-                pointer-events: none
-                top: 50%
-                width: 1.2109375%
-              type: image
-
-              #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
-
-            - entity: media_player.spotify
-              hide:
-                controls: true
-                name: true
-                power: true
-                source: true
-                volume: true
-              idle_view:
-                after: 0.1
-                when_idle: true
-                when_paused: true
-                when_standby: true
-              style: |
-                :host {
-                  left: 11.7%;
-                  top:  57.9%;
-                  width: 20.5078125%;
-                  border-radius: 5vw;
-                  overflow: hidden;
-                  height: 3.8vw;
-                  box-shadow: none !important;
-                }
-                ha-card {
-                  border-radius: 5vw;
-                  overflow: hidden !important;
-                  box-shadow: none !important;
-                  padding: 0.1vw 0.9vw 0.7vw 1.05vw !important;
-                }
-                ha-card.--inactive .mmp-player{
-                  opacity: 0 !important;
-                }
-                .entity__info{
-                  height: 2.6vw;
-                  width: 65% !important;
-                  max-height: 20vw !important;
-                  font-size: 0.9vw !important;
-                  margin:0 0 0 1.04vw !important;
-                  display: inline-block !important;
-                }
-                div.mmp__bg{
-                  background: #1E2022;
-                }
-                ha-card.--inactive div.mmp__bg{
-                  background: none;
-                }
-                div.mmp-player {
-                  padding: 0vw;
-                  height: 100%;
-                }
-                ha-card {
-                  height: 100%;
-                }
-                mmp-powerstrip {
-                  width: 100%;
-                  display: block;
-                  padding:0;
-                }
-                ha-icon{
-                  display: block !important;
-                  height: 2vw !important;
-                  width: 2vw !important;
-                  margin: 0.3vw 1.5vw 0 0vw !important;
-                }
-                .entity__icon{
-                  float:right;
-                  padding: 0.1vw;
-                  width: 3vw !important;
-                  height: 3vw !important;
-                  min-width: 0 !important;
-                  min-height: 0 !important;
-                  margin:0 !important;
-                  display: inline-block !important;
-                }
-
-                .mmp-player__core {
-                  height: auto;
-                  width: 100% !important;
-                  margin-bottom: 0.1vw;
-                  display: block !important;
-                  position: absolute !important;
-                  bottom: 0;
-                }
-
-                .entity__info__media{
-                  max-height: 20vw !important;
-                }
-                .entity__info__media span::before{
-                  content: none !important
-                }
-                .attr__media_title{
-                  display:block;
-                  color: white;
-                  font-weight: 300;
-                  font-size: 1.2vw !important;
-                }
-                .attr__media_artist{
-                  font-size: 0.8vw !important;
-                  font-weight: 200;
-                  color: white;
-                }
-                .entity__artwork{
-                  display:inline-block;
-                  float: right;
-                  margin-right: 0 !important;
-                  display: inline-block;
-                  float: right;
-                  width: 2.2vw !important;
-                  height: 2.2vw !important;
-                  min-width: 0 !important;
-                  margin: 0.2vw 1vw 0 0 !important;
-                }
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/4
-              type: 'custom:mini-media-player'
-          image: /local/ui/floorplan/floorplan_night.png
-          style: |
-            ha-card:first-child {
-              background: rgba(42, 46, 48, 1)
-            }
-          type: 'custom:hui-picture-elements-card'
-        entities:
-          - light.roof_garden
-          - light.roof_plants
-          - light.kitchen_1
-          - light.kitchen_2
-          - light.kitchen_3
-          - light.kitchen_4
-          - light.couch
-          - light.table
-          - light.plant_table
-          - light.toilet_1
-          - light.toilet_2
-          - light.study
-          - light.bedroom_roof
-          - light.bed
-          - light.stairs_2
-          - light.door
-          - light.balcony_2
-        type: 'custom:config-template-card'
-    icon: 'mdi:floor-plan'
-    panel: true
-    title: Control Rooms
-
-
-          #############################################################################################################################################
-          #                                                                                                                                           #
-          #                                                            Control Lights View                                                             #
-          #                                                                                                                                           #
-          #############################################################################################################################################
-
-
-  - badges: []
-    cards:
-      - card:
-          elements:
-
-              #########################    DAY BASE FLOORPLAN OVERLAY    #########################
-
-            - action: none
-              entity: sun.sun
-              hold_action:
-                action: none
-              state_image:
-                above_horizon: /local/ui/floorplan/floorplan_day.png
-                below_horizon: /local/transparent.png
-              style:
-                height: 100%
-                left: 50%
-                top: 50%
-                width: 100%
-              tap_action:
-                action: none
-              type: image
-
-
-              #########################    INDIVIDUAL LIGHT OVERLAYS    #########################
-
-
-            - action: none
-              entity: light.roof_plants
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/roofplants.png
-              state_filter:
-                'off': opacity(00%)
-                'on': opacity(100%)
-                unavailable: opacity(0%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" +
-                  (states['light.roof_plants'].attributes.hs_color  ?
-                  states['light.roof_plants'].attributes.hs_color[0] : 0) +
-                  "deg)"}
-                left: 27.02%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.roof_plants''].attributes.brightness / 255 }'
-                top: 51.1%
-                width: 45.0390625%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.roof_garden
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/roofgarden.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" +
-                  (states['light.roof_garden'].attributes.hs_color  ?
-                  states['light.roof_garden'].attributes.hs_color[0] : 0) +
-                  "deg)"}
-                left: 27.02%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.roof_garden''].attributes.brightness / 255 }'
-                top: 51.1%
-                width: 45.0390625%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.table
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/table.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" + (states['light.table'].attributes.hs_color
-                  ? states['light.table'].attributes.hs_color[0] : 0) + "deg)"}
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.table''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.plant_table
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/cabinet.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" +
-                  (states['light.plant_table'].attributes.hs_color  ?
-                  states['light.plant_table'].attributes.hs_color[0] : 0) +
-                  "deg)"}
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.plant_table''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.couch
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/couch.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                left: 73.73%
-                mix-blend-mode: lighten
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.kitchen_1
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/kitchen1.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_1''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.kitchen_2
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/kitchen2.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_2''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.kitchen_3
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/kitchen3.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_3''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.kitchen_4
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/kitchen4.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_4''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.door
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/door.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.door''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.stairs_2
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/stairs.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                left: 73.73%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.stairs_2''].attributes.brightness / 255 }'
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: group.toilet
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/toilet.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-                unknown: opacity(0%)
-              style:
-                left: 73.73%
-                top: 32.65%
-                width: 39.296875%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.bed
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/bed.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" + (states['light.bed'].attributes.hs_color  ?
-                  states['light.bed'].attributes.hs_color[0] : 0) + "deg)"}
-                left: 76.95%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.bed''].attributes.brightness / 255 }'
-                top: 78.2%
-                width: 46.1328125%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.bedroom_roof
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/bedroof.png
-              state_filter:
-                'off': opacity(00%)
-                'on': opacity(100%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" +
-                  (states['light.bedroom_roof'].attributes.hs_color  ?
-                  states['light.bedroom_roof'].attributes.hs_color[0] : 0) +
-                  "deg)"}
-                left: 76.95%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.bedroom_roof''].attributes.brightness / 255 }'
-                top: 78.2%
-                width: 46.1328125%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.study
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/study.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" + (states['light.study'].attributes.hs_color
-                  ? states['light.study'].attributes.hs_color[0] : 0) + "deg)"}
-                left: 76.95%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.study''].attributes.brightness / 255 }'
-                top: 78.2%
-                width: 46.1328125%
-              tap_action:
-                action: none
-              type: image
-            - action: none
-              entity: light.balcony_2
-              hold_action:
-                action: none
-              image: /local/ui/floorplan/lights/balcony.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-              style:
-                filter: >-
-                  ${ "hue-rotate(" +
-                  (states['light.balcony_2'].attributes.hs_color  ?
-                  states['light.balcony_2'].attributes.hs_color[0] : 0) +
-                  "deg)"}
-                left: 76.95%
-                mix-blend-mode: lighten
-                opacity: '${ states[''light.balcony_2''].attributes.brightness / 255 }'
-                top: 78.2%
-                width: 46.1328125%
-              tap_action:
-                action: none
-              type: image
-
-
-
-              #################################################################
-              #                                                               #
-              #                          LIGHT BUTTONS                        #
-              #                                                               #
-              #################################################################
-
-              # Using Browser.mod Popups, Light Entity Card and Custom Light Slider Card
+              #  These are the white state icons that appear over the floorplan.
+              #  They are the same as above, but instead of "areas" to control a group, they only
+              #. control individual lights
+              #
+              #  browser_mod.popup is used for a tap and hold for a custom popup card, custom styling
+              #  of the icon to make it appear white, etc.
 
             - entity: light.plant_table
               hold_action:
@@ -2305,7 +1569,7 @@ views:
               tap_action:
                 action: toggle
               type: state-icon
-            - entity: light.balcony_2
+            - entity: light.balcony
               hold_action:
                 action: call-service
                 service: browser_mod.popup
@@ -2313,7 +1577,7 @@ views:
                   card:
                     cards:
                       - entities:
-                          - entity: light.balcony_2
+                          - entity: light.balcony
                             secondary_info: last-changed
                         style:
                           z-index: 5
@@ -2323,7 +1587,7 @@ views:
                               - brightness: false
                                 color_picker: false
                                 effects_list: false
-                                entity: light.balcony_2
+                                entity: light.balcony
                                 full_width_sliders: true
                                 header: false
                                 persist_features: true
@@ -2332,7 +1596,7 @@ views:
                                 type: 'custom:light-entity-card'
                               - brightness: false
                                 color_temp: false
-                                entity: light.balcony_2
+                                entity: light.balcony
                                 full_width_sliders: true
                                 header: false
                                 persist_features: true
@@ -2344,7 +1608,7 @@ views:
                             type: 'custom:layout-card'
                           - entities:
                               - color_temp: true
-                                entity: light.balcony_2
+                                entity: light.balcony
                                 header: false
                                 persist_features: true
                                 type: 'custom:light-slider-card'
@@ -2642,16 +1906,26 @@ views:
                 action: toggle
               type: state-icon
 
-              #################################################################
-              #                                                               #
-              #                             SIDEBAR                           #
-              #                                                               #
-              #################################################################
+              #########################    EXPERIMENTAL NOW PLAYING ON PROJECTOR IN FLOORPLAN    #########################
+
+              # custom card to show whats playing on the screen when its playing (plex)
+
+            - entity: media_player.plex_projector
+              style:
+                left: 68.5%
+                perspective-origin: '70%, 50%'
+                top: 37.5%
+                transform: >-
+                  perspective(210px) scale(3.7, 1.8)  rotateX(34deg)
+                  rotateY(86deg) rotateZ(-86deg) translateY(-2px)  skewX(20deg)
+                  skewY(-10deg)
+                width: 10%
+              type: 'custom:now-playing-poster'
 
             - action: none
               hold_action:
                 action: none
-              image: /local/ui/sidebarBG2.png
+              image: /local/ui/sidebar/sidebarBG2.png
               style:
                 height: 100%
                 left: 11.73828125%
@@ -2660,6 +1934,28 @@ views:
               tap_action:
                 action: none
               type: image
+
+              #################################################################
+              #                                                               #
+              #                             SIDEBAR                           #
+              #                                                               #
+              #################################################################
+
+              #########################    BG IMAGE    #########################
+            - action: none
+              hold_action:
+                action: none
+              image: /local/ui/sidebar/sidebarBG2.png
+              style:
+                height: 100%
+                left: 11.73828125%
+                top: 50%
+                width: 23.4765625%
+              tap_action:
+                action: none
+              type: image
+
+              #########################    TIME AND DATE    #########################
             - entity: sensor.time
               hold_action:
                 action: none
@@ -2693,7 +1989,7 @@ views:
               #########################    MENU BUTTONS    #########################
 
             - action: none
-              image: /local/ui/side/rooms_off.png
+              image: /local/ui/sidebar/rooms_on.png
               style:
                 border-radius: 5vw
                 box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
@@ -2705,7 +2001,7 @@ views:
                 navigation_path: /lovelace/0
               type: image
             - action: none
-              image: /local/ui/side/lights_on.png
+              image: /local/ui/sidebar/cleanUp_off.png
               style:
                 left: 11.7%
                 top: 34%
@@ -2715,7 +2011,7 @@ views:
                 navigation_path: /lovelace/1
               type: image
             - action: none
-              image: /local/ui/side/cleanUp_off.png
+              image: /local/ui/sidebar/all_off.png
               style:
                 left: 11.7%
                 top: 42%
@@ -2725,7 +2021,7 @@ views:
                 navigation_path: /lovelace/2
               type: image
             - action: none
-              image: /local/ui/side/all_off.png
+              image: /local/ui/sidebar/media_off.png
               style:
                 left: 11.7%
                 top: 50%
@@ -2734,18 +2030,10 @@ views:
                 action: navigate
                 navigation_path: /lovelace/3
               type: image
-            - action: none
-              image: /local/ui/side/media_off.png
-              style:
-                left: 11.7%
-                top: 58%
-                width: 20.5078125%
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/4
-              type: image
 
-              #########################    PEOPLE    #########################
+              #########################    People at home    #########################
+
+              #Optional label for people at Home (currently hidden with opacity: 0)
 
             - style:
                 color: white
@@ -2810,7 +2098,7 @@ views:
               tap_action: null
               type: image
 
-              #########################    TEMPERATURE GRAPH (INSIDE / OUTSIDE)    #########################
+              #########################    Minigraph to show temperature inside and out    #########################
 
             - color_thresholds:
                 - color: '#4dd2ff'
@@ -2867,10 +2155,10 @@ views:
                 }
               tap_action:
                 action: navigate
-                navigation_path: /lovelace/5
+                navigation_path: /lovelace/4
               type: 'custom:mini-graph-card'
 
-              #########################    WEATHER SIDEBAR CARD    #########################
+              #########################    Mini Weather card    #########################
 
             - backdrop: false
               entity: weather.buienweather
@@ -2911,13 +2199,13 @@ views:
                 }
               tap_action:
                 action: navigate
-                navigation_path: /lovelace/5
+                navigation_path: /lovelace/4
               type: 'custom:simple-weather-card'
 
-              #########################    VISUAL SHADOW OVERLAYS    #########################
+              #########################    Overlay shadow images    #########################
 
             - action: none
-              image: /local/ui/side/sideShadow.png
+              image: /local/ui/sidebar/sideShadow.png
               style:
                 height: 35%
                 left: 18.45%
@@ -2926,7 +2214,7 @@ views:
                 width: 10%
               type: image
             - action: none
-              image: /local/ui/side/sidebarInnerShadow.png
+              image: /local/ui/sidebar/sidebarInnerShadow.png
               style:
                 left: 22.83%
                 opacity: 0.7
@@ -2935,9 +2223,11 @@ views:
                 width: 1.2109375%
               type: image
 
-              #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
+              #########################   Styled now playing Media Player    #########################
 
-            - entity: media_player.spotify
+              # when the media player is playing, this overlaps the "Media" menu button
+
+            - entity: media_player.spotify_luke
               hide:
                 controls: true
                 name: true
@@ -2952,7 +2242,7 @@ views:
               style: |
                 :host {
                   left: 11.7%;
-                  top:  57.9%;
+                  top:  49.5%;
                   width: 20.5078125%;
                   border-radius: 5vw;
                   overflow: hidden;
@@ -3050,48 +2340,29 @@ views:
                 }
               tap_action:
                 action: navigate
-                navigation_path: /lovelace/4
+                navigation_path: /lovelace/3
               type: 'custom:mini-media-player'
 
-          image: /local/ui/floorplan/floorplan_night.png
-          style: |
-            ha-card:first-child {
-              background: rgba(42, 46, 48, 1)
-            }
-          type: 'custom:hui-picture-elements-card'
-        entities:
-          - light.roof_garden
-          - light.roof_plants
-          - light.kitchen_1
-          - light.kitchen_2
-          - light.kitchen_3
-          - light.kitchen_4
-          - light.couch
-          - light.table
-          - light.plant_table
-          - light.toilet_1
-          - light.toilet_2
-          - light.study
-          - light.bedroom_roof
-          - light.bed
-          - light.stairs_2
-          - light.door
-          - light.balcony_2
-        type: 'custom:config-template-card'
-    icon: 'mdi:lightbulb-group'
+
+
+
+    #############################################################################################################################################
+    #                                                                                                                                           #
+    #                                                            Xiaomi Clean Up View                                                           #
+    #                                                                                                                                           #
+    #############################################################################################################################################
+
+  - title: Clean Up
+    icon: 'mdi:robot-vacuum'
     panel: true
-    title: Control Lights
-
-
-          #############################################################################################################################################
-          #                                                                                                                                           #
-          #                                                            Xiaomi Clean Up View                                                           #
-          #                                                                                                                                           #
-          #############################################################################################################################################
-
-
-  - cards:
-      - elements:
+    cards:
+      - type: picture-elements
+        image: /local/ui/floorplan/floorplan_night_cu.png
+        style: |
+          ha-card {
+            background: rgba(42, 46, 48, 1)
+          }
+        elements:
           - action: none
             entity: sun.sun
             hold_action:
@@ -3102,11 +2373,14 @@ views:
             style:
               height: 100%
               left: 50%
+              mix-blend-mode: lighten
+              opacity: '${ states[''sensor.sunlight_opacity''].state }'
               top: 50%
               width: 100%
             tap_action:
               action: none
             type: image
+
 
             #######################################################################
             #                                                                     #
@@ -3115,7 +2389,6 @@ views:
             #   https://www.home-assistant.io/integrations/vacuum.xiaomi_miio/    #
             #                                                                     #
             #######################################################################
-
 
           - action: none
             entity: input_text.room_cleaning
@@ -3205,16 +2478,43 @@ views:
               action: none
             type: image
           - action: none
+            entity: input_text.room_cleaning
             hold_action:
               action: none
-            image: /local/ui/cleanUp/cleaningStatusWait.png
+            state_image:
+              bedroom: /local/ui/cleanUp/cleaningStatusLive.png
+              charging: /local/ui/cleanUp/cleaningStatusWait.png
+              goinghome: /local/ui/cleanUp/cleaningStatusLive.png
+              kitchen: /local/ui/cleanUp/cleaningStatusLive.png
+              livingroom: /local/ui/cleanUp/cleaningStatusLive.png
+              study: /local/ui/cleanUp/cleaningStatusLive.png
             style:
               left: 38.5%
               top: 46%
               width: 16.796875%
-            tap_action:
-              action: null
             type: image
+
+
+            ########### Vacuum Robot Control Panel buttons ###########
+
+            #   Note: uses input_text from configuration.yaml to show
+            #   the right text, EG: "Cleaning Kitchen" status text
+
+          - conditions:
+              - entity: input_text.room_cleaning
+                state_not: charging
+            elements:
+              - entity: sensor.vacuum_cleaning_status
+                style:
+                  color: 'rgba(255,255,255,1)'
+                  font-size: 1.1vw
+                  font-weight: 300
+                  left: 38.4%
+                  text-align: center
+                  top: 51.2%
+                  width: 15%
+                type: state-label
+            type: conditional
           - action: none
             hold_action:
               action: none
@@ -3301,7 +2601,7 @@ views:
               Quiet: local/ui/cleanUp/btns/fan_2.png
               Turbo: local/ui/cleanUp/btns/fan_2.png
             style:
-              left: 36.78%
+              left: 36.48%
               top: 60.5%
               width: 4.1796875%
             tap_action:
@@ -3372,14 +2672,17 @@ views:
 
             #################################################################
             #                                                               #
-            #                             SIDEBAR                           #
+            #                      SIDEBAR : Cleanup                        #
             #                                                               #
             #################################################################
+
+
+            #########################    Background    #########################
 
           - action: none
             hold_action:
               action: none
-            image: /local/ui/sidebarBG2.png
+            image: /local/ui/sidebar/sidebarBG2.png
             style:
               height: 100%
               left: 11.73828125%
@@ -3388,6 +2691,9 @@ views:
             tap_action:
               action: none
             type: image
+
+            #########################    TIME & DATE    #########################
+
           - entity: sensor.time
             hold_action:
               action: none
@@ -3418,13 +2724,13 @@ views:
               action: none
             type: state-label
 
-            #########################    MENU BUTTONS    #########################
+
+            #########################   MENU BUTTONS   #########################
 
           - action: none
-            image: /local/ui/side/rooms_off.png
+            image: /local/ui/sidebar/rooms_off.png
             style:
               border-radius: 5vw
-              box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
               left: 11.7%
               top: 26%
               width: 20.5078125%
@@ -3433,8 +2739,9 @@ views:
               navigation_path: /lovelace/0
             type: image
           - action: none
-            image: /local/ui/side/lights_off.png
+            image: /local/ui/sidebar/cleanUp_on.png
             style:
+              box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
               left: 11.7%
               top: 34%
               width: 20.5078125%
@@ -3443,7 +2750,7 @@ views:
               navigation_path: /lovelace/1
             type: image
           - action: none
-            image: /local/ui/side/cleanUp_on.png
+            image: /local/ui/sidebar/all_off.png
             style:
               left: 11.7%
               top: 42%
@@ -3453,7 +2760,7 @@ views:
               navigation_path: /lovelace/2
             type: image
           - action: none
-            image: /local/ui/side/all_off.png
+            image: /local/ui/sidebar/media_off.png
             style:
               left: 11.7%
               top: 50%
@@ -3462,19 +2769,10 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: image
-          - action: none
-            image: /local/ui/side/media_off.png
-            style:
-              left: 11.7%
-              top: 58%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/4
-            type: image
 
-            #########################    PEOPLE    #########################
+            #########################   PEOPLE   #########################
 
+            #optional text label, currently invisible (make opacity:1) to show
           - style:
               color: white
               font-size: 1vw
@@ -3485,6 +2783,7 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
+
           - action: none
             entity: person.luke_vink
             state_image:
@@ -3538,7 +2837,7 @@ views:
             tap_action: null
             type: image
 
-            #########################    TEMPERATURE GRAPH (INSIDE / OUTSIDE)    #########################
+            #########################    TEMPERATURE MINI GRAPH (INSIDE vs OUTSIDE)    #########################
 
           - color_thresholds:
               - color: '#4dd2ff'
@@ -3595,7 +2894,7 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/5
+              navigation_path: /lovelace/4
             type: 'custom:mini-graph-card'
 
             #########################    WEATHER SIDEBAR CARD    #########################
@@ -3639,13 +2938,13 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/5
+              navigation_path: /lovelace/4
             type: 'custom:simple-weather-card'
 
             #########################    VISUAL SHADOW OVERLAYS    #########################
 
           - action: none
-            image: /local/ui/side/sideShadow.png
+            image: /local/ui/sidebar/sideShadow.png
             style:
               height: 35%
               left: 18.45%
@@ -3654,7 +2953,7 @@ views:
               width: 10%
             type: image
           - action: none
-            image: /local/ui/side/sidebarInnerShadow.png
+            image: /local/ui/sidebar/sidebarInnerShadow.png
             style:
               left: 22.83%
               opacity: 0.7
@@ -3665,7 +2964,7 @@ views:
 
             #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
 
-          - entity: media_player.spotify
+          - entity: media_player.spotify_luke
             hide:
               controls: true
               name: true
@@ -3680,7 +2979,7 @@ views:
             style: |
               :host {
                 left: 11.7%;
-                top:  57.9%;
+                top: 49.5%;
                 width: 20.5078125%;
                 border-radius: 5vw;
                 overflow: hidden;
@@ -3778,29 +3077,30 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/4
+              navigation_path: /lovelace/3
             type: 'custom:mini-media-player'
 
 
-        image: /local/ui/floorplan/floorplan_night_cu.png
+
+
+
+    #############################################################################################################################################
+    #                                                                                                                                           #
+    #                                                   All Devices (Entities) Homekit Style View                                               #
+    #                                                                                                                                           #
+    #############################################################################################################################################
+
+  - title: All Devices
+    icon: 'mdi:home'
+    panel: true
+    cards:
+      - type: picture-elements
+        image: /local/ui/floorplan/blurredFloorplan.png
         style: |
           ha-card {
             background: rgba(42, 46, 48, 1)
           }
-        type: picture-elements
-    icon: 'mdi:robot-vacuum'
-    panel: true
-    title: Clean Up
-
-          #############################################################################################################################################
-          #                                                                                                                                           #
-          #                                                   All Devices (Entities) Homekit Style View                                               #
-          #                                                                                                                                           #
-          #############################################################################################################################################
-
-  - cards:
-      - elements:
-
+        elements:
 
             #################################################################
             #                                                               #
@@ -3808,7 +3108,6 @@ views:
             #         https://github.com/DBuit/Homekit-panel-card           #
             #                                                               #
             #################################################################
-
 
           - enableColumns: true
             popup:
@@ -3830,15 +3129,6 @@ views:
                             icon: 'mdi:lamp'
                         title: Living Room
                     tileOnRow: 2
-                  - column: 2
-                    entities:
-                      - entities:
-                          - entity: light.kitchen_1
-                          - entity: light.kitchen_2
-                          - entity: light.kitchen_3
-                          - entity: light.kitchen_4
-                        title: Kitchen
-                    tileOnRow: 2
                   - column: 3
                     entities:
                       - entities:
@@ -3849,6 +3139,15 @@ views:
                         title: Bedroom
                     tileOnRow: 1
                   - column: 3
+                    entities:
+                      - entities:
+                          - entity: light.study
+                            icon: 'mdi:ceiling-light'
+                          - entity: light.balcony
+                            icon: 'mdi:coach-lamp'
+                        title: Study
+                    tileOnRow: 1
+                  - column: 4
                     entities:
                       - entities:
                           - entity: light.stairs
@@ -3862,27 +3161,27 @@ views:
                   - column: 1
                     entities:
                       - entities:
+                          - entity: light.kitchen_1
+                          - entity: light.kitchen_2
+                          - entity: light.kitchen_3
+                          - entity: light.kitchen_4
+                        title: Kitchen
+                    tileOnRow: 2
+                  - column: 2
+                    entities:
+                      - entities:
                           - entity: light.roof_garden
                             icon: 'mdi:lava-lamp'
                           - entity: light.roof_plants
                             icon: 'mdi:lava-lamp'
                         title: Roof
-                    tileOnRow: 2
-                  - column: 2
-                    entities:
-                      - entities:
-                          - entity: light.study
-                            icon: 'mdi:ceiling-light'
-                          - entity: light.balcony
-                            icon: 'mdi:coach-lamp'
-                        title: Study
-                    tileOnRow: 2
+                    tileOnRow: 1
                   - column: 3
                     entities:
                       - entities:
                           - entity: binary_sensor.stairs_detector_motion
                             icon: 'mdi:walk'
-                        title: All Lights
+                        title: Motion
                     tileOnRow: 1
                   - column: 4
                     entities:
@@ -3894,22 +3193,25 @@ views:
                 row: 2
             statePositionTop: true
             style:
-              height: 70%
+              height: 87%
               left: 62%
               top: 50%
-              width: 76%
+              width: 68%
             type: 'custom:homekit-card'
+
 
             #################################################################
             #                                                               #
-            #                             SIDEBAR                           #
+            #                     SIDEBAR : ALL DEVICES                     #
             #                                                               #
             #################################################################
+
+            #########################    BACKGROUND    #########################
 
           - action: none
             hold_action:
               action: none
-            image: /local/ui/sidebarBG2.png
+            image: /local/ui/sidebar/sidebarBG2.png
             style:
               height: 100%
               left: 11.73828125%
@@ -3918,6 +3220,9 @@ views:
             tap_action:
               action: none
             type: image
+
+            #########################    TIME & DATE    #########################
+
           - entity: sensor.time
             hold_action:
               action: none
@@ -3951,10 +3256,9 @@ views:
             #########################    MENU BUTTONS    #########################
 
           - action: none
-            image: /local/ui/side/rooms_off.png
+            image: /local/ui/sidebar/rooms_off.png
             style:
               border-radius: 5vw
-              box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
               left: 11.7%
               top: 26%
               width: 20.5078125%
@@ -3963,7 +3267,7 @@ views:
               navigation_path: /lovelace/0
             type: image
           - action: none
-            image: /local/ui/side/lights_off.png
+            image: /local/ui/sidebar/cleanUp_off.png
             style:
               left: 11.7%
               top: 34%
@@ -3973,8 +3277,9 @@ views:
               navigation_path: /lovelace/1
             type: image
           - action: none
-            image: /local/ui/side/cleanUp_on.png
+            image: /local/ui/sidebar/all_on.png
             style:
+              box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
               left: 11.7%
               top: 42%
               width: 20.5078125%
@@ -3983,7 +3288,7 @@ views:
               navigation_path: /lovelace/2
             type: image
           - action: none
-            image: /local/ui/side/all_off.png
+            image: /local/ui/sidebar/media_off.png
             style:
               left: 11.7%
               top: 50%
@@ -3992,19 +3297,10 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: image
-          - action: none
-            image: /local/ui/side/media_off.png
-            style:
-              left: 11.7%
-              top: 58%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/4
-            type: image
 
             #########################    PEOPLE    #########################
 
+            # optional label for people (currently hidden, to show, change to opacity:1)
           - style:
               color: white
               font-size: 1vw
@@ -4015,6 +3311,7 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
+
           - action: none
             entity: person.luke_vink
             state_image:
@@ -4068,7 +3365,7 @@ views:
             tap_action: null
             type: image
 
-            #########################    TEMPERATURE GRAPH (INSIDE / OUTSIDE)    #########################
+            #########################    TEMPERATURE GRAPH (INSIDE vs OUTSIDE)    #########################
 
           - color_thresholds:
               - color: '#4dd2ff'
@@ -4125,8 +3422,9 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/5
+              navigation_path: /lovelace/4
             type: 'custom:mini-graph-card'
+
 
             #########################    WEATHER SIDEBAR CARD    #########################
 
@@ -4169,13 +3467,13 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/5
+              navigation_path: /lovelace/4
             type: 'custom:simple-weather-card'
 
             #########################    VISUAL SHADOW OVERLAYS    #########################
 
           - action: none
-            image: /local/ui/side/sideShadow.png
+            image: /local/ui/sidebar/sideShadow.png
             style:
               height: 35%
               left: 18.45%
@@ -4184,7 +3482,7 @@ views:
               width: 10%
             type: image
           - action: none
-            image: /local/ui/side/sidebarInnerShadow.png
+            image: /local/ui/sidebar/sidebarInnerShadow.png
             style:
               left: 22.83%
               opacity: 0.7
@@ -4195,7 +3493,7 @@ views:
 
             #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
 
-          - entity: media_player.spotify
+          - entity: media_player.spotify_luke
             hide:
               controls: true
               name: true
@@ -4210,7 +3508,7 @@ views:
             style: |
               :host {
                 left: 11.7%;
-                top:  57.9%;
+                top:  49.5%;
                 width: 20.5078125%;
                 border-radius: 5vw;
                 overflow: hidden;
@@ -4308,58 +3606,499 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/4
+              navigation_path: /lovelace/3
             type: 'custom:mini-media-player'
 
-        image: /local/ui/blurredFloorplan.png
-        style: |
-          ha-card {
-            background: rgba(42, 46, 48, 1)
-          }
-        type: picture-elements
-    icon: 'mdi:home'
+
+
+
+    #############################################################################################################################################
+    #                                                                                                                                           #
+    #                                                            Now Playing Media View                                                         #
+    #                                                                                                                                           #
+    #############################################################################################################################################
+
+  - title: Media
+    icon: 'mdi:play-circle'
     panel: true
-    title: All Devices
-
-
-          #############################################################################################################################################
-          #                                                                                                                                           #
-          #                                                            Now Playing Media View                                                         #
-          #                                                                                                                                           #
-          #############################################################################################################################################
-
-
-  - badges: []
+    badges: []
     cards:
       - elements:
 
+            #########################    SPEAKER CONTROL BAR    #########################
+            # controls an IR blaster to control my 'not connected' surround sound speakers
+
+          - action: none
+            entity: switch.power
+            hold_action:
+              action: none
+            state_image:
+              'off': /local/ui/btns/speakers_PowerOff.png
+              'on': /local/ui/btns/speakers_PowerOn.png
+            style:
+              left: 31.7%
+              top: 86.3%
+              width: 12.578125%
+            tap_action:
+              action: toggle
+            type: image
+          - action: none
+            hold_action:
+              action: none
+            image: /local/ui/btns/speakers_volumeBG.png
+            style:
+              left: 81.5%
+              top: 86%
+              width: 25.820312499999996%
+            tap_action:
+              action: none
+            type: image
+          - action: none
+            entity: switch.speakers_vol_up
+            hold_action:
+              action: none
+            state_image:
+              'off': /local/ui/btns/speakers_volumeUp.png
+              'on': /local/ui/btns/speakers_volumeUp.png
+            style:
+              left: 87.8%
+              top: 86%
+              width: 15%
+            tap_action:
+              action: toggle
+            type: image
+          - action: none
+            entity: switch.speakers_vol_down
+            hold_action:
+              action: none
+            state_image:
+              'off': /local/ui/btns/speakers_volumeDown.png
+              'on': /local/ui/btns/speakers_volumeDown.png
+            style:
+              left: 75.3%
+              top: 86%
+              width: 15%
+            tap_action:
+              action: toggle
+            type: image
+          - action: none
+            entity: switch.speakers_input
+            hold_action:
+              action: none
+            state_image:
+              'off': /local/ui/btns/speakers_bluetooth.png
+              'on': /local/ui/btns/speakers_projector.png
+            style:
+              left: 51.5%
+              top: 86%
+              width: 27.890625%
+            tap_action:
+              action: toggle
+            type: image
 
             ###########################################################################
             #                                                                         #
-            #                 IF PLEX NOT PLAYING, SHOW SPOTIFY:                      #
+            #                 IF PROJECTOR NOT ON, SHOW SPOTIFY:                      #
             #                                                                         #
             ###########################################################################
-
-
-            # Spotify Playlists Card:
-            # https://github.com/custom-cards/spotify-card
-
-          - conditions:
-              - entity: media_player.plex_projector
-                state: unavailable
-            elements:
-              - client_id: 90cfab5d45f2436a9399c99d5fe23443
-                style:
-                  left: 81%
-                  top: 50%
-                  width: 27%
-                type: 'custom:spotify-card'
-            type: conditional
 
             #  Mini Media Player Card:
             #  https://github.com/kalkih/mini-media-player
 
-          - entity: media_player.spotify
+          - conditions:
+              - entity: device_tracker.projector
+                state: not_home
+            elements:
+              - artwork: full-cover
+                entity: media_player.spotify_luke
+                hide:
+                  power: true
+                  progress: false
+                  runtime: false
+                  volume: true
+                style: |
+                  :host {
+                    left: 46% !important;
+                    top: 39.8% !important;
+                    width: 33% !important;
+                    height: 62.3% !important;
+                  }
+                  ha-card{
+                    border-radius: 1vw !important;
+                    overflow: hidden !important;
+                    height: 100%;
+                  }
+                type: 'custom:mini-media-player'
+            type: conditional
+
+            # Spotify Playlists Card:
+            # https://github.com/dnguyen800/spotify-playlist-card
+            # I like this one that uses a sensor, as you dont need to keep activating it
+
+          - conditions:
+              - entity: device_tracker.projector
+                state: not_home
+            elements:
+              - columns: 3
+                playback_method: spotify
+                sensor: sensor.spotify_playlist
+                show_playlist_titles: true
+                shuffle: true
+                style:
+                  left: 79.5%
+                  top: 40%
+                  width: 29%
+                type: 'custom:spotify-playlist-card'
+            type: conditional
+
+
+            ###########################################################################
+            #                                                                         #
+            #          IF PROJECTOR IS ON, SHOW PLEX & RECENTLY ADDED:                #
+            #                                                                         #
+            ###########################################################################
+
+            # Mini Media Player Card:
+            # https://github.com/kalkih/mini-media-player
+
+          - conditions:
+              - entity: device_tracker.projector
+                state_not: not_home
+              - entity: media_player.spotify_luke
+                state_not: playing
+            elements:
+              - artwork: cover
+                entity: media_player.plex_projector
+                hide:
+                  icon: true
+                  mute: false
+                  power: true
+                  power_state: true
+                info: short
+                style: |
+                  :host {
+                    border-radius: 1vw;
+                    overflow: hidden;
+                    height: 300px;
+                    box-shadow: none !important;
+                    left: 50% !important;
+                    top: 43% !important;
+                    width: 42.3% !important;
+                    height: 66%
+                  }
+                  ha-card {
+                    border-radius: 1vw;
+                    height: 100%;
+                    overflow: hidden !important;
+                    box-shadow: none !important;
+                  }
+                type: 'custom:mini-media-player'
+            type: conditional
+
+
+            # Upcoming Media Card:
+            # https://github.com/custom-cards/upcoming-media-card
+
+            # Enabled by, Plex Recently Added Sensor:
+            # https://github.com/custom-components/sensor.plex_recently_added
+
+          - conditions:
+              - entity: device_tracker.projector
+                state_not: not_home
+              - entity: media_player.spotify_luke
+                state_not: playing
+            elements:
+              - entity: sensor.recently_added_tv
+                style:
+                  left: 84%
+                  top: 25%
+                  width: 18%
+                title: Recently Added Tv
+                type: 'custom:upcoming-media-card'
+            type: conditional
+          - conditions:
+              - entity: device_tracker.projector
+                state_not: not_home
+              - entity: media_player.spotify_luke
+                state_not: playing
+            elements:
+              - entity: sensor.recently_added_movies
+                style:
+                  left: 84%
+                  top: 59.5%
+                  width: 18%
+                title: Recently Added Movies
+                type: 'custom:upcoming-media-card'
+            type: conditional
+
+            #################################################################
+            #                                                               #
+            #                             SIDEBAR                           #
+            #                                                               #
+            #################################################################
+
+          - action: none
+            hold_action:
+              action: none
+            image: /local/ui/sidebar/sidebarBG2.png
+            style:
+              height: 100%
+              left: 11.73828125%
+              top: 50%
+              width: 23.4765625%
+            tap_action:
+              action: none
+            type: image
+          - entity: sensor.time
+            hold_action:
+              action: none
+            style:
+              color: 'rgba(255, 255, 255, 0.7)'
+              font-size: 5.41vw
+              font-weight: 200
+              left: 2.7%
+              letter-spacing: '-0.05vw'
+              max-width: 1px
+              top: 10%
+            tap_action:
+              action: none
+            type: state-label
+          - entity: sensor.date_string
+            hold_action:
+              action: none
+            style:
+              color: 'rgba(255, 255, 255, 0.3)'
+              font-size: 1.3vw
+              font-weight: 300
+              left: 18.1%
+              letter-spacing: '-0.05vw'
+              text-align: left
+              top: 17%
+              width: 30%
+            tap_action:
+              action: none
+            type: state-label
+          - action: none
+            image: /local/ui/sidebar/rooms_off.png
+            style:
+              border-radius: 5vw
+              left: 11.7%
+              top: 26%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/0
+            type: image
+          - action: none
+            image: /local/ui/sidebar/cleanUp_off.png
+            style:
+              left: 11.7%
+              top: 34%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            type: image
+          - action: none
+            image: /local/ui/sidebar/all_off.png
+            style:
+              left: 11.7%
+              top: 42%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/2
+            type: image
+          - action: none
+            image: /local/ui/sidebar/media_on.png
+            style:
+              box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
+              left: 11.7%
+              top: 50%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/3
+            type: image
+          - style:
+              color: white
+              font-size: 1vw
+              font-weight: 300
+              left: 8.8%
+              opacity: 0
+              top: 66%
+              width: 10%
+            text: 'People at home:'
+            type: 'custom:text-element'
+          - action: none
+            entity: person.luke_vink
+            state_image:
+              home: /local/people/luke.png
+              not_home: /local/people/lukeGone.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border-radius: 10vw
+              height: 4.5vw
+              left: 5.8%
+              top: 72%
+              width: 4.5vw
+            tap_action: null
+            type: image
+          - action: none
+            entity: person.santa_stibe
+            state_image:
+              home: /local/people/santa.png
+              not_home: /local/people/santaGone.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border-radius: 10vw
+              height: 4.5vw
+              left: 10.8%
+              top: 72%
+              width: 4.5vw
+            tap_action: null
+            type: image
+          - action: none
+            image: /local/transparent.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
+              border-radius: 10vw
+              height: 4.2vw
+              left: 15.9%
+              top: 72.2%
+              width: 4.2vw
+            tap_action: null
+            type: image
+          - action: none
+            image: /local/transparent.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
+              border-radius: 10vw
+              height: 4.2vw
+              left: 21.1%
+              top: 72.2%
+              width: 4.2vw
+            tap_action: null
+            type: image
+          - color_thresholds:
+              - color: '#4dd2ff'
+                value: 10
+              - color: '#ffa31a'
+                value: 15
+              - color: '#ff1a1a'
+                value: 20
+            entities:
+              - sensor.stairs_detector_temperature
+              - sensor.buienradar_ground_temperature
+            icon: 'mdi:home-thermometer-outline'
+            show:
+              icon: true
+              legend: false
+              name: false
+            style: |
+              :host {
+                left: 11.6%;
+                top:  92.9%;
+                width: 23.5%;
+                overflow: hidden;
+                height: 15%;
+                background: none  !important;
+                box-shadow: none !important;
+              }
+              .header {
+                font-size: 1vw;
+                position: absolute !important;
+                width: 5% !important;
+                padding: 0 !important;
+                right: 20% !important;
+                top: 15% !important;
+              }
+              ha-card {
+                background: none  !important;
+                padding: 0 !important;
+              }
+              .icon > ha-icon {
+                width:1.8vw !important;
+                height:1.8vw !important;
+              }
+              .state__time{
+                font-size:0.9vw !important;
+                margin-top: 0.2vw;
+                font-weight: 300 !important;
+                opacity: 0.4 !important;
+              }
+              .states {
+                font-size: 0.5vw !important;
+                padding: 1vw 0vw 0vw 0vw  !important;
+                margin: auto !important;
+                width: 68%;
+              }
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/4
+            type: 'custom:mini-graph-card'
+          - backdrop: false
+            entity: weather.buienweather
+            name: ' '
+            style: |
+              :host {
+                left: 11.4%;
+                top:  85.5%;
+                width: 17%;
+                height: 7% !important;
+                overflow: hidden;
+                height: 8.5vw;
+                background: none  !important;
+                box-shadow: none !important;
+                font-size: 1vw !important;
+              }
+              ha-card {
+                background: none  !important;
+                box-shadow: none !important;
+                flex-flow: row-reverse !important;
+                padding: 0 !important;
+              }
+              .weather__info--add{
+                display : none !important;
+              }
+              .weather__info{
+                flex-grow: 1;
+                min-height: 0 !important;
+                height: 2.4vw;
+                margin-left: 0.6vw;
+              }
+              .weather__icon{
+                margin-right:0.5% !important;
+                margin-top: -3%;
+                width: 2vw !important;
+                height: 2vw !important;
+                flex: 0 0 2vw !important;
+              }
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/4
+            type: 'custom:simple-weather-card'
+          - action: none
+            image: /local/ui/sidebar/sideShadow.png
+            style:
+              height: 35%
+              left: 18.45%
+              pointer-events: none
+              top: 83%
+              width: 10%
+            type: image
+          - action: none
+            image: /local/ui/sidebar/sidebarInnerShadow.png
+            style:
+              left: 22.83%
+              opacity: 0.7
+              pointer-events: none
+              top: 50%
+              width: 1.2109375%
+            type: image
+          - entity: media_player.spotify_luke
             hide:
               controls: true
               name: true
@@ -4375,7 +4114,7 @@ views:
             style: |
               :host {
                 left: 11.7%;
-                top:  57.9%;
+                top:  49.5%;
                 width: 20.5078125%;
                 border-radius: 5vw;
                 overflow: hidden;
@@ -4474,497 +4213,7 @@ views:
             tap_action:
               action: null
             type: 'custom:mini-media-player'
-
-
-
-
-            ###########################################################################
-            #                                                                         #
-            #               IF PLEX IS ON, SHOW PLEX & RECENTLY ADDED:                #
-            #                                                                         #
-            ###########################################################################
-
-            # Mini Media Player Card:
-            # https://github.com/kalkih/mini-media-player
-
-          - conditions:
-              - entity: media_player.plex_projector
-                state_not: unavailable
-            elements:
-              - artwork: cover
-                entity: media_player.plex_projector
-                hide:
-                  icon: true
-                  mute: false
-                  power: true
-                  power_state: true
-                info: short
-                style: |
-                  :host {
-                    border-radius: 1vw;
-                    overflow: hidden;
-                    height: 300px;
-                    box-shadow: none !important;
-                    left: 47.5% !important;
-                    top: 50% !important;
-                    width: 36.3% !important;
-                    height: 78%
-                  }
-                  ha-card {
-                    border-radius: 1vw;
-                    height: 100%;
-                    overflow: hidden !important;
-                    box-shadow: none !important;
-                  }
-                type: 'custom:mini-media-player'
-            type: conditional
-
-            # Upcoming Media Card:
-            # https://github.com/custom-cards/upcoming-media-card
-
-            # Enabled by, Plex Recently Added Sensor:
-            # https://github.com/custom-components/sensor.plex_recently_added
-
-          - conditions:
-              - entity: media_player.plex_projector
-                state_not: unavailable
-            elements:
-              - entity: sensor.recently_added_tv
-                style:
-                  left: 81%
-                  top: 30%
-                  width: 22%
-                title: Recently Added Tv
-                type: 'custom:upcoming-media-card'
-            type: conditional
-          - conditions:
-              - entity: media_player.plex_projector
-                state_not: unavailable
-            elements:
-              - entity: sensor.recently_added_movies
-                style:
-                  left: 81%
-                  top: 70%
-                  width: 22%
-                title: Recently Added Movies
-                type: 'custom:upcoming-media-card'
-            type: conditional
-
-
-            #################################################################
-            #                                                               #
-            #                             SIDEBAR                           #
-            #                                                               #
-            #################################################################
-
-          - action: none
-            hold_action:
-              action: none
-            image: /local/ui/sidebarBG2.png
-            style:
-              height: 100%
-              left: 11.73828125%
-              top: 50%
-              width: 23.4765625%
-            tap_action:
-              action: none
-            type: image
-          - entity: sensor.time
-            hold_action:
-              action: none
-            style:
-              color: 'rgba(255, 255, 255, 0.7)'
-              font-size: 5.41vw
-              font-weight: 200
-              left: 2.7%
-              letter-spacing: '-0.05vw'
-              max-width: 1px
-              top: 10%
-            tap_action:
-              action: none
-            type: state-label
-          - entity: sensor.date_string
-            hold_action:
-              action: none
-            style:
-              color: 'rgba(255, 255, 255, 0.3)'
-              font-size: 1.3vw
-              font-weight: 300
-              left: 18.1%
-              letter-spacing: '-0.05vw'
-              text-align: left
-              top: 17%
-              width: 30%
-            tap_action:
-              action: none
-            type: state-label
-
-            #########################    MENU BUTTONS    #########################
-
-          - action: none
-            image: /local/ui/side/rooms_off.png
-            style:
-              border-radius: 5vw
-              box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
-              left: 11.7%
-              top: 26%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/0
-            type: image
-          - action: none
-            image: /local/ui/side/lights_off.png
-            style:
-              left: 11.7%
-              top: 34%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/1
-            type: image
-          - action: none
-            image: /local/ui/side/cleanUp_off.png
-            style:
-              left: 11.7%
-              top: 42%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/2
-            type: image
-          - action: none
-            image: /local/ui/side/all_off.png
-            style:
-              left: 11.7%
-              top: 50%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/3
-            type: image
-          - action: none
-            image: /local/ui/side/media_on.png
-            style:
-              left: 11.7%
-              top: 58%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/4
-            type: image
-
-            #########################    PEOPLE    #########################
-
-          - style:
-              color: white
-              font-size: 1vw
-              font-weight: 300
-              left: 8.8%
-              opacity: 0
-              top: 66%
-              width: 10%
-            text: 'People at home:'
-            type: 'custom:text-element'
-          - action: none
-            entity: person.luke_vink
-            state_image:
-              home: /local/people/luke.png
-              not_home: /local/people/lukeGone.png
-            style:
-              background-color: 'rgba(255, 255, 255, 0.0)'
-              border-radius: 10vw
-              height: 4.5vw
-              left: 5.8%
-              top: 72%
-              width: 4.5vw
-            tap_action: null
-            type: image
-          - action: none
-            entity: person.santa_stibe
-            state_image:
-              home: /local/people/santa.png
-              not_home: /local/people/santaGone.png
-            style:
-              background-color: 'rgba(255, 255, 255, 0.0)'
-              border-radius: 10vw
-              height: 4.5vw
-              left: 10.8%
-              top: 72%
-              width: 4.5vw
-            tap_action: null
-            type: image
-          - action: none
-            image: /local/transparent.png
-            style:
-              background-color: 'rgba(255, 255, 255, 0.0)'
-              border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
-              border-radius: 10vw
-              height: 4.2vw
-              left: 15.9%
-              top: 72.2%
-              width: 4.2vw
-            tap_action: null
-            type: image
-          - action: none
-            image: /local/transparent.png
-            style:
-              background-color: 'rgba(255, 255, 255, 0.0)'
-              border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
-              border-radius: 10vw
-              height: 4.2vw
-              left: 21.1%
-              top: 72.2%
-              width: 4.2vw
-            tap_action: null
-            type: image
-
-            #########################    TEMPERATURE GRAPH (INSIDE / OUTSIDE)    #########################
-
-          - color_thresholds:
-              - color: '#4dd2ff'
-                value: 10
-              - color: '#ffa31a'
-                value: 15
-              - color: '#ff1a1a'
-                value: 20
-            entities:
-              - sensor.stairs_detector_temperature
-              - sensor.buienradar_ground_temperature
-            icon: 'mdi:home-thermometer-outline'
-            show:
-              icon: true
-              legend: false
-              name: false
-            style: |
-              :host {
-                left: 11.6%;
-                top:  92.9%;
-                width: 23.5%;
-                overflow: hidden;
-                height: 15%;
-                background: none  !important;
-                box-shadow: none !important;
-              }
-              .header {
-                font-size: 1vw;
-                position: absolute !important;
-                width: 5% !important;
-                padding: 0 !important;
-                right: 20% !important;
-                top: 15% !important;
-              }
-              ha-card {
-                background: none  !important;
-                padding: 0 !important;
-              }
-              .icon > ha-icon {
-                width:1.8vw !important;
-                height:1.8vw !important;
-              }
-              .state__time{
-                font-size:0.9vw !important;
-                margin-top: 0.2vw;
-                font-weight: 300 !important;
-                opacity: 0.4 !important;
-              }
-              .states {
-                font-size: 0.5vw !important;
-                padding: 1vw 0vw 0vw 0vw  !important;
-                margin: auto !important;
-                width: 68%;
-              }
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/5
-            type: 'custom:mini-graph-card'
-
-            #########################    WEATHER SIDEBAR CARD    #########################
-
-          - backdrop: false
-            entity: weather.buienweather
-            name: ' '
-            style: |
-              :host {
-                left: 11.4%;
-                top:  85.5%;
-                width: 17%;
-                height: 7% !important;
-                overflow: hidden;
-                height: 8.5vw;
-                background: none  !important;
-                box-shadow: none !important;
-                font-size: 1vw !important;
-              }
-              ha-card {
-                background: none  !important;
-                box-shadow: none !important;
-                flex-flow: row-reverse !important;
-                padding: 0 !important;
-              }
-              .weather__info--add{
-                display : none !important;
-              }
-              .weather__info{
-                flex-grow: 1;
-                min-height: 0 !important;
-                height: 2.4vw;
-                margin-left: 0.6vw;
-              }
-              .weather__icon{
-                margin-right:0.5% !important;
-                margin-top: -3%;
-                width: 2vw !important;
-                height: 2vw !important;
-                flex: 0 0 2vw !important;
-              }
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/5
-            type: 'custom:simple-weather-card'
-
-            #########################    VISUAL SHADOW OVERLAYS    #########################
-
-          - action: none
-            image: /local/ui/side/sideShadow.png
-            style:
-              height: 35%
-              left: 18.45%
-              pointer-events: none
-              top: 83%
-              width: 10%
-            type: image
-          - action: none
-            image: /local/ui/side/sidebarInnerShadow.png
-            style:
-              left: 22.83%
-              opacity: 0.7
-              pointer-events: none
-              top: 50%
-              width: 1.2109375%
-            type: image
-
-            #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
-
-          - entity: media_player.spotify
-            hide:
-              controls: true
-              name: true
-              power: true
-              source: true
-              volume: true
-            idle_view:
-              after: 0.1
-              when_idle: true
-              when_paused: true
-              when_standby: true
-            style: |
-              :host {
-                left: 11.7%;
-                top:  57.9%;
-                width: 20.5078125%;
-                border-radius: 5vw;
-                overflow: hidden;
-                height: 3.8vw;
-                box-shadow: none !important;
-              }
-              ha-card {
-                border-radius: 5vw;
-                overflow: hidden !important;
-                box-shadow: none !important;
-                padding: 0.1vw 0.9vw 0.7vw 1.05vw !important;
-              }
-              ha-card.--inactive .mmp-player{
-                opacity: 0 !important;
-              }
-              .entity__info{
-                height: 2.6vw;
-                width: 65% !important;
-                max-height: 20vw !important;
-                font-size: 0.9vw !important;
-                margin:0 0 0 1.04vw !important;
-                display: inline-block !important;
-              }
-              div.mmp__bg{
-                background: #1E2022;
-              }
-              ha-card.--inactive div.mmp__bg{
-                background: none;
-              }
-              div.mmp-player {
-                padding: 0vw;
-                height: 100%;
-              }
-              ha-card {
-                height: 100%;
-              }
-              mmp-powerstrip {
-                width: 100%;
-                display: block;
-                padding:0;
-              }
-              ha-icon{
-                display: block !important;
-                height: 2vw !important;
-                width: 2vw !important;
-                margin: 0.3vw 1.5vw 0 0vw !important;
-              }
-              .entity__icon{
-                float:right;
-                padding: 0.1vw;
-                width: 3vw !important;
-                height: 3vw !important;
-                min-width: 0 !important;
-                min-height: 0 !important;
-                margin:0 !important;
-                display: inline-block !important;
-              }
-
-              .mmp-player__core {
-                height: auto;
-                width: 100% !important;
-                margin-bottom: 0.1vw;
-                display: block !important;
-                position: absolute !important;
-                bottom: 0;
-              }
-
-              .entity__info__media{
-                max-height: 20vw !important;
-              }
-              .entity__info__media span::before{
-                content: none !important
-              }
-              .attr__media_title{
-                display:block;
-                color: white;
-                font-weight: 300;
-                font-size: 1.2vw !important;
-              }
-              .attr__media_artist{
-                font-size: 0.8vw !important;
-                font-weight: 200;
-                color: white;
-              }
-              .entity__artwork{
-                display:inline-block;
-                float: right;
-                margin-right: 0 !important;
-                display: inline-block;
-                float: right;
-                width: 2.2vw !important;
-                height: 2.2vw !important;
-                min-width: 0 !important;
-                margin: 0.2vw 1vw 0 0 !important;
-              }
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/4
-            type: 'custom:mini-media-player'
-
-
-
-        image: /local/ui/blurredFloorplan.png
+        image: /local/ui/floorplan/blurredFloorplan.png
         style: |
           ha-card {
             background: rgba(42, 46, 48, 1)
@@ -4977,7 +4226,7 @@ views:
                   padding:0 !important;
                 }
                 .rece_poster{
-                  width: 32% !important;
+                  width: 31% !important;
                   display: inline-block !important;
                   margin: 0% 0.2% !important;
                 }
@@ -5002,39 +4251,21 @@ views:
                   padding: 0;
                 }
         type: picture-elements
-    icon: 'mdi:play-circle'
+
+
+
+
+
+  - title: Weather
+    icon: 'mdi:white-balance-sunny'
     panel: true
-    title: Media
-
-
-          #############################################################################################################################################
-          #                                                                                                                                           #
-          #                                                            Weather & Rain View                                                            #
-          #                                                                                                                                           #
-          #############################################################################################################################################
-
-
-  - badges: []
+    badges: []
     cards:
       - elements:
-
-            #################################################################
-            #                                                               #
-            #                            WEATHER & RAIN                     #
-            #                                                               #
-            #################################################################
-
-            ###########################################################################
-            #                                                                         #
-            #                           BUIEN RAIN FORECAST:                          #
-            #   https://github.com/lukevink/home-assistant-buienradar-forecast-card   #
-            #                                                                         #
-            ###########################################################################
-
           - fillColor: 'rgba(89, 160, 238, 0.2)'
-            lat: !secret home_latitude
-            long: !secret home_longitude
+            lat: 53.361455
             lineColor: 'rgba(89, 160, 238, 1)'
+            long: 6.866892
             style: |
               :host {
                 left: 60.5%;
@@ -5063,16 +4294,7 @@ views:
                   padding: 0 !important;
                   margin: 0 !important;
               }
-            type: 'custom:buien-rain-forecast'
-
-            ###########################################################################
-            #                                                                         #
-            #                          CUSTOM WEATHER CARD:                           #
-            #              https://github.com/bramkragten/weather-card                #
-            #                                                                         #
-            ###########################################################################
-
-
+            type: 'custom:rain-card'
           - current: true
             details: true
             entity: weather.buienweather
@@ -5112,17 +4334,10 @@ views:
                 border-right: 0.1em solid #d9d9d9;
               }
             type: 'custom:weather-card'
-
-            #################################################################
-            #                                                               #
-            #                             SIDEBAR                           #
-            #                                                               #
-            #################################################################
-
           - action: none
             hold_action:
               action: none
-            image: /local/ui/sidebarBG2.png
+            image: /local/ui/sidebar/sidebarBG2.png
             style:
               height: 100%
               left: 11.73828125%
@@ -5160,14 +4375,10 @@ views:
             tap_action:
               action: none
             type: state-label
-
-            #########################    MENU BUTTONS    #########################
-
           - action: none
-            image: /local/ui/side/rooms_off.png
+            image: /local/ui/sidebar/rooms_off.png
             style:
               border-radius: 5vw
-              box-shadow: '0px 0.2vw 0.8vw 0px rgba(0,0,0,0.1)'
               left: 11.7%
               top: 26%
               width: 20.5078125%
@@ -5176,7 +4387,7 @@ views:
               navigation_path: /lovelace/0
             type: image
           - action: none
-            image: /local/ui/side/lights_off.png
+            image: /local/ui/sidebar/cleanUp_off.png
             style:
               left: 11.7%
               top: 34%
@@ -5186,7 +4397,7 @@ views:
               navigation_path: /lovelace/1
             type: image
           - action: none
-            image: /local/ui/side/cleanUp_off.png
+            image: /local/ui/sidebar/all_off.png
             style:
               left: 11.7%
               top: 42%
@@ -5196,7 +4407,7 @@ views:
               navigation_path: /lovelace/2
             type: image
           - action: none
-            image: /local/ui/side/all_off.png
+            image: /local/ui/sidebar/media_off.png
             style:
               left: 11.7%
               top: 50%
@@ -5205,19 +4416,6 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: image
-          - action: none
-            image: /local/ui/side/media_off.png
-            style:
-              left: 11.7%
-              top: 58%
-              width: 20.5078125%
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace/4
-            type: image
-
-            #########################    PEOPLE    #########################
-
           - style:
               color: white
               font-size: 1vw
@@ -5280,9 +4478,6 @@ views:
               width: 4.2vw
             tap_action: null
             type: image
-
-            #########################    TEMPERATURE GRAPH (INSIDE / OUTSIDE)    #########################
-
           - color_thresholds:
               - color: '#4dd2ff'
                 value: 10
@@ -5338,11 +4533,8 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/5
+              navigation_path: /lovelace/4
             type: 'custom:mini-graph-card'
-
-            #########################    WEATHER SIDEBAR CARD    #########################
-
           - backdrop: false
             entity: weather.buienweather
             name: ' '
@@ -5382,13 +4574,10 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/5
+              navigation_path: /lovelace/4
             type: 'custom:simple-weather-card'
-
-            #########################    VISUAL SHADOW OVERLAYS    #########################
-
           - action: none
-            image: /local/ui/side/sideShadow.png
+            image: /local/ui/sidebar/sideShadow.png
             style:
               height: 35%
               left: 18.45%
@@ -5397,7 +4586,7 @@ views:
               width: 10%
             type: image
           - action: none
-            image: /local/ui/side/sidebarInnerShadow.png
+            image: /local/ui/sidebar/sidebarInnerShadow.png
             style:
               left: 22.83%
               opacity: 0.7
@@ -5405,10 +4594,7 @@ views:
               top: 50%
               width: 1.2109375%
             type: image
-
-            #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
-
-          - entity: media_player.spotify
+          - entity: media_player.spotify_luke
             hide:
               controls: true
               name: true
@@ -5423,7 +4609,7 @@ views:
             style: |
               :host {
                 left: 11.7%;
-                top:  57.9%;
+                top: 49.5%;
                 width: 20.5078125%;
                 border-radius: 5vw;
                 overflow: hidden;
@@ -5521,15 +4707,11 @@ views:
               }
             tap_action:
               action: navigate
-              navigation_path: /lovelace/4
+              navigation_path: /lovelace/3
             type: 'custom:mini-media-player'
-
-        image: /local/ui/blurredFloorplan.png
+        image: /local/ui/floorplan/blurredFloorplan.png
         style: |
           ha-card {
             background: rgba(42, 46, 48, 1)
           }
         type: picture-elements
-    icon: 'mdi:white-balance-sunny'
-    panel: true
-    title: Weather

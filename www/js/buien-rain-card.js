@@ -1,3 +1,5 @@
+
+
 class RainCard extends HTMLElement {
 
   constructor() {
@@ -223,7 +225,7 @@ class RainCard extends HTMLElement {
   }
 }
 
-customElements.define('buien-rain-forecast', RainCard);
+customElements.define('rain-card', RainCard);
 
 
 /*!

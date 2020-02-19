@@ -1,3 +1,69 @@
+
+
+navigate_to_lights:
+  alias: 'Navigate - Lights'
+  sequence:
+    - service: browser_mod.navigate
+      data:
+        navigation_path: /lovelace/1
+        deviceID:
+          - e3bcb892-264fae95
+          - 0290dd82-2a03ce63
+          - tablet
+
+
+navigate_to_cleanup:
+  alias: 'Navigate - Cleanup'
+  sequence:
+    - service: browser_mod.navigate
+      data:
+        navigation_path: /lovelace/2
+        deviceID:
+          - e3bcb892-264fae95
+          - 0290dd82-2a03ce63
+          - tablet
+
+navigate_to_media:
+  alias: 'Navigate - Media'
+  sequence:
+    - service: browser_mod.navigate
+      data:
+        navigation_path: /lovelace/4
+        deviceID:
+          - e3bcb892-264fae95
+          - 0290dd82-2a03ce63
+          - tablet
+
+navigate_to_weather:
+  alias: 'Navigate - Weather'
+  sequence:
+    - service: browser_mod.navigate
+      data:
+        navigation_path: /lovelace/5
+        deviceID:
+          - e3bcb892-264fae95
+          - 0290dd82-2a03ce63
+          - tablet
+
+## Switch Audio when projector is turned on
+
+audio_input_projector:
+  alias: 'Set Audio: Projector'
+  sequence:
+    - service: broadlink.send
+      data:
+        host: 192.168.178.185
+        packet: 'JgBYAAABJ5UUERMTFRAVERIUFBETExI4FRATExURFBESOBU1FTUSFBMSFTUSFBM3EhQSExQ2EzcSOBQREzgSExM3EjgTEhMUEAAFpwABKEoTAAxVAAEnSxUADQU==='
+        
+audio_input_bluetooth:
+  alias: 'Set Audio: Bluetooth'
+  sequence:
+    - service: broadlink.send
+      data:
+        host: 192.168.178.185
+        packet: 'JgBYAAABKpEVERIUFBETExUQFRIRFBQ2FBIRFBQRExMVNRU1EjgVEBUREjgVNRU1EhQUERU2ETgVNRUREhMVERI4EzcUERMTFAAFpAABKkgSAAxWAAEnSxMADQU==='
+
+
 ####  Only one media player play at a time ####  
 plex_moviestarted:
   alias: 'Pause Music'
