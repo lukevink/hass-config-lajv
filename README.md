@@ -24,6 +24,12 @@ I first designed my whole UI in [Pixelmator](https://www.pixelmator.com/) so tha
 The image transparent.png is used on state_image picture-elements to hide elements if not needed, though this was used before I realised I could conditionally display elements :) - will update this soon to clean it up.
 
 
+
+## Beginners warning 
+
+This config is not the simplest config to copy and paste. If you try to run my exact config you will have issues until you replace all mentions of my light instances (and other entities) with your own. The floorplan views for example, relies on custom-config-template.js which will throw errors if you try to access light entities that aren't in your system. I recommend at least replacing all light entities with some of your own to start with, then customizing the view for each of your own.
+
+
 ## The sidebar
 
 Note, the sidebar is repeated across every view in the lovelace.yaml file and includes buttons for the views.
