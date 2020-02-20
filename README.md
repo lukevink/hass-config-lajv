@@ -29,6 +29,8 @@ The image transparent.png is used on state_image picture-elements to hide elemen
 
 This config is not the simplest config to copy and paste. If you try to run my exact config you will have issues until you replace all mentions of my light instances (and other entities) with your own. The floorplan views for example, relies on custom-config-template.js which will throw errors if you try to access light entities that aren't in your system. I recommend at least replacing all light entities with some of your own to start with, then customizing the view for each of your own.
 
+Knowing a bit of CSS will help here too. Because the config is picture-elements based, each card is styled heavily with CSS. If something doesnt appear right, its probably to do with CSS. Note: Only the floorplan view is designed to scale with resolution, other views may look funky on different sized screens.
+
 
 ## The sidebar
 
