@@ -58,10 +58,14 @@ Note, the sidebar is repeated across every view in the lovelace.yaml file and in
 
 ![mapped-lights-info1.png](https://github.com/lukevink/hass-config-lajv/blob/master/previews/mapped-lights-info1.png?raw=true)
 
-Individual Lights:
+
+**Config Template Card:**
+This approach relies on config-template-card. The picture elements card is wrapped inside a config-template-card. All entites used are listed on the config card so that they can be passed to the templates used in CSS. To understand why, check: https://github.com/iantrich/config-template-card
+
+**Individual Lights:**
 To have multiple lights overlayed on top of each other, the solution is actually pretty simple. You render an image for each individual light and use the CSS property filter mix-blend-mode: lighten. This will make sure only the “light” part of the image is shown, and will blend together any amount of images on top.
 
-Hue and Opacity
+**Hue and Opacity**
 To map one of your light images to the actual live RGB color of the bulb, you can use the following CSS template style which will adjust the hue rotation to the hue of the bulb (in this case, light.table):
 ```yaml
 style:
