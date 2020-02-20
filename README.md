@@ -9,6 +9,7 @@
 ## Features
 
 * Dynamic 3D Floorplan: Hue and Brightness mapped individual lights with custom popup controller.
+* Dynamic floorplan view, adjusts brightness based on calculated brightness of the sun
 * Less cluttered interface displaying [more information](https://github.com/thomasloven/hass-browser_mod#popup) on a [long press](https://www.home-assistant.io/lovelace/picture-elements/#hold_action), inspired by [Mattias Persson](https://github.com/matt8707/hass-config).
 * Custom rain card to display predicted rain in the next 2 hours - [seperate repo here](https://github.com/lukevink/home-assistant-buienradar-forecast-card)
 * Custom Xiaomi View for rapid room based zone cleanup
