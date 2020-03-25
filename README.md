@@ -1,6 +1,6 @@
 # Home Assistant Configuration
 
-[Hass.io](https://home-assistant.io/) version [0.107.6](https://www.home-assistant.io/blog/2020/03/18/release-107/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
+[Hass.io](https://home-assistant.io/) version [0.107.6](https://www.home-assistant.io/blog/2020/03/18/release-107/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [Fully Kiosk Browser](https://play.google.com/store/apps/details?id=de.ozerov.fully&hl=en).
 
 [Video of Full UI](https://www.youtube.com/watch?v=KcfZc1MXP_A)
 
