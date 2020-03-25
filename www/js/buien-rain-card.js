@@ -1,46 +1,48 @@
-
-
 class RainCard extends HTMLElement {
 
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-  }
-
-  setConfig(config) {
-
-    const root = this.shadowRoot;
-    if (root.lastChild) root.removeChild(root.lastChild);
-
-    var cardIcon;
-    const cardConfig = Object.assign({}, config);
-    if (!cardConfig.icon) cardIcon = 'mdi:weather-rainy';
-    if(cardConfig.icon) cardIcon = cardConfig.icon
-    // Amsterdam by Default
-    if (!cardConfig.long) cardConfig.long = '4.899431';
-    if (!cardConfig.lat) cardConfig.lat = '52.377956';
-    if (!cardConfig.fillColor) cardConfig.fillColor = "rgba(0, 150, 255, 0.21)";
-    if (!cardConfig.lineColor) cardConfig.lineColor = "#0096ff";
+	constructor() {
+		super();
+		this.attachShadow({
+			mode: 'open'
+		});
+	}
+	
+	
+	setConfig(config) {
 
 
-    function hexToRgb(hex) {
-      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null;
-    }
-    
-    const animatedYet = false;
-    const card = document.createElement('ha-card');
-    const content = document.createElement('div');
-    const style = document.createElement('style');
-    const icon = document.createElement('ha-icon');
-    const [prefix, type] = cardIcon.split('.', 2);
-    ['png', 'jpg', 'svg', 'gif'].includes(type)?icon.src = cardIcon:icon.icon = cardIcon;
-    
-    style.textContent = `
+		const root = this.shadowRoot;
+		if (root.lastChild) root.removeChild(root.lastChild);
+
+		var cardIcon;
+		const cardConfig = Object.assign({}, config);
+		if (!cardConfig.icon) cardIcon = 'mdi:weather-rainy';
+		if (cardConfig.icon) cardIcon = cardConfig.icon
+		// Amsterdam by Default
+		if (!cardConfig.long) cardConfig.long = '4.899431';
+		if (!cardConfig.lat) cardConfig.lat = '52.377956';
+		if (!cardConfig.fillColor) cardConfig.fillColor = "rgba(0, 150, 255, 0.21)";
+		if (!cardConfig.lineColor) cardConfig.lineColor = "#0096ff";
+
+		function hexToRgb(hex) {
+			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			return result ? {
+				r: parseInt(result[1], 16),
+				g: parseInt(result[2], 16),
+				b: parseInt(result[3], 16)
+			} : null;
+		}
+
+		const animatedYet = false;
+		const card = document.createElement('ha-card');
+		const content = document.createElement('div');
+		const style = document.createElement('style');
+		const icon = document.createElement('ha-icon');
+		const [prefix, type] = cardIcon.split('.', 2);
+		['png', 'jpg', 'svg', 'gif'].includes(type) ? icon.src = cardIcon : icon.icon = cardIcon;
+
+		style.textContent =
+			`
         ha-card {
           position: relative;
           ${cardConfig.style}
@@ -54,178 +56,261 @@ class RainCard extends HTMLElement {
           padding: 20px 30px 10px 20px;
         }
       `;
-    content.id = 'container';
-    card.header = cardConfig.title;
-    card.appendChild(content);
-    card.appendChild(style);
-    if(cardConfig.icon) card.appendChild(icon);
-    root.appendChild(card);
-    this._config = cardConfig;
-  }
+		content.id = 'container';
+		card.header = cardConfig.title;
+		card.appendChild(content);
+		card.appendChild(style);
+		if (cardConfig.icon) card.appendChild(icon);
+		root.appendChild(card);
+		
+		this.update_interval = config.update_interval || 20;
+		this.lat = config.lat;
+		this.long = config.long;
+		this.lineColor = config.lineColor;
+		this.fillColor = config.fillColor;
+		this._config = cardConfig;
+		
+		this.result = [];
+		this.time = [];
+		this.rainfall = [];
+		this.drawGraph = true;
+		
+		this.initconfig = {
+			type: 'line',
+			data: {
+				labels: this.time,
+				datasets: [{
+					label: "Rain",
+					borderColor:  this._config.lineColor,
+					backgroundColor:  this._config.fillColor,
+					fill: true,
+					data: this.rainfall
+				}]
+			},
+			options: {
+				tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + ' %' %>",
+				tooltips: {
+					intersect: false,
+					custom: function(tooltip) {
+						if (!tooltip) return;
+						// disable displaying the color box;
+						tooltip.displayColors = false;
+					},
+					callbacks: {
+						label: function(tooltipItem, data) {
+							var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
-  set hass(hass) {
-    const config = this._config;
-    const root = this.shadowRoot;
+							if (label) {
+								label += ': ';
+							}
+							label += tooltipItem.yLabel.toFixed(2);
+							return label;
+						}
+					}
+				},
+				responsive: true,
+				maintainAspectRatio: false,
+				animation: false,
+				legend: {
+					display: false
+				},
+				elements: {
+					point: {
+						radius: 0
+					}
+				},
+				scales: {
+					xAxes: [{
+						gridLines: {
+							display: false
+						},
+						ticks: {
+							autoSkip: true,
+							maxTicksLimit: 12,
+							display: "top",
+							mirror: true,
+						}
+					}],
+					yAxes: [{
+						gridLines: {
+							display: true
+						},
+						afterTickToLabelConversion: function(scaleInstance) {
+							// set the first and last tick to null so it does not display
+							// note, ticks[0] is the last tick and ticks[length - 1] is the first
+							scaleInstance.ticks[scaleInstance.ticks.length - 1] = null;
+							// need to do the same thing for this similiar array which is used internally
+							scaleInstance.ticksAsNumbers[scaleInstance.ticksAsNumbers.length - 1] = null;
+						},
+						ticks: {
+							suggestedMax: 5.0,
+							max: 5.0,
+							stepSize: 1,
+							mirror: true,
+						}
+					}]
+				}
+			}
+		}
+
+		this.style.display = 'block';
+		root.getElementById('container').innerHTML = '<canvas id="rainchart"></canvas>';
+
+		this.initGraph(root.getElementById('rainchart').getContext('2d'));
+		
+	}
+
+	set hass(hass) {
+
+		const config = this._config;
+		const root = this.shadowRoot;
+		
+
+		root.lastChild.hass = hass;
+
+	}
+
+	initGraph(element) {
+
+		var _this = this;
 
 
-      this.style.display = 'block';
-        root.getElementById('container').innerHTML = '<canvas id="rainchart"></canvas>';
-        
-        var stringVar;
+		// 			console.log(rainfall);
+		// 			console.log(time);
+		
+		var originalLineDraw = Chart.controllers.line.prototype.draw;
+		Chart.helpers.extend(Chart.controllers.line.prototype, {
+			draw: function() {
+				originalLineDraw.apply(this, arguments);
+
+				var chart = this.chart;
+				ctx = chart.chart.ctx;
+
+				if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+					var activePoint = this.chart.tooltip._active[0];
+					var ctx = this.chart.ctx;
+					var x = activePoint.tooltipPosition().x;
+					var topY = this.chart.scales['y-axis-0'].top;
+					var bottomY = this.chart.scales['y-axis-0'].bottom;
+
+					// draw line
+					ctx.save();
+					ctx.beginPath();
+					ctx.moveTo(x, topY);
+					ctx.lineTo(x, bottomY);
+					ctx.lineWidth = 0.5;
+					ctx.strokeStyle = '#eeeeee';
+					ctx.stroke();
+					ctx.restore();
+				}
+			}
+		});
+		
+
+		if(this.drawGraph){
+		
+			this.ctx = element;
+			this.chart = new Chart(this.ctx, this.initconfig);
+
+		
+// 		this.updateGraph();
+			this.updateGraph();
+			setInterval(function() {
+				_this.updateGraph();
+			}, this.update_interval * 1000);
+			this.drawGraph = false;
+		}
+		
+
+	}
 
 
+
+	getData() {
+		
+		
+		var _this = this;
+
+		
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "https://gpsgadget.buienradar.nl/data/raintext?lat="+ config.lat +"&lon=" + config.long);
+		xhr.open("GET", "https://gpsgadget.buienradar.nl/data/raintext?lat=" + this.lat + "&lon=" + this.long);
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
 				// 	    console.log(xhr.response);
-				decodeString(xhr.response, "|", "\n");
-				// handle xhr.response
+				_this.decodeString(xhr.response, "|", "\n");
+
+
 			}
 		}
 		xhr.send();
+	}
+	
 
+	decodeString(str, variable_sep, line_endings) {
 
-		function decodeString(str, variable_sep, line_endings) {
+		// 		console.log('Decode String');
+		this.rainfall = [];
+		this.time = [];
 
-			var result = [];
-			var time = [];
-			var rainfall = [];
-			var lines = str.split(line_endings);
-			for (var i = 0; i < lines.length; i++) {
-				var line = lines[i];
-				var variables = line.split(variable_sep);
+		var lines = str.split(line_endings);
+		for (var i = 0; i < lines.length; i++) {
+			var line = lines[i];
+			var variables = line.split(variable_sep);
 
-				if (variables[1] != null) {
-					rainfall.push(Math.pow(10, ((parseInt(variables[0]) - 109) / 32)));
-					time.push(variables[1]);
-				}
-
+			if (variables[1] != null) {
+				this.rainfall.push(Math.pow(10, ((parseInt(variables[0]) - 109) / 32)));
+				this.time.push(variables[1]);
 			}
-
-// 			console.log(rainfall);
-// 			console.log(time);
-			
-
-			var ctx = root.getElementById('rainchart').getContext('2d');
-			var myChart = new Chart(ctx, {
-				type: 'line',
-				data: {
-			      labels: time,
-			      datasets: [{
-			        label: "Rain",
-			        borderColor: config.lineColor,
-			        backgroundColor: config.fillColor,
-			        fill: true,
-			        data: rainfall
-			      }]
-			    },
-				options: {
-				    tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + ' %' %>",
-				    tooltips: {
-                       intersect: false,
-                       custom: function(tooltip) {
-                          if (!tooltip) return;
-                        // disable displaying the color box;
-                          tooltip.displayColors = false;
-                       },
-                       callbacks: {
-                            label: function(tooltipItem, data) {
-                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
-                    
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += tooltipItem.yLabel.toFixed(2);
-                                return label;
-                            }
-                        }
-                    },
-					responsive: true,
-					maintainAspectRatio: false,
-					animation: false,
-					legend: {
-			            display: false
-			        },
-			        elements: {
-	                    point:{
-	                        radius: 0
-	                    }
-	                },
-					scales: {
-						xAxes: [{
-				            gridLines: {
-				                display:false
-				            },
-				            ticks: {
-                                autoSkip: true,
-                                maxTicksLimit: 12,
-                                display: "top",
-                                mirror: true,
-                            }
-				        }],
-				        yAxes: [{
-				            gridLines: {
-				                display:true
-				            },
-				            afterTickToLabelConversion: function(scaleInstance) {
-                              // set the first and last tick to null so it does not display
-                              // note, ticks[0] is the last tick and ticks[length - 1] is the first
-                              scaleInstance.ticks[scaleInstance.ticks.length - 1] = null;
-                              // need to do the same thing for this similiar array which is used internally
-                              scaleInstance.ticksAsNumbers[scaleInstance.ticksAsNumbers.length - 1] = null;
-                            },
-				            ticks: {
-				                suggestedMax: 5.0,
-                                max: 5.0,
-                                stepSize: 1,
-                                mirror: true,
-                            }
-				        }]
-					}
-				}
-			});
-			
-			var originalLineDraw = Chart.controllers.line.prototype.draw;
-              Chart.helpers.extend(Chart.controllers.line.prototype, {
-                draw: function() {
-                  originalLineDraw.apply(this, arguments);
-        
-                  var chart = this.chart;
-                  var ctx = chart.chart.ctx;
-        
-                if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
-                  var activePoint = this.chart.tooltip._active[0];
-                  var ctx = this.chart.ctx;
-                  var x = activePoint.tooltipPosition().x;
-                  var topY = this.chart.scales['y-axis-0'].top;
-                  var bottomY = this.chart.scales['y-axis-0'].bottom;
-        
-                 // draw line
-                  ctx.save();
-                  ctx.beginPath();
-                  ctx.moveTo(x, topY);
-                  ctx.lineTo(x, bottomY);
-                  ctx.lineWidth = 0.5;
-                  ctx.strokeStyle = '#eeeeee';
-                  ctx.stroke();
-                  ctx.restore();
-               }
-              }});
-
-
 		}
+				
+				this.chart.data = {
+					labels: this.time,
+					datasets: [{
+						label: "Rain",
+						borderColor: this.lineColor,
+						backgroundColor: this.fillColor,
+						fill: true,
+						data: this.rainfall
+					}]
+				}
+				this.chart.update();
 
-      root.lastChild.hass = hass;
+		
+// 			if(this.chart.data.labels != this.time){
+/*
+				this.chart.data.labels = this.time;
+				this.chart.data.datasets[0].data = this.rainfall;
+				this.chart.update();
+*/
+// 			}
 
-  }
+	}
 
-  getCardSize() {
-    return 1;
-  }
+
+	updateGraph() {
+
+		this.getData();
+
+	}
+
+
+
+
+	getCardSize() {
+		return 1;
+	}
 }
 
-customElements.define('rain-card', RainCard);
+customElements.define('buien-rain-forecast', RainCard);
+
+console.info(
+  `%cBUIEN-RAIN-CARD\n%cVersion: 0.0.2`,
+  "color: green; font-weight: bold;",
+  ""
+);
+
+
+
 
 
 /*!

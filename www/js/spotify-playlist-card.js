@@ -95,9 +95,6 @@ class SpotifyPlaylistCard extends HTMLElement {
       </div>
       `;
       
-      if (config.show_title) {
-        card.header = cardConfig.title;
-      }
       card.appendChild(content);
       card.appendChild(style);
       root.appendChild(card);

@@ -15,8 +15,8 @@ custom_header:
       config:
         hidden_tab_redirect: false
         kiosk_mode: true
-
-
+        
+        
 resources:
 
     ###### CUSTOM CARDS / COMPONENTS #####
@@ -24,11 +24,11 @@ resources:
   - type: module
     url: /local/js/card-mod.js
   - type: module
-    url: /local/js/custom-header.js
+    url: /local/js/custom-header.js?v=1.3.2
   - type: js
     url: /local/js/text-element.js?v=0.0.2
   - type: module
-    url: /local/js/config-template-card.js
+    url: /local/js/config-template-card.js?v=1.1.2
   - type: module
     url: /browser_mod.js
   - type: js
@@ -42,9 +42,9 @@ resources:
   - type: module
     url: /local/js/layout-card.js
   - type: module
-    url: /local/js/mini-graph-card-bundle.js
+    url: /local/js/mini-graph-card-bundle.js?v=0.9.3
   - type: module
-    url: /local/js/mini-media-player-bundle.js
+    url: /local/js/mini-media-player-bundle.js?v=1.6.0
   - type: js
     url: /local/js/vertical-stack-in-card.js
   - type: module
@@ -56,7 +56,7 @@ resources:
   - type: module
     url: /local/js/simple-weather-card-bundle.js?v=0.7.2
   - type: module
-    url: /local/js/homekit-panel-card.js
+    url: /local/js/homekit-panel-card.js?v=0.4.7
   - type: module
     url: /local/js/weather-card.js
   - type: module
@@ -64,14 +64,16 @@ resources:
   - type: module
     url: /local/js/now-playing-card.js
   - type: module
-    url: /local/js/spotify-playlist-card.js
-
+    url: /local/js/spotify-playlist-card.js?v=0.4    
+  - type: module
+    url: /local/js/button-card.js  
+    
     ##### CARDS I CREATED OR MODIFIED FOR STYLING #####
 
   - type: js
     url: /local/js/spotify-card.styled.js
   - type: module
-    url: /local/js/buien-rain-card.js
+    url: /local/js/buien-rain-card.js?v=0.0.60
   - type: js
     url: /local/js/light-slider-card-lajv.js
 
@@ -88,24 +90,24 @@ views:
     #                                                              Floorplan View                                                               #
     #                                                                                                                                           #
     #############################################################################################################################################
-
+    
   - title: Control Rooms
     icon: 'mdi:floor-plan'
     panel: true
-    badges: []
+    badges: []    
     cards:
-
+    
         ###################   config-template-card    #####################
         #########################   IMPORTANT!    #########################
 
-        # To use the styling templates for individual lights, I have used
+        # To use the styling templates for individual lights, I have used 
         # Config Template Card. Config template card passes the entities it
-        # uses into the card. Make sure you change these entities below to
+        # uses into the card. Make sure you change these entities below to  
         # your own and include any light entities you use above.
-
+        
         # To understand why, check: https://github.com/iantrich/config-template-card
 
-      - type: 'custom:config-template-card'
+      - type: 'custom:config-template-card'    
         entities:
           - light.roof_garden
           - light.roof_plants
@@ -126,13 +128,16 @@ views:
           - light.balcony
         card:
           ###################   Picture Elements Card    #####################
-          type: 'custom:hui-picture-elements-card'
+          type: 'custom:hui-picture-elements-card'        
           image: /local/ui/floorplan/floorplan_night.png
           style: |
             ha-card:first-child {
               background: rgba(42, 46, 48, 1)
             }
           elements:
+          
+          
+
 
               #########################    DAY BASE FLOORPLAN OVERLAY    #########################
 
@@ -154,23 +159,75 @@ views:
                 action: none
               type: image
 
-              #########################    INDIVIDUAL LIGHTS - BLENDED IMAGE OVERLAYS    #########################
 
+              #########################    WEATHER ANIMATIONS    #########################
+              
+            - action: none
+              entity: weather.buienweather
+              hold_action:
+                action: none
+              image: /local/ui/floorplan/weather/rainstorm.gif
+              state_filter:
+                'pouring': opacity(100%)
+              style:
+                left: 60%
+                mix-blend-mode: color-dodge
+                top: 50%
+                width: 110%
+                opacity: 0
+              tap_action:
+                action: none
+              type: image     
+
+
+              #########################    Inside overlays for weather    #########################
+
+
+            - action: none
+              hold_action:
+                action: none
+              image: /local/ui/floorplan/main_night.png
+              style:
+                height: 100%
+                left: 50%
+                top: 50%
+                width: 100%
+              tap_action:
+                action: none
+              type: image 
+              
+            - action: none
+              entity: sun.sun
+              hold_action:
+                action: none
+              state_image:
+                above_horizon: /local/ui/floorplan/main_day.png
+                below_horizon: /local/transparent.png
+              style:
+                height: 100%
+                left: 50%
+                mix-blend-mode: lighten
+                opacity: '${ states[''sensor.sunlight_opacity''].state }'
+                top: 50%
+                width: 100%
+              tap_action:
+                action: none
+              type: image              
+              
+              #########################    INDIVIDUAL LIGHTS - BLENDED IMAGE OVERLAYS    #########################
+              
             - action: none
               entity: light.table
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/table.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 filter: >-
                   ${ "hue-rotate(" + (states['light.table'].attributes.hs_color
                   ? states['light.table'].attributes.hs_color[0] : 0) + "deg)"}
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.table''].attributes.brightness / 255 }'
+                opacity: "${states['light.table'].state === 'on' ? (states['light.table'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
@@ -181,9 +238,6 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/cabinet.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 filter: >-
                   ${ "hue-rotate(" +
@@ -192,7 +246,7 @@ views:
                   "deg)"}
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.plant_table''].attributes.brightness / 255 }'
+                opacity: "${states['light.plant_table'].state === 'on' ? (states['light.plant_table'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
@@ -219,10 +273,6 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/roofplants.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
-                unavailable: opacity(0%)
               style:
                 filter: >-
                   ${ "hue-rotate(" +
@@ -231,7 +281,7 @@ views:
                   "deg)"}
                 left: 27.02%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.roof_plants''].attributes.brightness / 255 }'
+                opacity: "${states['light.roof_plants'].state === 'on' ? (states['light.roof_plants'].attributes.brightness / 255) : '0'}"
                 top: 51.1%
                 width: 45.0390625%
               tap_action:
@@ -242,9 +292,6 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/roofgarden.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 filter: >-
                   ${ "hue-rotate(" +
@@ -253,7 +300,7 @@ views:
                   "deg)"}
                 left: 27.02%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.roof_garden''].attributes.brightness / 255 }'
+                opacity: "${states['light.roof_garden'].state === 'on' ? (states['light.roof_garden'].attributes.brightness / 255) : '0'}"
                 top: 51.1%
                 width: 45.0390625%
               tap_action:
@@ -264,13 +311,10 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/kitchen1.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_1''].attributes.brightness / 255 }'
+                opacity: "${states['light.kitchen_1'].state === 'on' ? (states['light.kitchen_1'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
@@ -281,13 +325,10 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/kitchen2.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_2''].attributes.brightness / 255 }'
+                opacity: "${states['light.kitchen_2'].state === 'on' ? (states['light.kitchen_2'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
@@ -298,13 +339,10 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/kitchen3.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_3''].attributes.brightness / 255 }'
+                opacity: "${states['light.kitchen_3'].state === 'on' ? (states['light.kitchen_3'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
@@ -315,13 +353,10 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/kitchen4.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.kitchen_4''].attributes.brightness / 255 }'
+                opacity: "${states['light.kitchen_4'].state === 'on' ? (states['light.kitchen_4'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
@@ -332,13 +367,10 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/door.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.door''].attributes.brightness / 255 }'
+                opacity: "${states['light.door'].state === 'on' ? (states['light.door'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
@@ -349,20 +381,17 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/stairs.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 left: 73.73%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.stairs_2''].attributes.brightness / 255 }'
+                opacity: "${states['light.stairs_2'].state === 'on' ? (states['light.stairs_2'].attributes.brightness / 255) : '0'}"
                 top: 32.65%
                 width: 39.296875%
               tap_action:
                 action: none
               type: image
             - action: none
-              entity: group.toilet
+              entity: light.toilet_1
               image: /local/ui/floorplan/lights/toilet.png
               state_filter:
                 'off': opacity(0%)
@@ -376,20 +405,31 @@ views:
                 action: none
               type: image
             - action: none
+              entity: binary_sensor.bathroom
+              image: /local/ui/floorplan/lights/bathroom.png
+              state_filter:
+                'off': opacity(0%)
+                'on': opacity(100%)
+                unknown: opacity(0%)
+              style:
+                left: 76.85%
+                top: 78.2%
+                width: 46.1328125%
+              tap_action:
+                action: none
+              type: image              
+            - action: none
               entity: light.bed
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/bed.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 filter: >-
                   ${ "hue-rotate(" + (states['light.bed'].attributes.hs_color  ?
                   states['light.bed'].attributes.hs_color[0] : 0) + "deg)"}
                 left: 76.85%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.bed''].attributes.brightness / 255 }'
+                opacity: "${states['light.bed'].state === 'on' ? (states['light.bed'].attributes.brightness / 255) : '0'}"
                 top: 78.2%
                 width: 46.1328125%
               tap_action:
@@ -400,9 +440,6 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/bedroof.png
-              state_filter:
-                'off': opacity(00%)
-                'on': opacity(100%)
               style:
                 filter: >-
                   ${ "hue-rotate(" +
@@ -411,7 +448,7 @@ views:
                   "deg)"}
                 left: 76.85%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.bedroom_roof''].attributes.brightness / 255 }'
+                opacity: "${states['light.bedroom_roof'].state === 'on' ? (states['light.bedroom_roof'].attributes.brightness / 255) : '0'}"
                 top: 78.2%
                 width: 46.1328125%
               tap_action:
@@ -422,16 +459,13 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/study.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 filter: >-
                   ${ "hue-rotate(" + (states['light.study'].attributes.hs_color
                   ? states['light.study'].attributes.hs_color[0] : 0) + "deg)"}
                 left: 76.85%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.study''].attributes.brightness / 255 }'
+                opacity: "${states['light.study'].state === 'on' ? (states['light.study'].attributes.brightness / 255) : '0'}"
                 top: 78.2%
                 width: 46.1328125%
               tap_action:
@@ -442,9 +476,6 @@ views:
               hold_action:
                 action: none
               image: /local/ui/floorplan/lights/balcony.png
-              state_filter:
-                'off': opacity(0%)
-                'on': opacity(100%)
               style:
                 filter: >-
                   ${ "hue-rotate(" +
@@ -452,21 +483,28 @@ views:
                   states['light.balcony'].attributes.hs_color[0] : 0) + "deg)"}
                 left: 76.85%
                 mix-blend-mode: lighten
-                opacity: '${ states[''light.balcony''].attributes.brightness / 255 }'
+                opacity: "${states['light.balcony'].state === 'on' ? (states['light.balcony'].attributes.brightness / 255) : '0'}"
                 top: 78.2%
                 width: 46.1328125%
               tap_action:
                 action: none
               type: image
-
+            
+            
+         
+              
+              
+              
+              
+              
               #########################    ROOM/GROUP CONTROL TRANSPARENT IMAGES    #########################
-
+              
               #  Used to create tap areas and popups for each room, referring to light groups.
               #  Because the above images overlap each other, I used seperate transparent images
               #. to handle the control of the room, so you always tap the right room.
               #
               #  browser_mod.popup is used for a tap and hold for a custom popup card
-
+              
             - entity: light.living_room_lights
               hold_action:
                 action: call-service
@@ -492,6 +530,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.living_room_lights
@@ -501,6 +543,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -511,9 +557,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -536,7 +587,10 @@ views:
                 top: 32.65%
                 width: 32%
               tap_action:
-                action: toggle
+                action: call-service
+                service: homeassistant.toggle
+                service_data:
+                    entity_id: light.living_room_lights
               type: image
             - entity: light.stairs_lights
               hold_action:
@@ -563,9 +617,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 1
                         layout: horizontal
@@ -587,9 +646,12 @@ views:
                 top: 23%
                 width: 12.7%
               tap_action:
-                action: toggle
+                action: call-service
+                service: homeassistant.toggle
+                service_data:
+                    entity_id: light.stairs_lights
               type: image
-            - entity: light.kitchen_lights
+            - entity: group.kitchen
               hold_action:
                 action: call-service
                 service: browser_mod.popup
@@ -614,9 +676,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 1
                         layout: horizontal
@@ -665,9 +732,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 1
                         layout: horizontal
@@ -689,7 +761,10 @@ views:
                 top: 50%
                 width: 6%
               tap_action:
-                action: toggle
+                action: call-service
+                service: homeassistant.toggle
+                service_data:
+                    entity_id: light.toilet_lights
               type: image
             - entity: light.study
               hold_action:
@@ -716,6 +791,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.study
@@ -725,6 +804,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -735,9 +818,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -760,7 +848,10 @@ views:
                 top: 70.8%
                 width: 12.5%
               tap_action:
-                action: toggle
+                action: call-service
+                service: homeassistant.toggle
+                service_data:
+                    entity_id: light.study
               type: image
             - entity: light.bedroom_lights
               hold_action:
@@ -787,6 +878,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.bedroom_lights
@@ -796,6 +891,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -806,9 +905,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -831,7 +935,10 @@ views:
                 top: 70.8%
                 width: 13%
               tap_action:
-                action: toggle
+                action: call-service
+                service: homeassistant.toggle
+                service_data:
+                    entity_id: light.bedroom_lights
               type: image
             - entity: light.balcony
               hold_action:
@@ -858,6 +965,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.balcony
@@ -867,6 +978,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -877,9 +992,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -902,7 +1022,10 @@ views:
                 top: 94%
                 width: 38%
               tap_action:
-                action: toggle
+                action: call-service
+                service: homeassistant.toggle
+                service_data:
+                    entity_id: light.balcony
               type: image
             - entity: light.roof_lights
               hold_action:
@@ -929,6 +1052,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.roof_lights
@@ -938,6 +1065,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -948,9 +1079,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -973,18 +1109,21 @@ views:
                 top: 49%
                 width: 30%
               tap_action:
-                action: toggle
+                action: call-service
+                service: homeassistant.toggle
+                service_data:
+                    entity_id: light.roof_lights
               type: image
-
+              
               #########################    INDIVIDUAL LIGHT ICONS    #########################
-
+              
               #  These are the white state icons that appear over the floorplan.
-              #  They are the same as above, but instead of "areas" to control a group, they only
+              #  They are the same as above, but instead of "areas" to control a group, they only 
               #. control individual lights
               #
-              #  browser_mod.popup is used for a tap and hold for a custom popup card, custom styling
+              #  browser_mod.popup is used for a tap and hold for a custom popup card, custom styling 
               #  of the icon to make it appear white, etc.
-
+              
             - entity: light.plant_table
               hold_action:
                 action: call-service
@@ -1010,6 +1149,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.plant_table
@@ -1019,6 +1162,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1029,9 +1176,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1064,7 +1216,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 54.5%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1092,9 +1244,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                           - entities:
                               - color_temp: true
@@ -1103,9 +1260,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1138,7 +1300,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 31%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1166,9 +1328,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                           - entities:
                               - color_temp: true
@@ -1177,9 +1344,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1212,14 +1384,58 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 17%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
               type: state-icon
             - entity: light.door
               hold_action:
-                action: more-info
+                action: call-service
+                service: browser_mod.popup
+                service_data:
+                  card:
+                    cards:
+                      - entities:
+                          - entity: light.door
+                            secondary_info: last-changed
+                        style:
+                          z-index: 5
+                        type: entities
+                      - cards:
+                          - cards: null
+                            column_height: 1
+                            layout: vertical
+                            type: 'custom:layout-card'
+                          - entities:
+                              - color_temp: true
+                                entity: light.door
+                                header: false
+                                persist_features: true
+                                type: 'custom:light-slider-card'
+                            show_header_toggle: false
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                            type: entities
+                        column_num: 1
+                        layout: horizontal
+                        max_width:
+                          - 100%
+                        type: 'custom:layout-card'
+                    type: 'custom:vertical-stack-in-card'
+                  deviceID:
+                    - this
+                  style:
+                    '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                    border-radius: 0.8vw
+                    opacity: 0.9
+                  title: Stairs - Door
               icon: 'mdi:track-light'
               style:
                 '--iron-icon-height': 1.7vw
@@ -1237,14 +1453,58 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 17%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
               type: state-icon
             - entity: light.stairs_2
               hold_action:
-                action: more-info
+                action: call-service
+                service: browser_mod.popup
+                service_data:
+                  card:
+                    cards:
+                      - entities:
+                          - entity: light.stairs_2
+                            secondary_info: last-changed
+                        style:
+                          z-index: 5
+                        type: entities
+                      - cards:
+                          - cards: null
+                            column_height: 1
+                            layout: vertical
+                            type: 'custom:layout-card'
+                          - entities:
+                              - color_temp: true
+                                entity: light.stairs_2
+                                header: false
+                                persist_features: true
+                                type: 'custom:light-slider-card'
+                            show_header_toggle: false
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                            type: entities
+                        column_num: 1
+                        layout: horizontal
+                        max_width:
+                          - 100%
+                        type: 'custom:layout-card'
+                    type: 'custom:vertical-stack-in-card'
+                  deviceID:
+                    - this
+                  style:
+                    '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                    border-radius: 0.8vw
+                    opacity: 0.9
+                  title: Stairs - Upstairs
               icon: 'mdi:track-light'
               style:
                 '--iron-icon-height': 1.7vw
@@ -1262,14 +1522,64 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 17%
-                transform: 'scale(-1, 1)'
+                transform: 'scale(1.2)'
                 width: 3vw
               tap_action:
                 action: toggle
               type: state-icon
             - entity: group.toilet
               hold_action:
-                action: more-info
+                action: call-service
+                service: browser_mod.popup
+                service_data:
+                  card:
+                    cards:
+                      - entities:
+                          - entity: group.toilet
+                            secondary_info: last-changed
+                        style:
+                          z-index: 5
+                        type: entities
+                      - type: markdown
+                        content: |
+                          &nbsp;  
+                      - cards:
+                          - cards: null
+                            column_height: 1
+                            layout: vertical
+                            type: 'custom:layout-card'
+                          - cards: 
+                              - color_temp: true
+                                entity: light.toilet_1
+                                header: false
+                                persist_features: true
+                                type: 'custom:light-slider-card'
+                              - color_temp: true
+                                entity: light.toilet_2
+                                header: false
+                                persist_features: true
+                                type: 'custom:light-slider-card'                          
+                            column_num: 2
+                            max_width:
+                              - 100%
+                            layout: horizontal
+                            type: 'custom:layout-card'
+                        column_num: 1
+                        layout: horizontal
+                        max_width:
+                          - 100%
+                        type: 'custom:layout-card'
+                      - type: markdown
+                        content: |
+                          &nbsp;     
+                    type: 'custom:vertical-stack-in-card'
+                  deviceID:
+                    - this
+                  style:
+                    '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                    border-radius: 0.8vw
+                    opacity: 0.9
+                  title: Toilet
               icon: 'mdi:lightbulb'
               style:
                 '--iron-icon-height': 1.7vw
@@ -1287,14 +1597,58 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 50%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
               type: state-icon
             - entity: light.couch
               hold_action:
-                action: more-info
+                action: call-service
+                service: browser_mod.popup
+                service_data:
+                  card:
+                    cards:
+                      - entities:
+                          - entity: light.couch
+                            secondary_info: last-changed
+                        style:
+                          z-index: 5
+                        type: entities
+                      - cards:
+                          - cards: null
+                            column_height: 1
+                            layout: vertical
+                            type: 'custom:layout-card'
+                          - entities:
+                              - color_temp: true
+                                entity: light.couch
+                                header: false
+                                persist_features: true
+                                type: 'custom:light-slider-card'
+                            show_header_toggle: false
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                            type: entities
+                        column_num: 1
+                        layout: horizontal
+                        max_width:
+                          - 100%
+                        type: 'custom:layout-card'
+                    type: 'custom:vertical-stack-in-card'
+                  deviceID:
+                    - this
+                  style:
+                    '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                    border-radius: 0.8vw
+                    opacity: 0.9
+                  title: Couch
               icon: 'mdi:lightbulb'
               style:
                 '--iron-icon-height': 1.7vw
@@ -1312,7 +1666,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 53%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1342,6 +1696,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.bed
@@ -1351,6 +1709,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1361,9 +1723,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1426,6 +1793,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.bedroom_roof
@@ -1435,6 +1806,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1445,9 +1820,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1480,7 +1860,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 70.5%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1510,6 +1890,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.study
@@ -1519,6 +1903,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1529,9 +1917,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1564,7 +1957,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 70.5%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1594,6 +1987,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.balcony
@@ -1603,6 +2000,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1613,9 +2014,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1648,7 +2054,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 88.5%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1678,6 +2084,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.roof_plants
@@ -1687,6 +2097,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1697,9 +2111,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1732,7 +2151,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 50%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1762,6 +2181,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.roof_garden
@@ -1771,6 +2194,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1781,9 +2208,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1816,7 +2248,7 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 50%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
@@ -1846,6 +2278,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                               - brightness: false
                                 color_temp: false
                                 entity: light.table
@@ -1855,6 +2291,10 @@ views:
                                 show_slider_percent: false
                                 smooth_color_wheel: true
                                 type: 'custom:light-entity-card'
+                                style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
@@ -1865,9 +2305,14 @@ views:
                                 persist_features: true
                                 type: 'custom:light-slider-card'
                             show_header_toggle: false
-                            style:
-                              height: 100%
-                              z-index: 0;
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
                             type: entities
                         column_num: 2
                         layout: horizontal
@@ -1875,11 +2320,14 @@ views:
                           - 60%
                           - 40%
                         type: 'custom:layout-card'
+                       
+
                     type: 'custom:vertical-stack-in-card'
                   deviceID:
                     - this
                   style:
                     '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                    
                     border-radius: 0.8vw
                     opacity: 0.9
                   title: Dining Table
@@ -1900,28 +2348,32 @@ views:
                 margin-left: '-1.5vw'
                 margin-top: '-1.5vw'
                 top: 25.7%
-                transform: scale(1)
+                transform: scale(1.2)
                 width: 3vw
               tap_action:
                 action: toggle
               type: state-icon
 
-              #########################    EXPERIMENTAL NOW PLAYING ON PROJECTOR IN FLOORPLAN    #########################
 
+
+         
+              
+              #########################    EXPERIMENTAL NOW PLAYING ON PROJECTOR IN FLOORPLAN    #########################
+              
               # custom card to show whats playing on the screen when its playing (plex)
 
-            - entity: media_player.plex_projector
-              style:
-                left: 68.5%
-                perspective-origin: '70%, 50%'
-                top: 37.5%
-                transform: >-
-                  perspective(210px) scale(3.7, 1.8)  rotateX(34deg)
-                  rotateY(86deg) rotateZ(-86deg) translateY(-2px)  skewX(20deg)
-                  skewY(-10deg)
-                width: 10%
-              type: 'custom:now-playing-poster'
-
+            # - entity: media_player.plex_projector
+            #   style:
+            #     left: 68.5%
+            #     perspective-origin: '70%, 50%'
+            #     top: 37.5%
+            #     transform: >-
+            #       perspective(210px) scale(3.7, 1.8)  rotateX(34deg)
+            #       rotateY(86deg) rotateZ(-86deg) translateY(-2px)  skewX(20deg)
+            #       skewY(-10deg)
+            #     width: 10%
+            #   type: 'custom:now-playing-poster'              
+              
             - action: none
               hold_action:
                 action: none
@@ -1934,7 +2386,7 @@ views:
               tap_action:
                 action: none
               type: image
-
+              
               #################################################################
               #                                                               #
               #                             SIDEBAR                           #
@@ -1954,7 +2406,7 @@ views:
               tap_action:
                 action: none
               type: image
-
+              
               #########################    TIME AND DATE    #########################
             - entity: sensor.time
               hold_action:
@@ -1985,7 +2437,7 @@ views:
               tap_action:
                 action: none
               type: state-label
-
+              
               #########################    MENU BUTTONS    #########################
 
             - action: none
@@ -2030,11 +2482,22 @@ views:
                 action: navigate
                 navigation_path: /lovelace/3
               type: image
-
+            - action: none
+              image: /local/ui/sidebar/health_off.png
+              style:
+                left: 11.7%
+                top: 58%
+                width: 20.5078125%
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/5
+              type: image  
+              
+              
               #########################    People at home    #########################
-
+              
               #Optional label for people at Home (currently hidden with opacity: 0)
-
+              
             - style:
                 color: white
                 font-size: 1vw
@@ -2045,6 +2508,7 @@ views:
                 width: 10%
               text: 'People at home:'
               type: 'custom:text-element'
+              
             - action: none
               entity: person.luke_vink
               state_image:
@@ -2057,8 +2521,9 @@ views:
                 left: 5.8%
                 top: 72%
                 width: 4.5vw
-              tap_action: null
+              tap_action: none
               type: image
+                
             - action: none
               entity: person.santa_stibe
               state_image:
@@ -2071,8 +2536,9 @@ views:
                 left: 10.8%
                 top: 72%
                 width: 4.5vw
-              tap_action: null
+              tap_action: none
               type: image
+              
             - action: none
               image: /local/transparent.png
               style:
@@ -2083,7 +2549,7 @@ views:
                 left: 15.9%
                 top: 72.2%
                 width: 4.2vw
-              tap_action: null
+              tap_action: none
               type: image
             - action: none
               image: /local/transparent.png
@@ -2095,11 +2561,11 @@ views:
                 left: 21.1%
                 top: 72.2%
                 width: 4.2vw
-              tap_action: null
+              tap_action: none
               type: image
-
+              
               #########################    Minigraph to show temperature inside and out    #########################
-
+              
             - color_thresholds:
                 - color: '#4dd2ff'
                   value: 10
@@ -2157,9 +2623,9 @@ views:
                 action: navigate
                 navigation_path: /lovelace/4
               type: 'custom:mini-graph-card'
-
+              
               #########################    Mini Weather card    #########################
-
+              
             - backdrop: false
               entity: weather.buienweather
               name: ' '
@@ -2201,9 +2667,9 @@ views:
                 action: navigate
                 navigation_path: /lovelace/4
               type: 'custom:simple-weather-card'
-
+              
               #########################    Overlay shadow images    #########################
-
+              
             - action: none
               image: /local/ui/sidebar/sideShadow.png
               style:
@@ -2222,18 +2688,19 @@ views:
                 top: 50%
                 width: 1.2109375%
               type: image
-
+              
               #########################   Styled now playing Media Player    #########################
-
+              
               # when the media player is playing, this overlaps the "Media" menu button
 
-            - entity: media_player.spotify_luke
+            - entity: media_player.spotify_luke_vink
               hide:
                 controls: true
                 name: true
                 power: true
                 source: true
                 volume: true
+                progress: true
               idle_view:
                 after: 0.1
                 when_idle: true
@@ -2257,6 +2724,9 @@ views:
                 }
                 ha-card.--inactive .mmp-player{
                   opacity: 0 !important;
+                }
+                #primaryProgress{
+                    background: #474A52 !important; 
                 }
                 .entity__info{
                   height: 2.6vw;
@@ -2343,20 +2813,20 @@ views:
                 navigation_path: /lovelace/3
               type: 'custom:mini-media-player'
 
-
-
+          
+        
 
     #############################################################################################################################################
     #                                                                                                                                           #
     #                                                            Xiaomi Clean Up View                                                           #
     #                                                                                                                                           #
     #############################################################################################################################################
-
+    
   - title: Clean Up
     icon: 'mdi:robot-vacuum'
     panel: true
     cards:
-      - type: picture-elements
+      - type: picture-elements   
         image: /local/ui/floorplan/floorplan_night_cu.png
         style: |
           ha-card {
@@ -2381,7 +2851,7 @@ views:
               action: none
             type: image
 
-
+            
             #######################################################################
             #                                                                     #
             #              Xiaomi Mi Robot : Zoned Cleanup Buttons                #
@@ -2389,7 +2859,7 @@ views:
             #   https://www.home-assistant.io/integrations/vacuum.xiaomi_miio/    #
             #                                                                     #
             #######################################################################
-
+            
           - action: none
             entity: input_text.room_cleaning
             hold_action:
@@ -2493,13 +2963,13 @@ views:
               top: 46%
               width: 16.796875%
             type: image
-
-
+            
+            
             ########### Vacuum Robot Control Panel buttons ###########
-
-            #   Note: uses input_text from configuration.yaml to show
+            
+            #   Note: uses input_text from configuration.yaml to show 
             #   the right text, EG: "Cleaning Kitchen" status text
-
+            
           - conditions:
               - entity: input_text.room_cleaning
                 state_not: charging
@@ -2675,10 +3145,10 @@ views:
             #                      SIDEBAR : Cleanup                        #
             #                                                               #
             #################################################################
-
-
+           
+           
             #########################    Background    #########################
-
+            
           - action: none
             hold_action:
               action: none
@@ -2691,7 +3161,7 @@ views:
             tap_action:
               action: none
             type: image
-
+            
             #########################    TIME & DATE    #########################
 
           - entity: sensor.time
@@ -2723,8 +3193,8 @@ views:
             tap_action:
               action: none
             type: state-label
-
-
+            
+            
             #########################   MENU BUTTONS   #########################
 
           - action: none
@@ -2769,9 +3239,19 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: image
-
+          - action: none
+            image: /local/ui/sidebar/health_off.png
+            style:
+              left: 11.7%
+              top: 58%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/5
+            type: image 
+              
             #########################   PEOPLE   #########################
-
+            
             #optional text label, currently invisible (make opacity:1) to show
           - style:
               color: white
@@ -2783,7 +3263,7 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
-
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -2796,7 +3276,7 @@ views:
               left: 5.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             entity: person.santa_stibe
@@ -2810,7 +3290,7 @@ views:
               left: 10.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -2822,7 +3302,7 @@ views:
               left: 15.9%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -2834,11 +3314,11 @@ views:
               left: 21.1%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
-
+            
             #########################    TEMPERATURE MINI GRAPH (INSIDE vs OUTSIDE)    #########################
-
+            
           - color_thresholds:
               - color: '#4dd2ff'
                 value: 10
@@ -2896,9 +3376,9 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:mini-graph-card'
-
+            
             #########################    WEATHER SIDEBAR CARD    #########################
-
+            
           - backdrop: false
             entity: weather.buienweather
             name: ' '
@@ -2940,9 +3420,9 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:simple-weather-card'
-
+            
             #########################    VISUAL SHADOW OVERLAYS    #########################
-
+            
           - action: none
             image: /local/ui/sidebar/sideShadow.png
             style:
@@ -2961,16 +3441,17 @@ views:
               top: 50%
               width: 1.2109375%
             type: image
-
+            
             #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
-
-          - entity: media_player.spotify_luke
+            
+          - entity: media_player.spotify_luke_vink
             hide:
               controls: true
               name: true
               power: true
               source: true
               volume: true
+              progress: true
             idle_view:
               after: 0.1
               when_idle: true
@@ -2995,6 +3476,11 @@ views:
               ha-card.--inactive .mmp-player{
                 opacity: 0 !important;
               }
+              
+              #primaryProgress{
+                background: #474A52 !important; 
+              }
+                
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -3079,36 +3565,36 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: 'custom:mini-media-player'
+            
+            
 
-
-
-
-
+        
+        
     #############################################################################################################################################
     #                                                                                                                                           #
     #                                                   All Devices (Entities) Homekit Style View                                               #
     #                                                                                                                                           #
     #############################################################################################################################################
 
-  - title: All Devices
+  - title: All Devices        
     icon: 'mdi:home'
     panel: true
     cards:
-      - type: picture-elements
+      - type: picture-elements    
         image: /local/ui/floorplan/blurredFloorplan.png
         style: |
           ha-card {
             background: rgba(42, 46, 48, 1)
           }
         elements:
-
+      
             #################################################################
             #                                                               #
             #                     Homekit Styled Card:                      #
             #         https://github.com/DBuit/Homekit-panel-card           #
             #                                                               #
             #################################################################
-
+            
           - enableColumns: true
             popup:
               brightnessHeight: 350px
@@ -3198,16 +3684,16 @@ views:
               top: 50%
               width: 68%
             type: 'custom:homekit-card'
-
-
+            
+            
             #################################################################
             #                                                               #
             #                     SIDEBAR : ALL DEVICES                     #
             #                                                               #
             #################################################################
-
+            
             #########################    BACKGROUND    #########################
-
+            
           - action: none
             hold_action:
               action: none
@@ -3220,7 +3706,7 @@ views:
             tap_action:
               action: none
             type: image
-
+            
             #########################    TIME & DATE    #########################
 
           - entity: sensor.time
@@ -3252,7 +3738,7 @@ views:
             tap_action:
               action: none
             type: state-label
-
+            
             #########################    MENU BUTTONS    #########################
 
           - action: none
@@ -3297,9 +3783,19 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: image
-
+          - action: none
+            image: /local/ui/sidebar/health_off.png
+            style:
+              left: 11.7%
+              top: 58%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/5
+            type: image 
+            
             #########################    PEOPLE    #########################
-
+            
             # optional label for people (currently hidden, to show, change to opacity:1)
           - style:
               color: white
@@ -3311,7 +3807,7 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
-
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -3324,7 +3820,7 @@ views:
               left: 5.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             entity: person.santa_stibe
@@ -3338,7 +3834,7 @@ views:
               left: 10.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -3350,7 +3846,7 @@ views:
               left: 15.9%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -3362,11 +3858,11 @@ views:
               left: 21.1%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
-
+            
             #########################    TEMPERATURE GRAPH (INSIDE vs OUTSIDE)    #########################
-
+            
           - color_thresholds:
               - color: '#4dd2ff'
                 value: 10
@@ -3424,8 +3920,8 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:mini-graph-card'
-
-
+            
+            
             #########################    WEATHER SIDEBAR CARD    #########################
 
           - backdrop: false
@@ -3469,9 +3965,9 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:simple-weather-card'
-
+            
             #########################    VISUAL SHADOW OVERLAYS    #########################
-
+            
           - action: none
             image: /local/ui/sidebar/sideShadow.png
             style:
@@ -3490,16 +3986,17 @@ views:
               top: 50%
               width: 1.2109375%
             type: image
-
+            
             #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
-
-          - entity: media_player.spotify_luke
+            
+          - entity: media_player.spotify_luke_vink
             hide:
               controls: true
               name: true
               power: true
               source: true
               volume: true
+              progress: true
             idle_view:
               after: 0.1
               when_idle: true
@@ -3524,6 +4021,9 @@ views:
               ha-card.--inactive .mmp-player{
                 opacity: 0 !important;
               }
+              #primaryProgress{
+                background: #474A52 !important; 
+              }              
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -3610,24 +4110,24 @@ views:
             type: 'custom:mini-media-player'
 
 
-
-
+    
+   
     #############################################################################################################################################
     #                                                                                                                                           #
     #                                                            Now Playing Media View                                                         #
     #                                                                                                                                           #
     #############################################################################################################################################
-
+   
   - title: Media
     icon: 'mdi:play-circle'
     panel: true
     badges: []
     cards:
       - elements:
-
+      
             #########################    SPEAKER CONTROL BAR    #########################
             # controls an IR blaster to control my 'not connected' surround sound speakers
-
+            
           - action: none
             entity: switch.power
             hold_action:
@@ -3695,7 +4195,7 @@ views:
             tap_action:
               action: toggle
             type: image
-
+            
             ###########################################################################
             #                                                                         #
             #                 IF PROJECTOR NOT ON, SHOW SPOTIFY:                      #
@@ -3704,13 +4204,13 @@ views:
 
             #  Mini Media Player Card:
             #  https://github.com/kalkih/mini-media-player
-
+            
           - conditions:
               - entity: device_tracker.projector
                 state: not_home
             elements:
               - artwork: full-cover
-                entity: media_player.spotify_luke
+                entity: media_player.spotify_luke_vink
                 hide:
                   power: true
                   progress: false
@@ -3728,20 +4228,23 @@ views:
                     overflow: hidden !important;
                     height: 100%;
                   }
+                  :host #primaryProgress{
+                    background: #474A52 !important; 
+                  }
                 type: 'custom:mini-media-player'
             type: conditional
-
+            
             # Spotify Playlists Card:
             # https://github.com/dnguyen800/spotify-playlist-card
             # I like this one that uses a sensor, as you dont need to keep activating it
-
+            
           - conditions:
               - entity: device_tracker.projector
                 state: not_home
             elements:
               - columns: 3
                 playback_method: spotify
-                sensor: sensor.spotify_playlist
+                sensor: sensor.spotifyplaylist
                 show_playlist_titles: true
                 shuffle: true
                 style:
@@ -3750,8 +4253,8 @@ views:
                   width: 29%
                 type: 'custom:spotify-playlist-card'
             type: conditional
-
-
+            
+            
             ###########################################################################
             #                                                                         #
             #          IF PROJECTOR IS ON, SHOW PLEX & RECENTLY ADDED:                #
@@ -3759,12 +4262,12 @@ views:
             ###########################################################################
 
             # Mini Media Player Card:
-            # https://github.com/kalkih/mini-media-player
-
+            # https://github.com/kalkih/mini-media-player            
+            
           - conditions:
               - entity: device_tracker.projector
                 state_not: not_home
-              - entity: media_player.spotify_luke
+              - entity: media_player.spotify_luke_vink
                 state_not: playing
             elements:
               - artwork: cover
@@ -3794,18 +4297,18 @@ views:
                   }
                 type: 'custom:mini-media-player'
             type: conditional
-
-
+            
+            
             # Upcoming Media Card:
             # https://github.com/custom-cards/upcoming-media-card
 
             # Enabled by, Plex Recently Added Sensor:
             # https://github.com/custom-components/sensor.plex_recently_added
-
+            
           - conditions:
               - entity: device_tracker.projector
                 state_not: not_home
-              - entity: media_player.spotify_luke
+              - entity: media_player.spotify_luke_vink
                 state_not: playing
             elements:
               - entity: sensor.recently_added_tv
@@ -3819,7 +4322,7 @@ views:
           - conditions:
               - entity: device_tracker.projector
                 state_not: not_home
-              - entity: media_player.spotify_luke
+              - entity: media_player.spotify_luke_vink
                 state_not: playing
             elements:
               - entity: sensor.recently_added_movies
@@ -3830,13 +4333,13 @@ views:
                 title: Recently Added Movies
                 type: 'custom:upcoming-media-card'
             type: conditional
-
+            
             #################################################################
             #                                                               #
             #                             SIDEBAR                           #
             #                                                               #
-            #################################################################
-
+            #################################################################            
+            
           - action: none
             hold_action:
               action: none
@@ -3920,6 +4423,20 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: image
+          - action: none
+            image: /local/ui/sidebar/health_off.png
+            style:
+              left: 11.7%
+              top: 58%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/5
+            type: image             
+            
+            #########################    PEOPLE    #########################
+            
+            # optional label for people (currently hidden, to show, change to opacity:1)            
           - style:
               color: white
               font-size: 1vw
@@ -3930,6 +4447,8 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
+            
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -3942,7 +4461,7 @@ views:
               left: 5.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             entity: person.santa_stibe
@@ -3956,7 +4475,7 @@ views:
               left: 10.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -3968,7 +4487,7 @@ views:
               left: 15.9%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -3980,7 +4499,7 @@ views:
               left: 21.1%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
           - color_thresholds:
               - color: '#4dd2ff'
@@ -4098,13 +4617,14 @@ views:
               top: 50%
               width: 1.2109375%
             type: image
-          - entity: media_player.spotify_luke
+          - entity: media_player.spotify_luke_vink
             hide:
               controls: true
               name: true
               power: true
               source: true
               volume: true
+              progress: true
             idle_view:
               after: 0.1
               when_idle: true
@@ -4130,6 +4650,9 @@ views:
               ha-card.--inactive .mmp-player{
                 opacity: 0 !important;
               }
+              #primaryProgress{
+                background: #474A52 !important; 
+              }              
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -4251,10 +4774,14 @@ views:
                   padding: 0;
                 }
         type: picture-elements
+   
 
-
-
-
+    
+    #############################################################################################################################################
+    #                                                                                                                                           #
+    #                                                               Weather View                                                                #
+    #                                                                                                                                           #
+    #############################################################################################################################################
 
   - title: Weather
     icon: 'mdi:white-balance-sunny'
@@ -4265,6 +4792,7 @@ views:
           - fillColor: 'rgba(89, 160, 238, 0.2)'
             lat: 53.361455
             lineColor: 'rgba(89, 160, 238, 1)'
+            update_interval: 20
             long: 6.866892
             style: |
               :host {
@@ -4294,7 +4822,7 @@ views:
                   padding: 0 !important;
                   margin: 0 !important;
               }
-            type: 'custom:rain-card'
+            type: 'custom:buien-rain-forecast'
           - current: true
             details: true
             entity: weather.buienweather
@@ -4416,6 +4944,20 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: image
+          - action: none
+            image: /local/ui/sidebar/health_off.png
+            style:
+              left: 11.7%
+              top: 58%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/5
+            type: image             
+            
+            #########################    PEOPLE    #########################
+            
+            # optional label for people (currently hidden, to show, change to opacity:1)               
           - style:
               color: white
               font-size: 1vw
@@ -4426,6 +4968,8 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
+            
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -4438,7 +4982,7 @@ views:
               left: 5.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             entity: person.santa_stibe
@@ -4452,7 +4996,7 @@ views:
               left: 10.8%
               top: 72%
               width: 4.5vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -4464,7 +5008,7 @@ views:
               left: 15.9%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
           - action: none
             image: /local/transparent.png
@@ -4476,7 +5020,7 @@ views:
               left: 21.1%
               top: 72.2%
               width: 4.2vw
-            tap_action: null
+            tap_action: none
             type: image
           - color_thresholds:
               - color: '#4dd2ff'
@@ -4594,13 +5138,14 @@ views:
               top: 50%
               width: 1.2109375%
             type: image
-          - entity: media_player.spotify_luke
+          - entity: media_player.spotify_luke_vink
             hide:
               controls: true
               name: true
               power: true
               source: true
               volume: true
+              progress: true
             idle_view:
               after: 0.1
               when_idle: true
@@ -4625,6 +5170,9 @@ views:
               ha-card.--inactive .mmp-player{
                 opacity: 0 !important;
               }
+              #primaryProgress{
+                background: #474A52 !important; 
+              }              
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -4715,3 +5263,770 @@ views:
             background: rgba(42, 46, 48, 1)
           }
         type: picture-elements
+
+    
+
+    #############################################################################################################################################
+    #                                                                                                                                           #
+    #                                                               Health View                                                                 #
+    #                                                                                                                                           #
+    #############################################################################################################################################
+           
+
+  - title: Health
+    icon: 'mdi:water-outline'
+    panel: true
+    badges: []
+    cards:
+      - elements:
+
+          - color_thresholds:
+              - color: '#FF004C'
+                value: 3
+              - color: '#03B4FF'
+                value: 5
+              - color: '#03B4FF'
+                value: 8                
+              - color: '#B51BE4'
+                value: 9
+            line_width: 2
+            points_per_hour: 6
+            hours_to_show: 25
+            height: 130
+            update_interval: 30
+            entities:
+              - entity: sensor.luke_cgm_sgv_mmol
+              - entity: binary_sensor.night
+                color: rgba(255,255,255,.25)
+                y_axis: secondary
+                smoothing: false 
+                aggregate_func: min
+                show_state: false
+                show_line: false
+                show_points: false
+              - entity: input_number.range_high
+                color: rgba(255,255,255,.1)
+                smoothing: false 
+                line_width: 1
+                aggregate_func: max
+                show_state: false
+                show_line: true
+                show_points: false
+              - entity: input_number.range_low
+                color: rgba(255,255,255,.1)
+                smoothing: false 
+                line_width: 1
+                aggregate_func: max
+                show_state: false
+                show_line: true
+                show_points: false
+                                
+                
+            state_map:
+              - value: "off"
+                label: "Day"
+              - value: "on"
+                label: "Night"
+            icon: 'mdi:water-outline'
+            align_state: right
+            name_adaptive_color: true
+            icon_adaptive_color: true
+            show:
+              icon: true
+              legend: false
+              name: false
+              fill: false
+              points: hover
+            style: |
+              :host {
+                left: 61.8%;
+                top:  32%;
+                width: 67.5%;
+                height: 43%;
+                background: none  !important;
+                box-shadow: none !important;
+              }
+              .state{
+                flex-direction: column;
+                margin-right: 4%;
+              }
+              .state__value{
+                font-size:  3.5vw !important;  
+              }
+              .header{
+                  height:0px !important;
+                  padding:0px !important;
+              }
+              .icon {
+                  position: absolute;
+                  top: -1%;
+                  left:  3%;
+              }
+              .icon > ha-icon {
+                width:2.4vw !important;
+                height:2.4vw !important;
+              }
+              .graph{
+                  flex-grow: 1;
+              }
+              .graph__container{
+                  flex-grow: 1;
+              }
+
+              mask:nth-child(3) .line, mask:nth-child(4) .line{
+                    stroke-width: 1;
+                    stroke-dasharray: 2 2;
+              }
+              ha-card {
+                background: none  !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+              }
+            type: 'custom:mini-graph-card'
+
+          - type: custom:mini-graph-card
+            align_state: right
+            entities:
+              - entity: device_tracker.luke_phone
+                color: rgba(225, 225, 225, 0.3)
+            name: Luke Presence
+            points_per_hour: 6
+            hours_to_show: 25
+            update_interval: 30
+            icon: 'mdi:bottle-tonic-plus-outline'
+            aggregate_func: max
+            line_width: 1
+            smoothing: false
+            show:
+              icon: true
+              legend: false
+              name: false
+              fill: false
+              points: hover
+            state_map:
+            - value: "not_home"
+              label: Away
+            - value: "home"
+              label: Home
+            style: |
+              :host {
+                left: 61.8%;
+                top:  77%;
+                width: 67.5%;
+                overflow: hidden;
+                height: 28%;
+                background: none  !important;
+                box-shadow: none !important;
+              }
+              .state{
+                margin-right: 4%;
+                flex-direction: column;
+              } 
+
+              .state__value{
+                font-size:  2vw !important;  
+              }
+              mask .line{
+                stroke-dasharray: 2 !important;
+              }
+              .header{
+                  height:0px !important;
+                  padding:0px !important;
+              }
+              .icon {
+                  position: absolute;
+                  top: -1%;
+                  left:  3%;
+              }
+              .icon > ha-icon {
+                width:2.4vw !important;
+                height:2.4vw !important;
+              }
+              ha-card {
+                background: none  !important;
+                padding: 0 !important;
+              }              
+
+
+
+          - type: custom:mini-graph-card
+            align_state: right
+            entities:
+              - entity: sensor.luke_carbs
+                color: rgba(225, 225, 225, 0.3)
+            name: Light Table
+            hours_to_show: 25
+            show:
+              graph: bar
+              icon: false
+              legend: false
+              state: false
+              name: false
+              fill: true
+              stroke: false
+              points: hover
+            style: |
+              :host {
+                left: 61.8%;
+                top:  77%;
+                width: 67.5%;
+                overflow: hidden;
+                height: 28%;
+                background: none  !important;
+                box-shadow: none !important;
+              }
+              .state{
+                margin-right: 4%;
+                flex-direction: column;
+              } 
+
+              .state__value{
+                font-size:  2vw !important;  
+              }
+
+              .header{
+                  height:0px !important;
+                  padding:0px !important;
+              }
+              .icon {
+                  position: absolute;
+                  top: -1%;
+                  left:  3%;
+              }
+              .icon > ha-icon {
+                width:2.4vw !important;
+                height:2.4vw !important;
+              }
+              ha-card {
+                background: none  !important;
+                padding: 0 !important;
+              }              
+
+        #   - type: iframe
+        #     url: 'http://lajv-ichor.herokuapp.com/'
+        #     style:
+        #       width: 50%
+        #       top: 50%
+        #       height: 70%
+        #       left: 70%
+
+
+              
+          - action: none
+            hold_action:
+              action: none
+            image: /local/ui/sidebar/sidebarBG2.png
+            style:
+              height: 100%
+              left: 11.73828125%
+              top: 50%
+              width: 23.4765625%
+            tap_action:
+              action: none
+            type: image
+          - entity: sensor.time
+            hold_action:
+              action: none
+            style:
+              color: 'rgba(255, 255, 255, 0.7)'
+              font-size: 5.41vw
+              font-weight: 200
+              left: 2.7%
+              letter-spacing: '-0.05vw'
+              max-width: 1px
+              top: 10%
+            tap_action:
+              action: none
+            type: state-label
+          - entity: sensor.date_string
+            hold_action:
+              action: none
+            style:
+              color: 'rgba(255, 255, 255, 0.3)'
+              font-size: 1.3vw
+              font-weight: 300
+              left: 18.1%
+              letter-spacing: '-0.05vw'
+              text-align: left
+              top: 17%
+              width: 30%
+            tap_action:
+              action: none
+            type: state-label
+          - action: none
+            image: /local/ui/sidebar/rooms_off.png
+            style:
+              border-radius: 5vw
+              left: 11.7%
+              top: 26%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/0
+            type: image
+          - action: none
+            image: /local/ui/sidebar/cleanUp_off.png
+            style:
+              left: 11.7%
+              top: 34%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            type: image
+          - action: none
+            image: /local/ui/sidebar/all_off.png
+            style:
+              left: 11.7%
+              top: 42%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/2
+            type: image
+          - action: none
+            image: /local/ui/sidebar/media_off.png
+            style:
+              left: 11.7%
+              top: 50%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/3
+            type: image
+          - action: none
+            image: /local/ui/sidebar/health_on.png
+            style:
+              left: 11.7%
+              top: 58%
+              width: 20.5078125%
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/5
+            type: image             
+            
+            #########################    PEOPLE    #########################
+            
+            # optional label for people (currently hidden, to show, change to opacity:1)                
+          - style:
+              color: white
+              font-size: 1vw
+              font-weight: 300
+              left: 8.8%
+              opacity: 0
+              top: 66%
+              width: 10%
+            text: 'People at home:'
+            type: 'custom:text-element'
+            
+            
+          - action: none
+            entity: person.luke_vink
+            state_image:
+              home: /local/people/luke.png
+              not_home: /local/people/lukeGone.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border-radius: 10vw
+              height: 4.5vw
+              left: 5.8%
+              top: 72%
+              width: 4.5vw
+            tap_action: none
+            type: image
+          - action: none
+            entity: person.santa_stibe
+            state_image:
+              home: /local/people/santa.png
+              not_home: /local/people/santaGone.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border-radius: 10vw
+              height: 4.5vw
+              left: 10.8%
+              top: 72%
+              width: 4.5vw
+            tap_action: none
+            type: image
+          - action: none
+            image: /local/transparent.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
+              border-radius: 10vw
+              height: 4.2vw
+              left: 15.9%
+              top: 72.2%
+              width: 4.2vw
+            tap_action: none
+            type: image
+          - action: none
+            image: /local/transparent.png
+            style:
+              background-color: 'rgba(255, 255, 255, 0.0)'
+              border: '0.1vw dashed rgba(255, 255, 255, 0.3)'
+              border-radius: 10vw
+              height: 4.2vw
+              left: 21.1%
+              top: 72.2%
+              width: 4.2vw
+            tap_action: none
+            type: image
+          - color_thresholds:
+              - color: '#4dd2ff'
+                value: 10
+              - color: '#ffa31a'
+                value: 15
+              - color: '#ff1a1a'
+                value: 20
+            entities:
+              - sensor.stairs_detector_temperature
+              - sensor.buienradar_ground_temperature
+            icon: 'mdi:home-thermometer-outline'
+            show:
+              icon: true
+              legend: false
+              name: false
+            style: |
+              :host {
+                left: 11.6%;
+                top:  92.9%;
+                width: 23.5%;
+                overflow: hidden;
+                height: 15%;
+                background: none  !important;
+                box-shadow: none !important;
+              }
+              .header {
+                font-size: 1vw;
+                position: absolute !important;
+                width: 5% !important;
+                padding: 0 !important;
+                right: 20% !important;
+                top: 15% !important;
+              }
+              ha-card {
+                background: none  !important;
+                padding: 0 !important;
+              }
+              .icon > ha-icon {
+                width:1.8vw !important;
+                height:1.8vw !important;
+              }
+              .state__time{
+                font-size:0.9vw !important;
+                margin-top: 0.2vw;
+                font-weight: 300 !important;
+                opacity: 0.4 !important;
+              }
+              .states {
+                font-size: 0.5vw !important;
+                padding: 1vw 0vw 0vw 0vw  !important;
+                margin: auto !important;
+                width: 68%;
+              }
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/4
+            type: 'custom:mini-graph-card'
+          - backdrop: false
+            entity: weather.buienweather
+            name: ' '
+            style: |
+              :host {
+                left: 11.4%;
+                top:  85.5%;
+                width: 17%;
+                height: 7% !important;
+                overflow: hidden;
+                height: 8.5vw;
+                background: none  !important;
+                box-shadow: none !important;
+                font-size: 1vw !important;
+              }
+              ha-card {
+                background: none  !important;
+                box-shadow: none !important;
+                flex-flow: row-reverse !important;
+                padding: 0 !important;
+              }
+              .weather__info--add{
+                display : none !important;
+              }
+              .weather__info{
+                flex-grow: 1;
+                min-height: 0 !important;
+                height: 2.4vw;
+                margin-left: 0.6vw;
+              }
+              .weather__icon{
+                margin-right:0.5% !important;
+                margin-top: -3%;
+                width: 2vw !important;
+                height: 2vw !important;
+                flex: 0 0 2vw !important;
+              }
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/4
+            type: 'custom:simple-weather-card'
+          - action: none
+            image: /local/ui/sidebar/sideShadow.png
+            style:
+              height: 35%
+              left: 18.45%
+              pointer-events: none
+              top: 83%
+              width: 10%
+            type: image
+          - action: none
+            image: /local/ui/sidebar/sidebarInnerShadow.png
+            style:
+              left: 22.83%
+              opacity: 0.7
+              pointer-events: none
+              top: 50%
+              width: 1.2109375%
+            type: image
+          - entity: media_player.spotify_luke_vink
+            hide:
+              controls: true
+              name: true
+              power: true
+              source: true
+              volume: true
+              progress: true
+            idle_view:
+              after: 0.1
+              when_idle: true
+              when_paused: true
+              when_standby: true
+            style: |
+              :host {
+                left: 11.7%;
+                top: 49.5%;
+                width: 20.5078125%;
+                border-radius: 5vw;
+                overflow: hidden;
+                height: 3.8vw;
+                box-shadow: none !important;
+              }
+              ha-card {
+                border-radius: 5vw;
+                overflow: hidden !important;
+                box-shadow: none !important;
+                padding: 0.1vw 0.9vw 0.7vw 1.05vw !important;
+              }
+              ha-card.--inactive .mmp-player{
+                opacity: 0 !important;
+              }
+              #primaryProgress{
+                background: #474A52 !important; 
+              }              
+              .entity__info{
+                height: 2.6vw;
+                width: 65% !important;
+                max-height: 20vw !important;
+                font-size: 0.9vw !important;
+                margin:0 0 0 1.04vw !important;
+                display: inline-block !important;
+              }
+              div.mmp__bg{
+                background: #1E2022;
+              }
+              ha-card.--inactive div.mmp__bg{
+                background: none;
+              }
+              div.mmp-player {
+                padding: 0vw;
+                height: 100%;
+              }
+              ha-card {
+                height: 100%;
+              }
+              mmp-powerstrip {
+                width: 100%;
+                display: block;
+                padding:0;
+              }
+              ha-icon{
+                display: block !important;
+                height: 2vw !important;
+                width: 2vw !important;
+                margin: 0.3vw 1.5vw 0 0vw !important;
+              }
+              .entity__icon{
+                float:right;
+                padding: 0.1vw;
+                width: 3vw !important;
+                height: 3vw !important;
+                min-width: 0 !important;
+                min-height: 0 !important;
+                margin:0 !important;
+                display: inline-block !important;
+              }
+
+              .mmp-player__core {
+                height: auto;
+                width: 100% !important;
+                margin-bottom: 0.1vw;
+                display: block !important;
+                position: absolute !important;
+                bottom: 0;
+              }
+
+              .entity__info__media{
+                max-height: 20vw !important;
+              }
+              .entity__info__media span::before{
+                content: none !important
+              }
+              .attr__media_title{
+                display:block;
+                color: white;
+                font-weight: 300;
+                font-size: 1.2vw !important;
+              }
+              .attr__media_artist{
+                font-size: 0.8vw !important;
+                font-weight: 200;
+                color: white;
+              }
+              .entity__artwork{
+                display:inline-block;
+                float: right;
+                margin-right: 0 !important;
+                display: inline-block;
+                float: right;
+                width: 2.2vw !important;
+                height: 2.2vw !important;
+                min-width: 0 !important;
+                margin: 0.2vw 1vw 0 0 !important;
+              }
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/3
+            type: 'custom:mini-media-player'
+        image: /local/ui/floorplan/bg_health_graphs.png
+        style: |
+          ha-card {
+            background: rgba(42, 46, 48, 1)
+          }
+        type: picture-elements
+        
+        
+        
+    
+    
+#   - badges: []
+#     cards:
+#       - type: iframe
+#         url: 'https://lajv-ichor.herokuapp.com/'
+           
+#       - card:
+#           show_header_toggle: false
+#           type: entities
+#         filter:
+#           include:
+#             - domain: media_player
+#               options:
+#                 artwork: cover
+#                 artwork_border: true
+#                 hide:
+#                   icon: true
+#                   mute: false
+#                   power: true
+#                   power_state: true
+#                 style: |
+#                   :host {
+#                     border-radius: 1vw;
+#                     overflow: hidden;
+#                     height: 300px;
+#                     box-shadow: none !important;
+#                   }
+#                   ha-card {
+#                     border-radius: 1vw;
+#                     height: 300px;
+#                     overflow: hidden !important;
+#                     box-shadow: none !important;
+#                   }
+#                 type: 'custom:mini-media-player'
+#               state: /playing|paused/
+#         show_empty: false
+#         type: 'custom:auto-entities'
+#       - entity: sensor.recently_added_tv
+#         title: Recently Added Tv
+#         type: 'custom:upcoming-media-card'
+#       - card:
+#           artwork: cover
+#           entity: media_player.plex_projector
+#           hide:
+#             icon: true
+#             mute: false
+#             power: true
+#             power_state: true
+#           info: short
+#           style: |
+#             :host {
+#               border-radius: 1vw;
+#               overflow: hidden;
+#               height: 300px;
+#               box-shadow: none !important;
+#             }
+#             ha-card {
+#               border-radius: 1vw;
+#               height: 300px;
+#               overflow: hidden !important;
+#               box-shadow: none !important;
+#             }
+#           type: 'custom:mini-media-player'
+#         conditions:
+#           - entity: media_player.plex_projector
+#             state_not: unavailable
+#         type: conditional
+#       - date_format: DD MMM YYYY
+#         delivery: sensor.postnl_delivery
+#         distribution: sensor.postnl_distribution
+#         hide:
+#           delivered: false
+#           first_letter: false
+#           header: false
+#         letters: sensor.postnl_letters
+#         past_days: 1
+#         time_format: 'HH:mm'
+#         type: 'custom:postnl-card'
+#       - fillColor: 'rgba(89, 160, 238, 0.2)'
+#         icon: 'mdi:weather-rainy'
+#         lat: 51.9713
+#         lineColor: 'rgba(89, 160, 238, 1)'
+#         long: 6.7205
+#         type: 'custom:rain-card'
+#       - dateColor: black
+#         dateSize: 90
+#         dayWrapperLineColor: black
+#         dimFinishedEvents: true
+#         entities:
+#           - entity: calendar.actung_work
+#         eventBarColor: blue
+#         finishedEventFilter: grayscale(100%)
+#         finishedEventOpacity: 0.6
+#         fullDayEventText: All day
+#         locationIconColor: 'rgb(230, 124, 115)'
+#         locationLinkColor: black
+#         locationTextSize: 90
+#         maxDaysToShow: 7
+#         progressBarColor: blue
+#         showColors: true
+#         showCurrentEventLine: false
+#         showLocation: true
+#         showMonth: false
+#         showProgressBar: true
+#         timeColor: blue
+#         timeSize: 90
+#         title: Calendar
+#         titleColor: black
+#         titleSize: 100
+#         type: 'custom:atomic-calendar'
+#         untilText: Until
+#     icon: 'mdi:calendar'
+#     title: Practical

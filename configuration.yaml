@@ -25,10 +25,10 @@ browser_mod:
 
 frontend:
   themes: !include themes.yaml
-
+    
 homekit: !include homekit.yaml
 lovelace:
-  mode: yaml
+  mode: yaml    
 
 #################################################################
 ## Components
@@ -40,25 +40,23 @@ google:
   client_secret: !secret google_secret
 
 ## Spotify
-media_player:
-  - platform: spotify
-    name: Spotify Luke
+spotify:
     client_id: !secret spotify_client_id
     client_secret: !secret spotify_secret
-    cache_path: '.spotify_luke'
 
-  - platform: spotify
-    name: Spotify Santa
-    client_id: !secret spotify_s_client_id
-    client_secret: !secret spotify_s_secret
-    cache_path: '.spotify_santa'
-
+  
+#   - platform: spotify
+#     name: Spotify Santa
+#     client_id: !secret spotify_s_client_id
+#     client_secret: !secret spotify_s_secret
+#     cache_path: '.spotify_santa'
+       
 ## For robot vacuum & automation status
 vacuum:
   - platform: xiaomi_miio
     host: 192.168.178.227
     token: !secret xiaomi_robot_token
-
+    
 input_text:
   room_cleaning:
     name: Currently Cleaning Room
@@ -76,24 +74,48 @@ device_tracker:
     host: 192.168.178.1
     interval_seconds: 3
     consider_home: 30
-
+    
 
 ## Weather
 weather:
   - platform: buienradar
     name: 'buienWeather'
-    latitude: !secret latitude
-    longitude: !secret longitude
+    latitude: 52.365150
+    longitude: 4.934230
     forecast: true
 
 binary_sensor:
   - platform: workday
-    country: NL
+    country: NL   
 
+  - platform: tod
+    name: Night
+    after: sunset
+    before: sunrise    
 
+input_number:
+  nightime:
+    name: Nightime value
+    initial: 0
+    min: 0
+    max: 1
+    step: 1
+    mode: box
+    
+  range_high:
+    name: High Limit
+    initial: 8.0
+    min: 0
+    max: 30
+    
+  range_low:
+    name: High Limit
+    initial: 4.0
+    min: 0
+    max: 30
+    
 
-
-## For IR Blaster / Speaker remote control through homekit
+## For IR Blaster / Speaker remote control through homekit    
 switch:
   - platform: broadlink
     host: 192.168.178.185
@@ -116,12 +138,12 @@ switch:
          friendly_name: Projector Audio
          command_on: 'JgBYAAABJ5UUERMTFRAVERIUFBETExI4FRATExURFBESOBU1FTUSFBMSFTUSFBM3EhQSExQ2EzcSOBQREzgSExM3EjgTEhMUEAAFpwABKEoTAAxVAAEnSxUADQU==='
          command_off: 'JgBYAAABKpEVERIUFBETExUQFRIRFBQ2FBIRFBQRExMVNRU1EjgVEBUREjgVNRU1EhQUERU2ETgVNRUREhMVERI4EzcUERMTFAAFpAABKkgSAAxWAAEnSxMADQU==='
-
-
+        
+    
 #################################################################
 ## Sensors
-#################################################################
-
+#################################################################    
+    
 sensor:
 
 
@@ -135,7 +157,7 @@ sensor:
     client_secret: !secret spotify_secret
     number_of_playlists: 12
     name: SpotifyPlaylist_Santa
-
+    
   - platform: plex_recently_added
     name: Recently Added Movies # will create sensor.recently_added_movies
     token: !secret plex_token
@@ -152,9 +174,7 @@ sensor:
     section_types:
     - show
 
-  - platform: postnl
-    username: !secret postnl_user
-    password: !secret postnl_password
+
   - platform: time_date
     display_options:
       - 'time'
@@ -167,8 +187,8 @@ sensor:
       - 'beat'
   - platform: buienradar
     name: 'buienradar'
-    latitude: !secret latitude
-    longitude: !secret longitude
+    latitude: 52.365150
+    longitude: 4.934230
     timeframe: 120
     monitored_conditions:
       - stationname
@@ -186,8 +206,8 @@ sensor:
       - windspeed
       - windforce
       - windgust
-      - rain_1d
-      - windspeed_1d
+      - rain_1d 
+      - windspeed_1d 
       - rainchance_1d
       - precipitation
       - irradiance
@@ -198,8 +218,8 @@ sensor:
 
   - platform: darksky
     api_key: !secret dark_sky_key
-    latitude: !secret latitude
-    longitude: !secret longitude
+    latitude: 52.365150
+    longitude: 4.934230    
     forecast:
       - 0
     hourly_forecast:
@@ -213,22 +233,64 @@ sensor:
       - uv_index
       - moon_phase
       - alerts
+      
+  - platform: rest
+    name: luke_cgm
+    resource: https://lajv-ichor.herokuapp.com/api/v1/entries/current.json
+    value_template: >
+      sgv:{{value_json[0].sgv}}, trend:{{value_json[0].trend}}, direction:{{value_json[0].direction}}, time:{{ ( (as_timestamp(now()) - as_timestamp(value_json[0].dateString) ) / 60) | round(0) }}
 
+  - platform: rest
+    name: luke_treatments
+    resource: https://lajv-ichor.herokuapp.com/api/v1/treatments.json
+    value_template: >
+      carbs:{{value_json[0].carbs}}, eventType:{{value_json[0].eventType}}, insulin:{{value_json[0].insulin}}, time:{{ (as_timestamp(value_json[0].created_at)) }}
 
-#######################################################################################
+      
+####################################################################################### 
 ## Templates (Used for updating text in the UI and converting sensors to CSS values )
-#######################################################################################
-
+#######################################################################################        
+      
   - platform: template
     sensors:
 
-      ## to get the current view of my tablet for UI automations
+      luke_cgm_sgv:
+        value_template: >
+          {{ states('sensor.luke_cgm') | regex_findall_index("sgv:(\d+)") }}
+        unit_of_measurement: "mmol"
+      luke_cgm_trend:
+        value_template: >
+          {{ states('sensor.luke_cgm') | regex_findall_index("trend:(\d+)") }}
+      luke_cgm_direction:
+        value_template: >
+          {{ states('sensor.luke_cgm') | regex_findall_index("direction:(\w+)") }}
+      luke_cgm_time:
+        value_template: >
+          {{ states('sensor.luke_cgm') | regex_findall_index("time:(\d+)") }}
+      luke_cgm_sgv_mmol:
+        value_template: >
+          {%- set mgdl = states('sensor.luke_cgm_sgv') | float %}
+          {%- set mmol = (mgdl / 18) %}
+          {{ mmol | float | round(1)}}
+        unit_of_measurement: "mmol/L"
+    
+      luke_inslulin:
+        value_template: >
+          {{ states('sensor.luke_treatments') | regex_findall_index("insulin:(\d+)") }}
+        unit_of_measurement: "units"
+
+      luke_carbs:
+        value_template: >
+          {{ states('sensor.luke_treatments') | regex_findall_index("carbs:(\d+)") }}
+        unit_of_measurement: "g"          
+
+      ## to get the current view of my tablet for UI automations 
       tablet_view:
            value_template: "{{ states.sensor.tablet.attributes['path'] | default('/lovelace/0') }}"
            friendly_name: Tablet View
 
 
-      ## Calculates daylight brightness out of 100%
+      ## Calculates daylight brightness out of 100% 
       sunlight_pct:
         entity_id:
           - sun.sun
@@ -248,10 +310,10 @@ sensor:
           {%- set brightness = adjusted_elevation * cloud_factor %}
           {{ brightness | round }}
         unit_of_measurement: '%'
-        device_class: 'illuminance'
-
-
-      ## Daylight brightness converted to opacity for CSS
+        device_class: 'illuminance'   
+        
+        
+      ## Daylight brightness converted to opacity for CSS     
       sunlight_opacity:
         entity_id:
           - sensor.sunlight_pct
@@ -259,9 +321,9 @@ sensor:
           {%- set sunpct = states('sensor.sunlight_pct') | float %}
           {%- set opacity = sunpct / 100 | float %}
           {{ opacity }}
-
-
-      ## Converts time and date into sentence for UI
+          
+          
+      ## Converts time and date into sentence for UI     
       day:
         entity_id: sensor.date
         value_template: >
@@ -272,15 +334,15 @@ sensor:
         value_template: >
           {% set months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
           {{ strptime(states('sensor.date'), '%Y-%m-%d').day }}
-          {{ months[now().month-1] }}
-
+          {{ months[now().month-1] }} 
+          
       date_string:
         friendly_name: "Full Date"
         value_template: "{{ states('sensor.day') }}, {{ states('sensor.month') }} {{ now().year }}"
-
-
+        
+        
       ## Vaccuum templates, for showing attributes as sensors, etc.
-
+        
       vacuum_status:
         friendly_name: "Vacuum - Status"
         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
@@ -311,14 +373,14 @@ sensor:
       vacuum_cleaned_area:
         friendly_name: "Vacuum - Cleaned Area"
         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
-
+        
 
 
 #################################################################
 ## Light Groups
 #################################################################
 
-
+     
 light:
  - platform: group
    name: Kitchen Lights
@@ -327,13 +389,13 @@ light:
     - light.kitchen_2
     - light.kitchen_3
     - light.kitchen_4
-
+    
  - platform: group
    name: Roof Lights
    entities:
      - light.roof_garden
      - light.roof_plants
-
+    
  - platform: group
    name: Kitchen Fridge Lights
    entities:
@@ -343,29 +405,32 @@ light:
    name: Kitchen Sink Lights
    entities:
      - light.kitchen_3
-     - light.kitchen_4
+     - light.kitchen_4   
 
  - platform: group
    name: Living Room Lights
    entities:
      - light.couch
      - light.table
-     - light.plant_table
-
+     - light.plant_table 
+    
  - platform: group
    name: Toilet Lights
    entities:
      - light.toilet_1
-     - light.toilet_2
-
+     - light.toilet_2    
+    
  - platform: group
    name: Bedroom Lights
    entities:
      - light.bedroom_roof
      - light.bed
-
+     
  - platform: group
    name: Stairs Lights
    entities:
      - light.stairs_2
      - light.door
+ 
+
+

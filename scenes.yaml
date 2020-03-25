@@ -48,6 +48,22 @@
       min_mireds: 153
       state: 'off'
       supported_features: 63
+    light.roof_garden:
+      effect_list:
+      - random
+      friendly_name: Roof Garden
+      max_mireds: 500
+      min_mireds: 153
+      state: unavailable
+      supported_features: 63
+    light.roof_plants:
+      effect_list:
+      - random
+      friendly_name: Roof Plants
+      max_mireds: 500
+      min_mireds: 153
+      state: unavailable
+      supported_features: 63
     light.study_2:
       effect_list:
       - colorloop
@@ -58,16 +74,13 @@
       state: 'off'
       supported_features: 63
     light.table:
-      brightness: 94
-      color_temp: 422
-      effect: none
       effect_list:
       - colorloop
       - random
       friendly_name: Table
       max_mireds: 500
       min_mireds: 153
-      state: 'on'
+      state: 'off'
       supported_features: 63
 - id: '1579037859497'
   name: noplex
@@ -100,3 +113,29 @@
       min_mireds: 153
       state: 'on'
       supported_features: 63
+- id: '1584628498818'
+  name: toiletOn
+  entities:
+    light.toilet_1:
+      brightness: 254
+      friendly_name: Toilet 1
+      transition: 0.5
+      state: 'on'
+      supported_features: 41
+    light.toilet_2:
+      brightness: 254
+      friendly_name: Toilet 2
+      state: 'on'
+      transition: 0.5
+      supported_features: 41
+- id: '1584628536827'
+  name: toiletOff
+  entities:
+    light.toilet_1:
+      friendly_name: Toilet 1
+      state: 'off'
+      supported_features: 41
+    light.toilet_2:
+      friendly_name: Toilet 2
+      state: 'off'
+      supported_features: 41

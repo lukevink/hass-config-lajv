@@ -1,0 +1,64 @@
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c148 79.163765, 2019/01/24-18:11:46        ">
+ <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about=""
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+    xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"
+    xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+    xmlns:xmpDM="http://ns.adobe.com/xmp/1.0/DynamicMedia/"
+    xmlns:stDim="http://ns.adobe.com/xap/1.0/sType/Dimensions#"
+   dc:identifier="060A2B340101010501010D111300000028C4E203028905A528AE8C85905019E4"
+   dc:format="MXF OP1a"
+   xmpMM:InstanceID="xmp.iid:86667817-a603-4788-a057-11af943eeeb9"
+   xmpMM:DocumentID="02a9dccf-16ca-916e-a02e-bd3800000091"
+   xmpMM:OriginalDocumentID="xmp.did:e2061cdb-5b7f-4225-81ff-2f41c7e64a13"
+   xmp:MetadataDate="2020-02-23T19:06:33+01:00"
+   xmp:ModifyDate="2020-02-23T19:06:33+01:00"
+   xmp:CreateDate="2020-02-23T19:06:02+01:00"
+   xmpDM:videoFrameRate="25.000000"
+   xmpDM:videoFieldOrder="Progressive"
+   xmpDM:videoPixelAspectRatio="1/1"
+   xmpDM:audioSampleRate="48000"
+   xmpDM:audioSampleType="16Int"
+   xmpDM:audioChannelType="Stereo"
+   xmpDM:previewRenderOriginalHadNoAlpha="False"
+   xmpDM:startTimeScale="25"
+   xmpDM:startTimeSampleSize="1">
+   <xmpMM:History>
+    <rdf:Seq>
+     <rdf:li
+      stEvt:action="saved"
+      stEvt:instanceID="11459a94-823b-3857-e99c-8de4000000be"
+      stEvt:when="2020-02-23T19:06:33+01:00"
+      stEvt:softwareAgent="Adobe Premiere Pro 2019.1 (Macintosh)"
+      stEvt:changed="/"/>
+     <rdf:li
+      stEvt:action="saved"
+      stEvt:instanceID="xmp.iid:e430640d-efc3-4d82-a4a2-0402b618445c"
+      stEvt:when="2020-02-23T19:06:33+01:00"
+      stEvt:softwareAgent="Adobe Premiere Pro 2019.1 (Macintosh)"
+      stEvt:changed="/"/>
+     <rdf:li
+      stEvt:action="saved"
+      stEvt:instanceID="xmp.iid:86667817-a603-4788-a057-11af943eeeb9"
+      stEvt:when="2020-02-23T19:06:33+01:00"
+      stEvt:softwareAgent="Adobe Premiere Pro 2019.1 (Macintosh)"
+      stEvt:changed="/metadata"/>
+    </rdf:Seq>
+   </xmpMM:History>
+   <xmpDM:videoFrameSize
+    stDim:w="1280"
+    stDim:h="720"
+    stDim:unit="pixel"/>
+   <xmpDM:duration
+    xmpDM:value="17"
+    xmpDM:scale="1/25"/>
+   <xmpDM:startTimecode
+    xmpDM:timeFormat="25Timecode"
+    xmpDM:timeValue="00:00:00:00"/>
+   <xmpDM:altTimecode
+    xmpDM:timeValue="00:00:00:00"
+    xmpDM:timeFormat="25Timecode"/>
+  </rdf:Description>
+ </rdf:RDF>
+</x:xmpmeta>

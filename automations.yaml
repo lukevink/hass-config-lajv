@@ -1,3 +1,47 @@
+## Sensor Automations:
+
+  - alias: 'Toilet On'
+    trigger:
+      - entity_id: binary_sensor.toilet
+        platform: state
+        to: 'on'
+    action:
+      service: scene.turn_on
+      entity_id: scene.toilet_on
+        
+  - alias: 'Toilet On'
+    trigger:
+      - entity_id: binary_sensor.toilet
+        platform: state
+        to: 'off'
+    action:
+      service: scene.turn_on
+      entity_id: scene.toilet_off
+        
+## Set nighttime value for Health Graphs
+
+  - alias: 'Set Nighttime input'
+    trigger:
+      platform: sun
+      event: sunset
+      offset: "-00:45:00"
+    action:
+      entity_id: input_number.nighttime
+      service: input_number.set_value
+      data:
+        value: 20
+        
+  - alias: 'Set Daytime input'
+    trigger:
+      platform: sun
+      event: sunrise
+      offset: "-00:45:00"
+    action:
+      entity_id: input_number.nighttime
+      service: input_number.set_value
+      data:
+        value: 0
+        
 ## Set custom theme on startup
   - alias: 'System - Set Custom Theme at Startup'
     initial_state: 'true'
@@ -10,10 +54,10 @@
         name: slate
 
 ## Browser-mod Switch views when something happens
-  - alias: Sound Up
+  - alias: Change to Media Screen
     trigger:
       - platform: state
-        entity_id: media_player.plex_lajv_aphrodite
+        entity_id: media_player.plex_projector
         to: 'playing'
       - platform: state
         entity_id: media_player.spotify
@@ -61,7 +105,104 @@
     action:
       service: switch.turn_on
       entity_id: switch.speakers_input           
-      
+
+
+#### Sugar levels low ####  
+
+  - alias: Low Blood Sugar!
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.luke_cgm_sgv_mmol
+        below: '4'
+    action:
+      - service: scene.create
+        data:
+          scene_id: snapshot_plant_table
+          snapshot_entities:
+            - light.plant_table
+      - service: light.turn_on
+        data:
+            brightness: 150
+            rgb_color: [255, 0, 0]
+            entity_id:
+              - light.plant_table    
+      - service: browser_mod.popup
+        data:
+          title: Low Blood Sugar!
+          card:
+            type: 'custom:mini-graph-card'
+            color_thresholds:
+              - color: '#FF004C'
+                value: 3
+              - color: '#03B4FF'
+                value: 5
+              - color: '#03B4FF'
+                value: 8                
+              - color: '#B51BE4'
+                value: 9
+            line_width: 2
+            points_per_hour: 6
+            hours_to_show: 25
+            height: 130
+            update_interval: 30
+            entities:
+              - entity: sensor.buienradar_ground_temperature
+              - entity: binary_sensor.night
+                color: rgba(255,255,255,.25)
+                y_axis: secondary
+                smoothing: false 
+                aggregate_func: min
+                show_state: false
+                show_line: false
+                show_points: false
+              - entity: input_number.range_high
+                color: rgba(255,255,255,.1)
+                smoothing: false 
+                line_width: 1
+                aggregate_func: max
+                show_state: false
+                show_line: true
+                show_points: false
+              - entity: input_number.range_low
+                color: rgba(255,255,255,.1)
+                smoothing: false 
+                line_width: 1
+                aggregate_func: max
+                show_state: false
+                show_line: true
+                show_points: false
+            state_map:
+              - value: "off"
+                label: "Day"
+              - value: "on"
+                label: "Night"
+            icon: 'mdi:water-outline'
+            align_state: right
+            align_icon: right
+            name_adaptive_color: true
+            icon_adaptive_color: true
+            show:
+              icon: true
+              legend: false
+              name: false
+              fill: false
+              points: hover
+          deviceID:
+            - e3bcb892-264fae95
+            - 0290dd82-2a03ce63
+            - tablet
+            
+  - alias: Normal Blood Sugar
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.luke_cgm_sgv_mmol
+        above: '4'
+    action:
+      - service: scene.turn_on
+        entity_id: scene.snapshot_plant_table
+      - service: browser_mod.close_popup
+
+
       
 #### Automate lights when watching movies, pause on toilet break ####  
 
@@ -69,7 +210,7 @@
     trigger:
       - platform: state
         entity_id: media_player.plex_projector
-        to: '1'
+        to: 'playing'
     condition:
       - condition: state
         entity_id: sun.sun
@@ -77,6 +218,41 @@
     action:
       service:  script.turn_on
       entity_id: script.plex_moviestarted
+
+  - alias: Plex Paused
+    trigger:
+      - platform: state
+        entity_id: media_player.plex_projector
+        to: 'paused'
+    condition:
+      - condition: state
+        entity_id: light.toilet_1
+        state: 'on'        
+    action:
+      - service: browser_mod.popup
+        data:
+          title: Movie Paused
+          style:
+            width: 400px
+          card:
+            type: 'custom:button-card'
+            icon: mdi:play-circle
+            tap_action:
+              action: call-service
+              service: script.turn_on
+              service_data:
+                entity_id: script.plex_continuemovie
+            label: Continue Playing
+            show_label: true
+            size: 45%
+            styles:
+              card:
+                - height: 400px
+          deviceID:
+            - e3bcb892-264fae95
+            - 0290dd82-2a03ce63
+            - tablet
+
       
   - alias: Plex Playing Break
     trigger:
@@ -88,8 +264,9 @@
         entity_id: media_player.plex_projector
         state: 'playing'
     action:
-      service:  media_player.media_pause
-      entity_id: media_player.plex_projector
+      - service:  media_player.media_pause
+        entity_id: media_player.plex_projector
+
       
   - alias: Plex Playing Break Study
     trigger:
