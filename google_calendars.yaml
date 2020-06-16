@@ -1,0 +1,70 @@
+
+- cal_id: sq5vrc7b3aakt4mf1f87o4npcu3g43qu@import.calendar.google.com
+  entities:
+  - device_id: luke_lukevink_com_s_trips_on_kayak
+    ignore_availability: true
+    name: luke@lukevink.com's Trips on KAYAK
+    track: true
+
+- cal_id: luke@lukevink.com
+  entities:
+  - device_id: personal
+    ignore_availability: true
+    name: Personal
+    track: true
+
+- cal_id: luke@achtung.nl
+  entities:
+  - device_id: actung_work
+    ignore_availability: true
+    name: Actung! Work
+    track: true
+
+- cal_id: carmen@achtung.nl
+  entities:
+  - device_id: carmen_achtung_nl
+    ignore_availability: true
+    name: carmen@achtung.nl
+    track: true
+
+- cal_id: lukevink.com_dd5appvpgs861brhs1rcepg94c@group.calendar.google.com
+  entities:
+  - device_id: important_dates
+    ignore_availability: true
+    name: Important Dates
+    track: true
+
+- cal_id: daniel@achtung.nl
+  entities:
+  - device_id: daniel_achtung_nl
+    ignore_availability: true
+    name: daniel@achtung.nl
+    track: true
+
+- cal_id: sasha@achtung.nl
+  entities:
+  - device_id: sasha_achtung_nl
+    ignore_availability: true
+    name: sasha@achtung.nl
+    track: true
+
+- cal_id: en.dutch#holiday@group.v.calendar.google.com
+  entities:
+  - device_id: holidays_in_netherlands
+    ignore_availability: true
+    name: Holidays in Netherlands
+    track: true
+
+- cal_id: philip@achtung.nl
+  entities:
+  - device_id: philip_achtung_nl
+    ignore_availability: true
+    name: philip@achtung.nl
+    track: true
+
+- cal_id: joeri@achtung.nl
+  entities:
+  - device_id: joeri_achtung_nl
+    ignore_availability: true
+    name: joeri@achtung.nl
+    track: true

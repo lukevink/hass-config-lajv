@@ -114,6 +114,18 @@ slowly_turn_on_livingroom:
         color_temp: 360
         transition: 4
         
+        
+speak_sugar_level:
+    alias: 'Ask Google for Sugar Level'
+    sequence:
+    - delay:
+        seconds: 1
+    - service: tts.google_say
+      entity_id:
+        - media_player.home_hub
+      data_template:
+        message: >-
+          Luke's sugar level is {{states('sensor.luke_cgm_sgv_mmol')}}       
     
 ####  Scripts for Xiaomi Robot room by room cleaning ####  
 ## (To do this, robot must ONLY use zoned cleaning, otherwise the map will reorient itself! :S )

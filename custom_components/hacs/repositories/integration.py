@@ -1,4 +1,5 @@
 """Class for integrations in HACS."""
+# pylint: disable=attribute-defined-outside-init
 from integrationhelper import Logger
 
 from homeassistant.loader import async_get_custom_components
@@ -26,6 +27,16 @@ class HacsIntegration(HacsRepository):
         """Return localpath."""
         return f"{self.hacs.system.config_path}/custom_components/{self.data.domain}"
 
+    async def async_post_installation(self):
+        """Run post installation steps."""
+        if self.data.config_flow:
+            if self.data.full_name != "hacs/integration":
+                await self.reload_custom_components()
+            if self.data.first_install:
+                self.pending_restart = False
+                return
+        self.pending_restart = True
+
     async def validate_repository(self):
         """Validate."""
         await self.common_validate()
@@ -45,6 +56,8 @@ class HacsIntegration(HacsRepository):
         try:
             await get_integration_manifest(self)
         except HacsException as exception:
+            if self.hacs.action:
+                raise HacsException(exception)
             self.logger.error(exception)
 
         # Handle potential errors
@@ -54,22 +67,9 @@ class HacsIntegration(HacsRepository):
                     self.logger.error(error)
         return self.validate.success
 
-    async def registration(self):
-        """Registration."""
-        if not await self.validate_repository():
-            return False
-
-        # Run common registration steps.
-        await self.common_registration()
-
-        # Set local path
-        self.content.path.local = self.localpath
-
-    async def update_repository(self):
+    async def update_repository(self, ignore_issues=False):
         """Update."""
-        if self.hacs.github.ratelimits.remaining == 0:
-            return
-        await self.common_update()
+        await self.common_update(ignore_issues)
 
         if self.data.content_in_root:
             self.content.path.remote = ""
@@ -91,3 +91,4 @@ class HacsIntegration(HacsRepository):
         self.logger.info("Reloading custom_component cache")
         del self.hacs.hass.data["custom_components"]
         await async_get_custom_components(self.hacs.hass)
+        self.logger.info("Custom_component cache reloaded")

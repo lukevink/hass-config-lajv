@@ -89,11 +89,8 @@ class HACSSensor(HACSDevice):
                 {
                     "name": repository.data.full_name,
                     "display_name": repository.display_name,
-                    "installed version": repository.display_installed_version,
-                    "available version": repository.display_available_version,
+                    "installed_version": repository.display_installed_version,
+                    "available_version": repository.display_available_version,
                 }
             )
-        return {
-            "repositories": data,
-            "attribution": "It is expected to see [object Object] here, for more info see https://hacs.xyz/docs/basic/sensor",
-        }
+        return {"repositories": data}

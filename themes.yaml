@@ -1,5 +1,6 @@
 # Based on https://github.com/seangreen2/slate_theme
 slate:
+  lovelace-background: '#434b4d'
   # Main colors
   primary-color: '#434b4d'
   accent-color: '#ff0000'

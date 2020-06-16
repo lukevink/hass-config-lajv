@@ -1,6 +1,14 @@
-## Sensor Automations:
+      
+##############################################      
+################### Toilet ################### 
+##############################################
 
-  - alias: 'Toilet On'
+# Motion sensor on door for initial light, Distance sensor pointed at the toilet to keep lights on.
+# This basically makes sure the lights dont stay on for 5 minutes, they turn off if no one is there.
+
+  #Detects first motion at toilet door
+  - alias: 'Toilet On Motion'
+    # hide_entity: true
     trigger:
       - entity_id: binary_sensor.toilet
         platform: state
@@ -8,19 +16,181 @@
     action:
       service: scene.turn_on
       entity_id: scene.toilet_on
-        
-  - alias: 'Toilet On'
+
+  #Keeps lights on when distance sensor sees someone on the toilet
+  - alias: 'Toilet On Occupied'
+    # hide_entity: true
+    trigger:
+      - entity_id: binary_sensor.toilet_in_use
+        platform: state
+        to: 'on'
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 7
+    action:
+      service: scene.turn_on
+      entity_id: scene.toilet_on
+
+  #Keeps lights on when distance sensor sees and motion is triggered
+  - alias: 'Toilet On Occupied with Motion'
+    # hide_entity: true
+    trigger:
+      - entity_id: binary_sensor.toilet_in_use
+        platform: state
+        to: 'on'
+    condition:
+        condition: state
+        entity_id: binary_sensor.toilet
+        state: 'on'
+    action:
+      service: scene.turn_on
+      entity_id: scene.toilet_on
+
+  #If no motion or proximity, turn off toilet lights
+  - alias: 'Toilet Off'
+    # hide_entity: true
     trigger:
       - entity_id: binary_sensor.toilet
         platform: state
         to: 'off'
+    condition:
+        condition: state
+        entity_id: binary_sensor.toilet_in_use
+        state: 'off'
     action:
       service: scene.turn_on
       entity_id: scene.toilet_off
-        
+
+  #Keep turning off toilet lights every 5 seconds 
+  #if light has been turned on for more than 3 mins
+  - alias: 'Toilet Off Distance'
+    # hide_entity: true
+    trigger:
+      platform: time_pattern
+      seconds: "/5"
+    condition:
+      - condition: state
+        entity_id: light.toilet_1
+        state: 'on'
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 120
+      - condition: state
+        entity_id: binary_sensor.toilet_in_use
+        state: 'off'
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 12
+    action:
+      service: scene.turn_on
+      entity_id: scene.toilet_off  
+      
+  #Make sure if someone is sitting on the toilet, 
+  #The lights remain on
+  - alias: 'Toilet On Distance'
+    # hide_entity: true
+    trigger:
+      platform: time_pattern
+      seconds: "/1"
+    condition:
+      - condition: state
+        entity_id: binary_sensor.toilet_in_use
+        state: 'on'
+    action:
+      service: scene.turn_on
+      entity_id: scene.toilet_on
+
+
+      
+##############################################      
+#################### Roof #################### 
+##############################################
+
+# Two motion sensors detect if someone is moving upstairs or downstairs, counts people on roof.
+# A vibration sensor detects the angle of the roof door and turns lights on and off.
+
+  - alias: Person goes upstairs
+    # hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.roof_motion
+        to: 'on'
+    condition:
+        - condition: state
+          entity_id: binary_sensor.stairs_detector_motion
+          state: 'on'
+    action:
+      service: counter.increment
+      entity_id: counter.people_on_roof 
+
+
+  - alias: Person goes downstairs
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.stairs_detector_motion
+        to: 'on'
+    condition:
+        - condition: state
+          entity_id: binary_sensor.roof_motion
+          state: 'on'
+        - condition: numeric_state
+          entity_id: counter.people_on_roof
+          above: 0
+    action:
+      service: counter.decrement
+      entity_id: counter.people_on_roof
+      
+      
+  - alias: Turn on Roof
+    # hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: binary_sensor.roof_door_open
+      from: "off"
+      to: "on"
+    condition:
+      condition: state  
+      entity_id: sun.sun
+      state: 'below_horizon'
+    action:
+      service: homeassistant.turn_on
+      entity_id:
+        - light.roof_plants
+        - light.roof_garden  
+
+
+  - alias: Turn Off Roof
+    # hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: binary_sensor.roof_door_open
+      from: "on"
+      to: "off"
+    action:
+      service: homeassistant.turn_off
+      entity_id:
+        - light.roof_plants
+        - light.roof_garden          
+
+  - alias: "Roof Off Morning"
+    # hide_entity: true
+    trigger:
+      - platform: time
+        at: '04:00:00'
+    action:
+      - service: homeassistant.turn_off
+        data:
+          entity_id:
+            - light.roof_plants
+            - light.roof_garden
+           
 ## Set nighttime value for Health Graphs
 
   - alias: 'Set Nighttime input'
+    # hide_entity: true
     trigger:
       platform: sun
       event: sunset
@@ -32,6 +202,7 @@
         value: 20
         
   - alias: 'Set Daytime input'
+    # hide_entity: true
     trigger:
       platform: sun
       event: sunrise
@@ -44,6 +215,7 @@
         
 ## Set custom theme on startup
   - alias: 'System - Set Custom Theme at Startup'
+    # hide_entity: true
     initial_state: 'true'
     trigger:
       platform: homeassistant
@@ -55,6 +227,7 @@
 
 ## Browser-mod Switch views when something happens
   - alias: Change to Media Screen
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: media_player.plex_projector
@@ -65,11 +238,17 @@
     action:
       service:  script.turn_on
       entity_id: script.navigate_to_media
-        
+      
+      
+##############################################      
+################# IR Blaster ################# 
+##############################################
+
 #### Homekit make toggle a button:
 #### This controls my IR blaster to send volume commands, so I can just keep tapping the button like it was an actual remote in Homekit.
 
   - alias: Sound Up
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: switch.speakers_vol_up
@@ -79,6 +258,7 @@
       entity_id: switch.speakers_vol_up
 
   - alias: Sound Down
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: switch.speakers_vol_down
@@ -88,16 +268,25 @@
       entity_id: switch.speakers_vol_down
 
   - alias: Projector Off
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: device_tracker.projector
         to: 'not_home'
+    condition:
+      condition: state
+      entity_id: device_tracker.projector
+      state: 'not_home'
+      # optional: trigger only if state was this for last 5 minutes.
+      for:
+        minutes: 5
     action:
       service: switch.turn_off
-      entity_id: switch.speakers_input
- 
+      entity_id: switch.speakers_input         
+
  
   - alias: Projector On
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: device_tracker.projector
@@ -107,25 +296,71 @@
       entity_id: switch.speakers_input           
 
 
-#### Sugar levels low ####  
 
+##############################################      
+################## Diabetes ################## 
+##############################################
+
+# Fun fact, im a type 1 diabetic. My house knows my sugar level (connected CgM)
+# If a low sugar is detected, the tablet displays a warning and turns lights red
+# Light colors also warn me if there is an issue with my insulin pump
+
+  #### Sugar levels low ####  
+  - alias: Issue with CGM!
+    # hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: sensor.luke_cgm_direction
+        to: 'NOT'
+    action:
+      - service: scene.create
+        data:
+          scene_id: snapshot_cabinet
+          snapshot_entities:
+            - light.cabinet
+      - service: light.turn_on
+        data:
+            brightness: 150
+            rgb_color: [0, 30, 200]
+            entity_id:
+              - light.cabinet
+              
+  - alias: No issue with cgm
+    # hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: sensor.luke_cgm_direction
+        from: 'NOT'
+    condition:
+        condition: numeric_state
+        entity_id: sensor.luke_cgm_sgv_mmol
+        above: '4'
+    action:
+      - service: scene.turn_on
+        entity_id: scene.snapshot_cabinet
+      - service: browser_mod.close_popup            
+              
   - alias: Low Blood Sugar!
+    # hide_entity: true
     trigger:
       - platform: numeric_state
         entity_id: sensor.luke_cgm_sgv_mmol
         below: '4'
+    condition:
+        condition: template
+        value_template: "{{ states.sensor.luke_cgm_direction.state != 'NOT' }}"
     action:
       - service: scene.create
         data:
-          scene_id: snapshot_plant_table
+          scene_id: snapshot_cabinet
           snapshot_entities:
-            - light.plant_table
+            - light.cabinet
       - service: light.turn_on
         data:
             brightness: 150
             rgb_color: [255, 0, 0]
             entity_id:
-              - light.plant_table    
+              - light.cabinet    
       - service: browser_mod.popup
         data:
           title: Low Blood Sugar!
@@ -193,20 +428,24 @@
             - tablet
             
   - alias: Normal Blood Sugar
+    # hide_entity: true
     trigger:
       - platform: numeric_state
         entity_id: sensor.luke_cgm_sgv_mmol
         above: '4'
     action:
       - service: scene.turn_on
-        entity_id: scene.snapshot_plant_table
+        entity_id: scene.snapshot_cabinet
       - service: browser_mod.close_popup
 
-
+##############################################      
+############### Watching movies ############## 
+##############################################
       
 #### Automate lights when watching movies, pause on toilet break ####  
 
   - alias: Plex Playing
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: media_player.plex_projector
@@ -220,6 +459,7 @@
       entity_id: script.plex_moviestarted
 
   - alias: Plex Paused
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: media_player.plex_projector
@@ -255,6 +495,7 @@
 
       
   - alias: Plex Playing Break
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: light.toilet_1
@@ -269,6 +510,7 @@
 
       
   - alias: Plex Playing Break Study
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: light.study
@@ -283,6 +525,7 @@
       
       
   - alias: Plex Playing Continue
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: light.toilet_1
@@ -299,6 +542,7 @@
       entity_id: media_player.plex_projector        
 
   - alias: Plex Playing Continue Study
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: light.study
@@ -317,6 +561,7 @@
 
 
   - alias: Plex Stopped
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: media_player.plex_projector
@@ -328,11 +573,17 @@
     action:
       service: script.turn_on
       entity_id: script.slowly_turn_on_livingroom
-      
+
+
+     
+##############################################      
+############ Xiomi Robot UI status ########### 
+##############################################
 
 ####  Updating status of Room Cleaning input ####  
       
   - alias: Vacuum Returning
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: sensor.vacuum_status
@@ -344,6 +595,7 @@
         value: "goinghome"
         
   - alias: Vacuum Idle
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: sensor.vacuum_status
@@ -355,6 +607,7 @@
         value: "paused"   
         
   - alias: Vacuum Charging
+    # hide_entity: true
     trigger:
       - platform: state
         entity_id: sensor.vacuum_status
@@ -366,13 +619,16 @@
         value: "charging"
         
  
- 
+ ##############################################      
+ ############ UI Sounds for tablet ############ 
+ ##############################################
  
   - alias: ui_sound_on
+    # hide_entity: true
     trigger:
     - platform: state
       entity_id:
-        ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.plant_table', 
+        ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.cabinet', 
         'light.table', 'light.couch', 'light.kitchen_4', 'light.kitchen_3', 'light.kitchen_2', 'light.kitchen_1', 'light.roof_plants',
         'light.roof_garden', 'switch.speakers_vol_up', 'switch.speakers_vol_down', 'switch.power', 'switch.speakers_input',
         'light.balcony','light.study']
@@ -386,10 +642,11 @@
         media_content_type: music
 
   - alias: ui_sound_off
+    # hide_entity: true
     trigger:
     - platform: state
       entity_id:
-        ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.plant_table', 
+        ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.cabinet', 
         'light.table', 'light.couch', 'light.kitchen_4', 'light.kitchen_3', 'light.kitchen_2', 'light.kitchen_1', 'light.roof_plants',
         'light.roof_garden', 'switch.speakers_vol_up', 'switch.speakers_vol_down', 'switch.power', 'switch.speakers_input',
         'light.balcony','light.study']
@@ -403,6 +660,7 @@
         media_content_type: music
 
   - alias: ui_sound_popup
+    # hide_entity: true
     trigger:
       platform: event
       event_type: call_service
@@ -417,6 +675,7 @@
         media_content_type: music
         
   - alias: ui_sound_view
+    # hide_entity: true
     trigger:
       platform: state
       entity_id: sensor.tablet_view

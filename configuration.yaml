@@ -18,45 +18,147 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 browser_mod:
   devices:
-    fce10b49-92cd38df:
+    8fbe9ff3-9e1ed0d0:
       name: mac_chrome
-    ca49e139-5ccf9f14:
+    e98effc3-b940ce40:
       name: tablet
+
+
+
+##############################################      
+################ UI Libraries ################ 
+##############################################
+
+# I chose to not use HACS as some libraries are custom (for styling) and I prefer manual control.
+
+# In addition, in HACS I have the following installed:
+# Browser Mod - https://github.com/thomasloven/hass-browser_mod
+# Plex Recently Added - https://github.com/custom-components/sensor.plex_recently_added
+# Spotcast - https://github.com/fondberg/spotcast 
+
 
 frontend:
   themes: !include themes.yaml
-    
+
 homekit: !include homekit.yaml
 lovelace:
-  mode: yaml    
+  mode: yaml
+  resources:
+    ###### CUSTOM CARDS / COMPONENTS #####
+  
+  - type: module
+    url: /local/js/card-mod.js
+  - type: module
+    url: /local/js/custom-header.js?v=1.5.1
+  - type: js
+    url: /local/js/text-element.js?v=0.0.2
+  - type: module
+    url: /local/js/config-template-card.js?v=1.1.2
+  - type: module
+    url: /browser_mod.js
+  - type: js
+    url: /local/js/bar-card.js
+  - type: module
+    url: /local/js/button-entity-row.js
+  - type: module
+    url: /local/js/circle-sensor-card.js
+  - type: js
+    url: /local/js/light-entity-card.js
+  - type: module
+    url: /local/js/layout-card.js
+  - type: module
+    url: /local/js/mini-graph-card-bundle.js?v=0.9.3
+  - type: module
+    url: /local/js/mini-media-player-bundle.js?v=1.7.0
+  - type: js
+    url: /local/js/vertical-stack-in-card.js
+  - type: module
+    url: /local/js/popup-backdrop-filter.js
+  - type: js
+    url: /local/js/upcoming-media-card.js
+  - type: module
+    url: /local/js/weather-card-chart.js
+  - type: module
+    url: /local/js/simple-weather-card-bundle.js?v=0.7.2
+  - type: module
+    url: /local/js/homekit-panel-card.js?v=0.4.7
+  - type: module
+    url: /local/js/weather-card.js
+  - type: module
+    url: /local/js/auto-entities.js
+  - type: module
+    url: /local/js/now-playing-card.js
+  - type: module
+    url: /local/js/button-card.js  
+    
+    ###################################################
+    ##### CARDS I CREATED OR MODIFIED FOR STYLING #####
+    ###################################################
+    # I cannot support any issues with these, they are 
+    # completely custom. I cant confirm that CSS styles 
+    # will look right in any other browser than my own.
+    
+  - type: js
+    url: /local/js/spotify-card.js?v=1.24.15
+  - type: module
+    url: /local/js/buien-rain-card.js?v=0.0.60
+  - type: js
+    url: /local/js/light-slider-card-lajv.js
+  - type: js
+    url: /local/js/nightscout-card.js?v=0.0.31
 
+
+hue:
+  bridges:
+    - host: 192.168.0.210
+      allow_unreachable: true
+      
+mqtt:
+  broker: 192.168.0.248
+  port: 1883
+  username: !secret mqtt_user_name
+  password: !secret mqtt_password
+  discovery: true
+  
+  
 #################################################################
 ## Components
 #################################################################
 
 
-google:
-  client_id: !secret google_client_id
-  client_secret: !secret google_secret
+# google:
+#   client_id: !secret google_client_id
+#   client_secret: !secret google_secret
 
 ## Spotify
 spotify:
     client_id: !secret spotify_client_id
     client_secret: !secret spotify_secret
+    
+# spotcast:
+#   username: !secret spotify_username
+#   password: !secret spotify_password
 
-  
 #   - platform: spotify
 #     name: Spotify Santa
 #     client_id: !secret spotify_s_client_id
 #     client_secret: !secret spotify_s_secret
 #     cache_path: '.spotify_santa'
-       
+
+
+counter:
+  people_on_roof:
+    initial: 0
+    step: 1
+    
+
+      
 ## For robot vacuum & automation status
 vacuum:
   - platform: xiaomi_miio
-    host: 192.168.178.227
+    host: 192.168.0.204
     token: !secret xiaomi_robot_token
-    
+
 input_text:
   room_cleaning:
     name: Currently Cleaning Room
@@ -68,13 +170,20 @@ device_tracker:
     track_new_devices: true
     interval_seconds: 5
     consider_home: 30
-  - platform: upc_connect
-    password: !secret wifi_admin_password
-    track_new_devices: false
-    host: 192.168.178.1
-    interval_seconds: 3
-    consider_home: 30
-    
+#   - platform: upc_connect
+#     password: !secret wifi_admin_password
+#     track_new_devices: false
+#     host: 192.168.178.1
+#     interval_seconds: 3
+#     consider_home: 30
+  - platform: nmap_tracker
+    hosts: 
+      - 192.168.0.233
+      - 192.168.0.204
+      - 192.168.0.241      
+      - 192.168.178.136
+      - 192.168.178.227
+    home_interval: 4
 
 ## Weather
 weather:
@@ -84,14 +193,8 @@ weather:
     longitude: 4.934230
     forecast: true
 
-binary_sensor:
-  - platform: workday
-    country: NL   
 
-  - platform: tod
-    name: Night
-    after: sunset
-    before: sunrise    
+    
 
 input_number:
   nightime:
@@ -101,24 +204,24 @@ input_number:
     max: 1
     step: 1
     mode: box
-    
+
   range_high:
     name: High Limit
     initial: 8.0
     min: 0
     max: 30
-    
+
   range_low:
     name: High Limit
     initial: 4.0
     min: 0
     max: 30
-    
 
-## For IR Blaster / Speaker remote control through homekit    
+
+## For IR Blaster / Speaker remote control through homekit
 switch:
   - platform: broadlink
-    host: 192.168.178.185
+    host: 192.168.0.205
     mac: '78:0F:77:18:54:CB'
     friendly_name: 'Speakers'
     switches:
@@ -138,30 +241,50 @@ switch:
          friendly_name: Projector Audio
          command_on: 'JgBYAAABJ5UUERMTFRAVERIUFBETExI4FRATExURFBESOBU1FTUSFBMSFTUSFBM3EhQSExQ2EzcSOBQREzgSExM3EjgTEhMUEAAFpwABKEoTAAxVAAEnSxUADQU==='
          command_off: 'JgBYAAABKpEVERIUFBETExUQFRIRFBQ2FBIRFBQRExMVNRU1EjgVEBUREjgVNRU1EhQUERU2ETgVNRUREhMVERI4EzcUERMTFAAFpAABKkgSAAxWAAEnSxMADQU==='
-        
-    
+
+
 #################################################################
 ## Sensors
-#################################################################    
+#################################################################
+
+
+binary_sensor:
+
+  - platform: template
+    sensors:
+      roof_door_open:
+        friendly_name: "Roof Door Open"
+        device_class: door
+        value_template: "{{ states('sensor.roof_door_ypos')|int > 30 }}"
+        
+  - platform: workday
+    country: NL
+    
+  - platform: tod
+    name: Night
+    after: sunset
+    before: sunrise
     
 sensor:
 
 
-  - platform: spotify-playlist-sensor
-    client_id: !secret spotify_client_id
-    client_secret: !secret spotify_secret
-    number_of_playlists: 12
+#   - platform: spotify-playlist-sensor
+#     client_id: !secret spotify_client_id
+#     client_secret: !secret spotify_secret
+#     number_of_playlists: 12
 
-  - platform: spotify-playlist-sensor
-    client_id: !secret spotify_client_id
-    client_secret: !secret spotify_secret
-    number_of_playlists: 12
-    name: SpotifyPlaylist_Santa
-    
+#   - platform: spotify-playlist-sensor
+#     client_id: !secret spotify_client_id
+#     client_secret: !secret spotify_secret
+#     number_of_playlists: 12
+#     name: SpotifyPlaylist_Santa
+
+
+
   - platform: plex_recently_added
     name: Recently Added Movies # will create sensor.recently_added_movies
     token: !secret plex_token
-    host: 192.168.178.46
+    host: 192.168.0.245
     port: 32400
     section_types:
     - movie
@@ -169,7 +292,7 @@ sensor:
   - platform: plex_recently_added
     name: Recently Added TV  # will create sensor.recently_added_tv
     token: !secret plex_token
-    host: 192.168.178.46
+    host: 192.168.0.245
     port: 32400
     section_types:
     - show
@@ -206,8 +329,8 @@ sensor:
       - windspeed
       - windforce
       - windgust
-      - rain_1d 
-      - windspeed_1d 
+      - rain_1d
+      - windspeed_1d
       - rainchance_1d
       - precipitation
       - irradiance
@@ -219,7 +342,7 @@ sensor:
   - platform: darksky
     api_key: !secret dark_sky_key
     latitude: 52.365150
-    longitude: 4.934230    
+    longitude: 4.934230
     forecast:
       - 0
     hourly_forecast:
@@ -233,7 +356,7 @@ sensor:
       - uv_index
       - moon_phase
       - alerts
-      
+
   - platform: rest
     name: luke_cgm
     resource: https://lajv-ichor.herokuapp.com/api/v1/entries/current.json
@@ -246,21 +369,20 @@ sensor:
     value_template: >
       carbs:{{value_json[0].carbs}}, eventType:{{value_json[0].eventType}}, insulin:{{value_json[0].insulin}}, time:{{ (as_timestamp(value_json[0].created_at)) }}
 
-      
-####################################################################################### 
+
+#######################################################################################
 ## Templates (Used for updating text in the UI and converting sensors to CSS values )
-#######################################################################################        
-      
+#######################################################################################
+
   - platform: template
     sensors:
-
       luke_cgm_sgv:
         value_template: >
           {{ states('sensor.luke_cgm') | regex_findall_index("sgv:(\d+)") }}
         unit_of_measurement: "mmol"
-      luke_cgm_trend:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("trend:(\d+)") }}
+    #   luke_cgm_trend:
+    #     value_template: >
+    #       {{ states('sensor.luke_cgm') | regex_findall_index("trend:(\d+)") }}
       luke_cgm_direction:
         value_template: >
           {{ states('sensor.luke_cgm') | regex_findall_index("direction:(\w+)") }}
@@ -273,24 +395,52 @@ sensor:
           {%- set mmol = (mgdl / 18) %}
           {{ mmol | float | round(1)}}
         unit_of_measurement: "mmol/L"
-    
-      luke_inslulin:
-        value_template: >
-          {{ states('sensor.luke_treatments') | regex_findall_index("insulin:(\d+)") }}
-        unit_of_measurement: "units"
+        device_class: temperature
+        friendly_name: "Sugar Level"
+        icon_template: >-
+          {%- set mgdl = states('sensor.luke_cgm_sgv') | float %}
+          {%- set mmol = (mgdl / 18) %}
+          {% if mmol < 4 %}
+            mdi:arrow-up-bold
+          {% else %}
+            {% if mmol > 8 %}
+              mdi:arrow-up-bold
+            {% else %}
+              mdi:water
+            {% endif %}
+          {% endif %}
 
-      luke_carbs:
-        value_template: >
-          {{ states('sensor.luke_treatments') | regex_findall_index("carbs:(\d+)") }}
-        unit_of_measurement: "g"          
 
-      ## to get the current view of my tablet for UI automations 
+      roof_door_ypos:
+        value_template: >-
+          {{ state_attr('sensor.roof_door_action','angle_y_absolute') | int }}
+        unit_of_measurement: "°"
+        friendly_name: "Roof Door Y Angle"
+        icon_template: >-
+          {% if state_attr('sensor.roof_door_action','angle_y_absolute') | int < 40 %}
+            mdi:door-closed
+          {% else %}
+            mdi:door-open
+          {% endif %}
+         
+         
+    #   luke_inslulin:
+    #     value_template: >
+    #       {{ states('sensor.luke_treatments') | regex_findall_index("insulin:(\d+)") }}
+    #     unit_of_measurement: "units"
+
+    #   luke_carbs:
+    #     value_template: >
+    #       {{ states('sensor.luke_treatments') | regex_findall_index("carbs:(\d+)") }}
+    #     unit_of_measurement: "g"
+
+      ## to get the current view of my tablet for UI automations
       tablet_view:
            value_template: "{{ states.sensor.tablet.attributes['path'] | default('/lovelace/0') }}"
            friendly_name: Tablet View
 
 
-      ## Calculates daylight brightness out of 100% 
+      ## Calculates daylight brightness out of 100%
       sunlight_pct:
         entity_id:
           - sun.sun
@@ -310,10 +460,10 @@ sensor:
           {%- set brightness = adjusted_elevation * cloud_factor %}
           {{ brightness | round }}
         unit_of_measurement: '%'
-        device_class: 'illuminance'   
-        
-        
-      ## Daylight brightness converted to opacity for CSS     
+        device_class: 'illuminance'
+
+
+      ## Daylight brightness converted to opacity for CSS
       sunlight_opacity:
         entity_id:
           - sensor.sunlight_pct
@@ -321,9 +471,9 @@ sensor:
           {%- set sunpct = states('sensor.sunlight_pct') | float %}
           {%- set opacity = sunpct / 100 | float %}
           {{ opacity }}
-          
-          
-      ## Converts time and date into sentence for UI     
+
+
+      ## Converts time and date into sentence for UI
       day:
         entity_id: sensor.date
         value_template: >
@@ -334,15 +484,15 @@ sensor:
         value_template: >
           {% set months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
           {{ strptime(states('sensor.date'), '%Y-%m-%d').day }}
-          {{ months[now().month-1] }} 
-          
+          {{ months[now().month-1] }}
+
       date_string:
         friendly_name: "Full Date"
         value_template: "{{ states('sensor.day') }}, {{ states('sensor.month') }} {{ now().year }}"
-        
-        
+
+
       ## Vaccuum templates, for showing attributes as sensors, etc.
-        
+
       vacuum_status:
         friendly_name: "Vacuum - Status"
         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
@@ -373,14 +523,14 @@ sensor:
       vacuum_cleaned_area:
         friendly_name: "Vacuum - Cleaned Area"
         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
-        
+
 
 
 #################################################################
 ## Light Groups
 #################################################################
 
-     
+
 light:
  - platform: group
    name: Kitchen Lights
@@ -389,13 +539,13 @@ light:
     - light.kitchen_2
     - light.kitchen_3
     - light.kitchen_4
-    
+
  - platform: group
    name: Roof Lights
    entities:
      - light.roof_garden
      - light.roof_plants
-    
+
  - platform: group
    name: Kitchen Fridge Lights
    entities:
@@ -405,32 +555,29 @@ light:
    name: Kitchen Sink Lights
    entities:
      - light.kitchen_3
-     - light.kitchen_4   
+     - light.kitchen_4
 
  - platform: group
    name: Living Room Lights
    entities:
      - light.couch
      - light.table
-     - light.plant_table 
-    
+     - light.cabinet
+
  - platform: group
    name: Toilet Lights
    entities:
      - light.toilet_1
-     - light.toilet_2    
-    
+     - light.toilet_2
+
  - platform: group
    name: Bedroom Lights
    entities:
      - light.bedroom_roof
      - light.bed
-     
+
  - platform: group
    name: Stairs Lights
    entities:
      - light.stairs_2
      - light.door
- 
-
-

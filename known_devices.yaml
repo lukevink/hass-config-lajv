@@ -23,11 +23,11 @@ my_cloud_HD:
   picture:
   track: true
 
-64_bc_0c_47_40_92:
+lajv_hermes:
   hide_if_away: false
   icon:
   mac: 64:BC:0C:47:40:92
-  name: 64 bc 0c 47 40 92
+  name: LAJV Hermes (Android Nexus)
   picture:
   track: true
 
@@ -63,11 +63,11 @@ google_home_mini:
   picture:
   track: true
 
-google_nest_hub:
+google_home_hub:
   hide_if_away: false
   icon: mdi:monitor-dashboard
   mac: 1C:F2:9A:3A:AB:56
-  name: 1c f2 9a 3a ab 56
+  name: Google Home Hub
   picture:
   track: true
 
@@ -87,11 +87,11 @@ laptop_u3g6relp:
   picture:
   track: true
   
-8c_85_90_50_19_e4:
+lajv_muses:
   hide_if_away: false
   icon:
   mac: 8C:85:90:50:19:E4
-  name: 8c 85 90 50 19 e4
+  name: LAJV Muses (Macbook Pro)
   picture:
   track: true
 
@@ -151,17 +151,17 @@ projector:
   picture:
   track: true
 
-00_0a_f5_cb_6c_10:
+vector:
   hide_if_away: false
-  icon:
+  icon: mdi:robot
   mac: 00:0A:F5:CB:6C:10
-  name: 00 0a f5 cb 6c 10
+  name: Vector
   picture:
   track: true
 
 lajv_mouse:
   hide_if_away: false
-  icon: 
+  icon: mdi:mouse
   mac: BT_04:DB:56:6B:FC:96
   name: LAJV Mouse
   picture:
@@ -199,17 +199,17 @@ oneplus_7_pro:
   picture:
   track: true
 
-84_b8_b8_3a_7c_69:
+lenovo_tab_p10:
   hide_if_away: false
-  icon:
+  icon: mdi:tablet
   mac: 84:B8:B8:3A:7C:69
-  name: 84 b8 b8 3a 7c 69
+  name: Wall Tablet (Lenovo)
   picture:
   track: true
 
-lenovo_tab_p10:
+lenovo_tab_p10_BT:
   hide_if_away: false
-  icon:
+  icon: mdi:tablet
   mac: BT_84:B8:B8:36:7C:69
   name: Lenovo Tab P10
   picture:
@@ -229,7 +229,7 @@ tv_tv_elsekind:
   mac: BT_8C:79:F5:E6:6F:4D
   name: '[TV] TV Elsekind'
   picture:
-  track: true
+  track: false
 
 5c_e5_0c_c4_8c_70:
   hide_if_away: false
@@ -308,5 +308,118 @@ santas_macbook_air:
   icon:
   mac: BT_2C:F0:EE:29:C0:9F
   name: Santa’s MacBook Air
+  picture:
+  track: true
+
+lajv_muses_1:
+  hide_if_away: false
+  icon:
+  mac: BT_CE:85:90:54:7F:57
+  name: LAJV Muses
+  picture:
+  track: true
+
+tim_jongens:
+  hide_if_away: false
+  icon:
+  mac: BT_84:AD:8D:CF:22:66
+  name: tim jongens
+  picture:
+  track: true
+
+00_e0_4c_68_00_ca:
+  hide_if_away: false
+  icon:
+  mac: 00:E0:4C:68:00:CA
+  name: 00_e0_4c_68_00_ca
+  picture:
+  track: true
+
+archer_router:
+  hide_if_away: false
+  icon: mdi:router-wireless
+  mac: 74:DA:88:C4:C1:C7
+  name: Archer Router
+  picture:
+  track: true
+
+lajv_echo:
+  hide_if_away: false
+  icon: mdi:headphones
+  mac: BT_4C:6B:E8:07:2A:59
+  name: LAJV Echo
+  picture: 
+  track: true
+
+74_da_88_c4_c1_c6:
+  hide_if_away: false
+  icon:
+  mac: 74:DA:88:C4:C1:C6
+  name: 74_da_88_c4_c1_c6
+  picture:
+  track: true
+
+huawei_p_smart_2019_2:
+  hide_if_away: false
+  icon:
+  mac: BT_EC:56:23:0A:BD:EF
+  name: HUAWEI P smart 2019
+  picture:
+  track: true
+
+home_hub:
+  hide_if_away: false
+  icon:
+  mac: BT_3C:8D:20:F8:6C:3A
+  name: Home Hub
+  picture:
+  track: true
+
+oneplus_5t:
+  icon:
+  mac: BT_94:65:2D:D3:E0:BE
+  name: OnePlus 5T
+  picture:
+  track: true
+
+oculus_quest:
+  icon: mdi:safety-goggles
+  mac: BT_2C:26:17:5E:C8:2B
+  name: Oculus Quest
+  picture:
+  track: true
+
+b0_f1_ec_36_3a_44:
+  icon:
+  mac: B0:F1:EC:36:3A:44
+  name: b0_f1_ec_36_3a_44
+  picture:
+  track: true
+
+purity_pro:
+  icon:
+  mac: BT_94:20:53:2D:EB:5C
+  name: Purity Pro
+  picture:
+  track: true
+
+ht_mt300_301:
+  icon:
+  mac: BT_30:D1:6B:0A:B7:FF
+  name: HT-MT300/301
+  picture:
+  track: true
+
+lajv_hephaestus:
+  icon:
+  mac: BT_F4:5C:89:A3:08:B4
+  name: LAJV Hephaestus
+  picture:
+  track: true
+
+galaxy_grand_prime_pro:
+  icon:
+  mac: BT_00:00:00:00:5A:AD
+  name: Galaxy Grand Prime Pro
   picture:
   track: true

@@ -10,6 +10,7 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass, config):
 
+    await setup_connection(hass, config)
     setup_view(hass)
 
     aliases = {}
@@ -31,9 +32,8 @@ async def async_setup(hass, config):
     await hass.helpers.discovery.async_load_platform("light", DOMAIN, {}, config)
     await hass.helpers.discovery.async_load_platform("camera", DOMAIN, {}, config)
 
-    await setup_connection(hass, config)
 
-    setup_service(hass)
+    await setup_service(hass)
 
     return True
 

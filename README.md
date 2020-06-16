@@ -1,5 +1,8 @@
 # Home Assistant Configuration
 
+Version: 0.111.3
+Operating System: 4.10
+
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
 
 [Video of Full UI](https://www.youtube.com/watch?v=KcfZc1MXP_A)
@@ -16,7 +19,6 @@
 * Custom Xiaomi View for rapid room based zone cleanup
 
 
-
 ## Approach & Picture-Elements Styling
 
 This approach is heavily based on the [Picture Elements Card](https://www.home-assistant.io/lovelace/picture-elements/) for each view, and does not work in a traditional "Card" based way. Most cards include a heavy amount of styling and positioning. Some of this styling overrides the custom cards to use [View Width](https://css-tricks.com/fun-viewport-units/) so that their fonts, widths and heights scale according to the width of the display, so that I can use my interface on any resolution.
@@ -27,7 +29,7 @@ The image transparent.png is used on state_image picture-elements to hide elemen
 
 
 
-## Beginners warning 
+## Beginners warning
 
 This config is not the simplest config to copy and paste. If you try to run my exact config you will have issues until you replace all mentions of my light instances (and other entities) with your own. The floorplan views for example, relies on custom-config-template.js which will throw errors if you try to access light entities that aren't in your system. I recommend at least replacing all light entities with some of your own to start with, then customizing the view for each of your own.
 

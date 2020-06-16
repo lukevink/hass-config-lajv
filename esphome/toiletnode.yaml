@@ -1,0 +1,47 @@
+esphome:
+  name: toiletnode
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: "Lust & Freud"
+  password: "Lostandfound36"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Toiletnode Fallback Hotspot"
+    password: "ingSoc1989"
+
+captive_portal:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: D1
+    id: toilet_distance
+    echo_pin: D2
+    name: "Toilet Distance"
+    update_interval: 500ms
+    internal: true
+    
+binary_sensor:
+  - platform: template
+    name: "Toilet in Use"
+    device_class: occupancy
+    filters:
+          - delayed_off: 5s
+    lambda: |-
+      if (id(toilet_distance).state < 1.35) {
+         // Someone is on toilet.
+        return true;
+      } else {
+         // No One is on toilet.
+         return false;
+      }
+      
+# logger:
+  # level: VERBOSE

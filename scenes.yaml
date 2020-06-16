@@ -119,7 +119,7 @@
     light.toilet_1:
       brightness: 254
       friendly_name: Toilet 1
-      transition: 0.5
+      transition: 0.3
       state: 'on'
       supported_features: 41
     light.toilet_2:
