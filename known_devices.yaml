@@ -423,3 +423,73 @@ galaxy_grand_prime_pro:
   name: Galaxy Grand Prime Pro
   picture:
   track: true
+
+redmi:
+  icon:
+  mac: BT_E0:CC:F8:19:BD:60
+  name: Redmi
+  picture:
+  track: true
+
+euw10_5lif76k:
+  icon:
+  mac: BT_98:3B:8F:E9:5B:9B
+  name: EUW10-5LIF76K
+  picture:
+  track: true
+
+living_room_speaker:
+  icon:
+  mac: BT_B0:2A:43:54:87:44
+  name: Living Room speaker
+  picture:
+  track: true
+
+oneplus_6t:
+  icon:
+  mac: BT_64:A2:F9:BF:1D:D6
+  name: OnePlus 6T
+  picture:
+  track: true
+
+jbl_tune220tws:
+  icon:
+  mac: BT_98:52:3D:4E:9C:87
+  name: JBL TUNE220TWS
+  picture:
+  track: true
+
+huawei_p20_pro:
+  icon:
+  mac: BT_00:BE:3B:4C:89:58
+  name: HUAWEI P20 Pro
+  picture:
+  track: true
+
+desktop_qk7b882:
+  icon:
+  mac: BT_00:E1:8C:59:32:28
+  name: DESKTOP-QK7B882
+  picture:
+  track: true
+
+iphone_van_lois_lane:
+  name: iPhone van Loïs-Lane
+  mac: BT_D0:D2:B0:4E:8E:A6
+  icon:
+  picture:
+  track: true
+
+michels_iphone:
+  name: Michels iphone
+  mac: BT_8C:86:1E:3E:72:53
+  icon:
+  picture:
+  track: true
+
+lukes_airpods_pro:
+  name: Luke’s AirPods Pro
+  mac: BT_3C:4D:BE:EA:D1:16
+  icon:
+  picture:
+  track: true

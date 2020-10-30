@@ -19,9 +19,9 @@ custom_header:
         disable_sidebar: true
         kiosk_mode: true
 
+        
 
-
-
+  
 title: Lust & Freud
 views:
 
@@ -30,24 +30,24 @@ views:
     #                                                              Floorplan View                                                               #
     #                                                                                                                                           #
     #############################################################################################################################################
-
+    
   - title: Control Rooms
     icon: 'mdi:floor-plan'
     panel: true
-    badges: []
+    badges: []    
     cards:
-
+    
         ###################   config-template-card    #####################
         #########################   IMPORTANT!    #########################
 
-        # To use the styling templates for individual lights, I have used
+        # To use the styling templates for individual lights, I have used 
         # Config Template Card. Config template card passes the entities it
-        # uses into the card. Make sure you change these entities below to
+        # uses into the card. Make sure you change these entities below to  
         # your own and include any light entities you use above.
-
+        
         # To understand why, check: https://github.com/iantrich/config-template-card
 
-      - type: 'custom:config-template-card'
+      - type: 'custom:config-template-card'    
         entities:
           - light.roof_garden
           - light.roof_plants
@@ -68,15 +68,15 @@ views:
           - light.balcony
         card:
           ###################   Picture Elements Card    #####################
-          type: picture-elements
+          type: picture-elements       
           image: /local/ui/floorplan/floorplan_night.png
           style: |
             ha-card:first-child {
               background: rgba(42, 46, 48, 1)
             }
           elements:
-
-
+          
+          
 
 
               #########################    DAY BASE FLOORPLAN OVERLAY    #########################
@@ -101,7 +101,7 @@ views:
 
 
               #########################    WEATHER ANIMATIONS    #########################
-
+              
             - action: none
               entity: weather.buienweather
               hold_action:
@@ -117,7 +117,7 @@ views:
                 opacity: 0
               tap_action:
                 action: none
-              type: image
+              type: image     
 
 
               #########################    Inside overlays for weather    #########################
@@ -134,8 +134,8 @@ views:
                 width: 100%
               tap_action:
                 action: none
-              type: image
-
+              type: image 
+              
             - action: none
               entity: sun.sun
               hold_action:
@@ -152,10 +152,10 @@ views:
                 width: 100%
               tap_action:
                 action: none
-              type: image
-
+              type: image              
+              
               #########################    INDIVIDUAL LIGHTS - BLENDED IMAGE OVERLAYS    #########################
-
+              
             - action: none
               entity: light.table
               hold_action:
@@ -359,7 +359,7 @@ views:
                 mix-blend-mode: lighten
               tap_action:
                 action: none
-              type: image
+              type: image              
             - action: none
               entity: light.bed
               hold_action:
@@ -431,22 +431,22 @@ views:
               tap_action:
                 action: none
               type: image
-
-
-
-
-
-
-
-
+            
+            
+         
+              
+              
+              
+              
+              
               #########################    ROOM/GROUP CONTROL TRANSPARENT IMAGES    #########################
-
+              
               #  Used to create tap areas and popups for each room, referring to light groups.
               #  Because the above images overlap each other, I used seperate transparent images
               #. to handle the control of the room, so you always tap the right room.
               #
               #  browser_mod.popup is used for a tap and hold for a custom popup card
-
+              
             - entity: light.living_room_lights
               hold_action:
                 action: call-service
@@ -502,7 +502,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -562,7 +562,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -621,7 +621,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -677,7 +677,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -763,7 +763,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -850,7 +850,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -937,7 +937,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1024,7 +1024,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1056,16 +1056,16 @@ views:
                 service_data:
                     entity_id: light.roof_lights
               type: image
-
+              
               #########################    INDIVIDUAL LIGHT ICONS    #########################
-
+              
               #  These are the white state icons that appear over the floorplan.
-              #  They are the same as above, but instead of "areas" to control a group, they only
+              #  They are the same as above, but instead of "areas" to control a group, they only 
               #. control individual lights
               #
-              #  browser_mod.popup is used for a tap and hold for a custom popup card, custom styling
+              #  browser_mod.popup is used for a tap and hold for a custom popup card, custom styling 
               #  of the icon to make it appear white, etc.
-
+              
             - entity: light.cabinet
               hold_action:
                 action: call-service
@@ -1121,7 +1121,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1189,7 +1189,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1205,7 +1205,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1273,7 +1273,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1289,7 +1289,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1359,7 +1359,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1385,7 +1385,7 @@ views:
                 '--paper-item-icon-active-color': '#000000'
                 '--paper-item-icon-color': lightgrey
                 align-items: center
-                background-color: 'rgba(255, 255, 255, 0.4)'
+                background-color: 'rgba(255, 255, 255, 1)'
                 border-radius: 100%
                 box-shadow: '0px 0px 28px 0px rgba(0,0,0,0.39)'
                 display: flex
@@ -1428,7 +1428,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1484,13 +1484,13 @@ views:
                         type: entities
                       - type: markdown
                         content: |
-                          &nbsp;
+                          &nbsp;  
                       - cards:
                           - cards: null
                             column_height: 1
                             layout: vertical
                             type: 'custom:layout-card'
-                          - cards:
+                          - cards: 
                               - color_temp: true
                                 entity: light.toilet_1
                                 header: false
@@ -1500,7 +1500,7 @@ views:
                                 entity: light.toilet_2
                                 header: false
                                 persist_features: true
-                                type: 'custom:light-slider-card'
+                                type: 'custom:light-slider-card'                          
                             column_num: 2
                             max_width:
                               - 100%
@@ -1513,7 +1513,7 @@ views:
                         type: 'custom:layout-card'
                       - type: markdown
                         content: |
-                          &nbsp;
+                          &nbsp;     
                     type: 'custom:vertical-stack-in-card'
                   deviceID:
                     - this
@@ -1544,6 +1544,77 @@ views:
               tap_action:
                 action: toggle
               type: state-icon
+              
+            - entity: light.reading_lamp
+              hold_action:
+                action: call-service
+                service: browser_mod.popup
+                service_data:
+                  card:
+                    cards:
+                      - entities:
+                          - entity: light.reading_lamp
+                            secondary_info: last-changed
+                        style:
+                          z-index: 5
+                        type: entities
+                      - cards:
+                          - cards: null
+                            column_height: 1
+                            layout: vertical
+                            type: 'custom:layout-card'
+                          - entities:
+                              - color_temp: true
+                                entity: light.reading_lamp
+                                header: false
+                                persist_features: true
+                                type: 'custom:light-slider-card'
+                            show_header_toggle: false
+                            style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;  
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                            type: entities
+                        column_num: 1
+                        layout: horizontal
+                        max_width:
+                          - 100%
+                        type: 'custom:layout-card'
+                    type: 'custom:vertical-stack-in-card'
+                  deviceID:
+                    - this
+                  style:
+                    '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                    border-radius: 0.8vw
+                    opacity: 0.9
+                  title: Reading Lamp
+              icon: 'mdi:floor-lamp'
+              style:
+                '--iron-icon-height': 1.7vw
+                '--iron-icon-width': 1.7vw
+                '--paper-item-icon-active-color': '#000000'
+                '--paper-item-icon-color': darkgrey
+                align-items: center
+                background-color: '#FFFFFF'
+                border-radius: 100%
+                box-shadow: '0px 0px 28px 0px rgba(0,0,0,0.39)'
+                display: flex
+                height: 3vw
+                justify-content: center
+                left: 90%
+                margin-left: '-1.5vw'
+                margin-top: '-1.5vw'
+                top: 37%
+                transform: scale(1.2)
+                width: 3vw
+              tap_action:
+                action: toggle
+              type: state-icon
+              
             - entity: light.couch
               hold_action:
                 action: call-service
@@ -1572,7 +1643,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1668,7 +1739,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1688,7 +1759,7 @@ views:
                     border-radius: 0.8vw
                     opacity: 0.9
                   title: Bedside
-              icon: 'mdi:desk-lamp'
+              icon: 'mdi:lamp'
               style:
                 '--iron-icon-height': 2vw
                 '--iron-icon-width': 2vw
@@ -1765,7 +1836,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1862,7 +1933,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -1959,7 +2030,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -2056,7 +2127,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -2153,7 +2224,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -2250,7 +2321,7 @@ views:
                             style: |
                                 :host{
                                   height: 100%;
-                                  z-index: 0;
+                                  z-index: 0;  
                                 }
                                 ha-card {
                                   box-shadow: none !important;
@@ -2262,14 +2333,14 @@ views:
                           - 60%
                           - 40%
                         type: 'custom:layout-card'
-
+                       
 
                     type: 'custom:vertical-stack-in-card'
                   deviceID:
                     - this
                   style:
                     '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
-
+                    
                     border-radius: 0.8vw
                     opacity: 0.9
                   title: Dining Table
@@ -2298,10 +2369,10 @@ views:
 
 
 
-
-
+         
+              
               #########################    EXPERIMENTAL NOW PLAYING ON PROJECTOR IN FLOORPLAN    #########################
-
+              
               # custom card to show whats playing on the screen when its playing (plex)
 
             # - entity: media_player.plex_projector
@@ -2314,8 +2385,8 @@ views:
             #       rotateY(86deg) rotateZ(-86deg) translateY(-2px)  skewX(20deg)
             #       skewY(-10deg)
             #     width: 10%
-            #   type: 'custom:now-playing-poster'
-
+            #   type: 'custom:now-playing-poster'              
+              
             - action: none
               hold_action:
                 action: none
@@ -2328,7 +2399,7 @@ views:
               tap_action:
                 action: none
               type: image
-
+              
               #################################################################
               #                                                               #
               #                             SIDEBAR                           #
@@ -2348,7 +2419,7 @@ views:
               tap_action:
                 action: none
               type: image
-
+              
               #########################    TIME AND DATE    #########################
             - entity: sensor.time
               hold_action:
@@ -2379,7 +2450,7 @@ views:
               tap_action:
                 action: none
               type: state-label
-
+              
               #########################    MENU BUTTONS    #########################
 
             - action: none
@@ -2433,13 +2504,13 @@ views:
               tap_action:
                 action: navigate
                 navigation_path: /lovelace/5
-              type: image
-
-
+              type: image  
+              
+              
               #########################    People at home    #########################
-
+              
               #Optional label for people at Home (currently hidden with opacity: 0)
-
+              
             - style:
                 color: white
                 font-size: 1vw
@@ -2450,7 +2521,7 @@ views:
                 width: 10%
               text: 'People at home:'
               type: 'custom:text-element'
-
+              
             - action: none
               entity: person.luke_vink
               state_image:
@@ -2465,7 +2536,7 @@ views:
                 width: 4.5vw
               tap_action: none
               type: image
-
+                
             - action: none
               entity: person.santa_stibe
               state_image:
@@ -2480,7 +2551,7 @@ views:
                 width: 4.5vw
               tap_action: none
               type: image
-
+              
             - action: none
               image: /local/transparent.png
               style:
@@ -2505,7 +2576,7 @@ views:
                 width: 4.2vw
               tap_action: none
               type: image
-
+              
               #########################    Minigraph to show temperature inside and out    #########################
 
 
@@ -2567,9 +2638,9 @@ views:
                 action: navigate
                 navigation_path: /lovelace/4
               type: 'custom:mini-graph-card'
-
+              
               #########################    Mini Weather card    #########################
-
+              
             - backdrop: false
               entity: weather.buienweather
               name: ' '
@@ -2611,9 +2682,9 @@ views:
                 action: navigate
                 navigation_path: /lovelace/4
               type: 'custom:simple-weather-card'
-
+              
               #########################    Overlay shadow images    #########################
-
+              
             - action: none
               image: /local/ui/sidebar/sideShadow.png
               style:
@@ -2632,9 +2703,9 @@ views:
                 top: 50%
                 width: 1.2109375%
               type: image
-
+              
               #########################   Styled now playing Media Player    #########################
-
+              
               # when the media player is playing, this overlaps the "Media" menu button
 
             - entity: media_player.spotify_luke_vink
@@ -2670,7 +2741,7 @@ views:
                   opacity: 0 !important;
                 }
                 #primaryProgress{
-                    background: #474A52 !important;
+                    background: #474A52 !important; 
                 }
                 .entity__info{
                   height: 2.6vw;
@@ -2757,20 +2828,20 @@ views:
                 navigation_path: /lovelace/3
               type: 'custom:mini-media-player'
 
-
-
+          
+        
 
     #############################################################################################################################################
     #                                                                                                                                           #
     #                                                            Xiaomi Clean Up View                                                           #
     #                                                                                                                                           #
     #############################################################################################################################################
-
+    
   - title: Clean Up
     icon: 'mdi:robot-vacuum'
     panel: true
     cards:
-      - type: picture-elements
+      - type: picture-elements   
         image: /local/ui/floorplan/floorplan_night_cu.png
         style: |
           ha-card {
@@ -2795,7 +2866,7 @@ views:
               action: none
             type: image
 
-
+            
             #######################################################################
             #                                                                     #
             #              Xiaomi Mi Robot : Zoned Cleanup Buttons                #
@@ -2803,7 +2874,7 @@ views:
             #   https://www.home-assistant.io/integrations/vacuum.xiaomi_miio/    #
             #                                                                     #
             #######################################################################
-
+            
           - action: none
             entity: input_text.room_cleaning
             hold_action:
@@ -2907,13 +2978,13 @@ views:
               top: 46%
               width: 16.796875%
             type: image
-
-
+            
+            
             ########### Vacuum Robot Control Panel buttons ###########
-
-            #   Note: uses input_text from configuration.yaml to show
+            
+            #   Note: uses input_text from configuration.yaml to show 
             #   the right text, EG: "Cleaning Kitchen" status text
-
+            
           - conditions:
               - entity: input_text.room_cleaning
                 state_not: charging
@@ -2990,10 +3061,10 @@ views:
             hold_action:
               action: none
             state_image:
-              Balanced: local/ui/cleanUp/btns/fan_1.png
-              Max: local/ui/cleanUp/btns/fan_1.png
-              Quiet: local/ui/cleanUp/btns/fan_1_selected.png
-              Turbo: local/ui/cleanUp/btns/fan_1.png
+              38: local/ui/cleanUp/btns/fan_1.png
+              60: local/ui/cleanUp/btns/fan_1.png
+              75: local/ui/cleanUp/btns/fan_1_selected.png
+              100: local/ui/cleanUp/btns/fan_1.png
             style:
               left: 32.22%
               top: 60.5%
@@ -3010,10 +3081,10 @@ views:
             hold_action:
               action: none
             state_image:
-              Balanced: local/ui/cleanUp/btns/fan_2_selected.png
-              Max: local/ui/cleanUp/btns/fan_2.png
-              Quiet: local/ui/cleanUp/btns/fan_2.png
-              Turbo: local/ui/cleanUp/btns/fan_2.png
+              38: local/ui/cleanUp/btns/fan_2_selected.png
+              60: local/ui/cleanUp/btns/fan_2.png
+              75: local/ui/cleanUp/btns/fan_2.png
+              100: local/ui/cleanUp/btns/fan_2.png
             style:
               left: 36.48%
               top: 60.5%
@@ -3030,10 +3101,10 @@ views:
             hold_action:
               action: none
             state_image:
-              Balanced: local/ui/cleanUp/btns/fan_3.png
-              Max: local/ui/cleanUp/btns/fan_3.png
-              Quiet: local/ui/cleanUp/btns/fan_3.png
-              Turbo: local/ui/cleanUp/btns/fan_3_selected.png
+              38: local/ui/cleanUp/btns/fan_3.png
+              60: local/ui/cleanUp/btns/fan_3.png
+              75: local/ui/cleanUp/btns/fan_3.png
+              100: local/ui/cleanUp/btns/fan_3_selected.png
             style:
               left: 40.74%
               top: 60.5%
@@ -3050,10 +3121,10 @@ views:
             hold_action:
               action: none
             state_image:
-              Balanced: local/ui/cleanUp/btns/fan_4.png
-              Max: local/ui/cleanUp/btns/fan_4_selected.png
-              Quiet: local/ui/cleanUp/btns/fan_4.png
-              Turbo: local/ui/cleanUp/btns/fan_4.png
+              38: local/ui/cleanUp/btns/fan_4.png
+              60: local/ui/cleanUp/btns/fan_4_selected.png
+              75: local/ui/cleanUp/btns/fan_4.png
+              100: local/ui/cleanUp/btns/fan_4.png
             style:
               left: 45%
               top: 60.5%
@@ -3089,10 +3160,10 @@ views:
             #                      SIDEBAR : Cleanup                        #
             #                                                               #
             #################################################################
-
-
+           
+           
             #########################    Background    #########################
-
+            
           - action: none
             hold_action:
               action: none
@@ -3105,7 +3176,7 @@ views:
             tap_action:
               action: none
             type: image
-
+            
             #########################    TIME & DATE    #########################
 
           - entity: sensor.time
@@ -3137,8 +3208,8 @@ views:
             tap_action:
               action: none
             type: state-label
-
-
+            
+            
             #########################   MENU BUTTONS   #########################
 
           - action: none
@@ -3192,10 +3263,10 @@ views:
             tap_action:
               action: navigate
               navigation_path: /lovelace/5
-            type: image
-
+            type: image 
+              
             #########################   PEOPLE   #########################
-
+            
             #optional text label, currently invisible (make opacity:1) to show
           - style:
               color: white
@@ -3207,7 +3278,7 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
-
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -3260,9 +3331,9 @@ views:
               width: 4.2vw
             tap_action: none
             type: image
-
+            
             #########################    TEMPERATURE MINI GRAPH (INSIDE vs OUTSIDE)    #########################
-
+            
           - color_thresholds:
               - color: '#4dd2ff'
                 value: 10
@@ -3320,9 +3391,9 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:mini-graph-card'
-
+            
             #########################    WEATHER SIDEBAR CARD    #########################
-
+            
           - backdrop: false
             entity: weather.buienweather
             name: ' '
@@ -3364,9 +3435,9 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:simple-weather-card'
-
+            
             #########################    VISUAL SHADOW OVERLAYS    #########################
-
+            
           - action: none
             image: /local/ui/sidebar/sideShadow.png
             style:
@@ -3385,9 +3456,9 @@ views:
               top: 50%
               width: 1.2109375%
             type: image
-
+            
             #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
-
+            
           - entity: media_player.spotify_luke_vink
             hide:
               controls: true
@@ -3420,11 +3491,11 @@ views:
               ha-card.--inactive .mmp-player{
                 opacity: 0 !important;
               }
-
+              
               #primaryProgress{
-                background: #474A52 !important;
+                background: #474A52 !important; 
               }
-
+                
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -3509,36 +3580,36 @@ views:
               action: navigate
               navigation_path: /lovelace/3
             type: 'custom:mini-media-player'
+            
+            
 
-
-
-
-
+        
+        
     #############################################################################################################################################
     #                                                                                                                                           #
     #                                                   All Devices (Entities) Homekit Style View                                               #
     #                                                                                                                                           #
     #############################################################################################################################################
 
-  - title: Tasks
+  - title: Tasks        
     icon: 'mdi:home'
     panel: true
     cards:
-      - type: picture-elements
+      - type: picture-elements    
         image: /local/ui/floorplan/blurredFloorplan.png
         style: |
           ha-card {
             background: rgba(42, 46, 48, 1)
           }
         elements:
-
+      
             #################################################################
             #                                                               #
             #                     Homekit Styled Card:                      #
             #         https://github.com/DBuit/Homekit-panel-card           #
             #                                                               #
             #################################################################
-
+            
           - enableColumns: true
             popup:
               brightnessHeight: 350px
@@ -3628,16 +3699,16 @@ views:
               top: 50%
               width: 68%
             type: 'custom:homekit-card'
-
-
+            
+            
             #################################################################
             #                                                               #
             #                     SIDEBAR : ALL DEVICES                     #
             #                                                               #
             #################################################################
-
+            
             #########################    BACKGROUND    #########################
-
+            
           - action: none
             hold_action:
               action: none
@@ -3650,7 +3721,7 @@ views:
             tap_action:
               action: none
             type: image
-
+            
             #########################    TIME & DATE    #########################
 
           - entity: sensor.time
@@ -3682,7 +3753,7 @@ views:
             tap_action:
               action: none
             type: state-label
-
+            
             #########################    MENU BUTTONS    #########################
 
           - action: none
@@ -3736,10 +3807,10 @@ views:
             tap_action:
               action: navigate
               navigation_path: /lovelace/5
-            type: image
-
+            type: image 
+            
             #########################    PEOPLE    #########################
-
+            
             # optional label for people (currently hidden, to show, change to opacity:1)
           - style:
               color: white
@@ -3751,7 +3822,7 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
-
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -3804,9 +3875,9 @@ views:
               width: 4.2vw
             tap_action: none
             type: image
-
+            
             #########################    TEMPERATURE GRAPH (INSIDE vs OUTSIDE)    #########################
-
+            
           - color_thresholds:
               - color: '#4dd2ff'
                 value: 10
@@ -3864,8 +3935,8 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:mini-graph-card'
-
-
+            
+            
             #########################    WEATHER SIDEBAR CARD    #########################
 
           - backdrop: false
@@ -3909,9 +3980,9 @@ views:
               action: navigate
               navigation_path: /lovelace/4
             type: 'custom:simple-weather-card'
-
+            
             #########################    VISUAL SHADOW OVERLAYS    #########################
-
+            
           - action: none
             image: /local/ui/sidebar/sideShadow.png
             style:
@@ -3930,9 +4001,9 @@ views:
               top: 50%
               width: 1.2109375%
             type: image
-
+            
             #########################    NOW PLAYING SPOTIFY MENU BUTTON    #########################
-
+            
           - entity: media_player.spotify_luke_vink
             hide:
               controls: true
@@ -3966,8 +4037,8 @@ views:
                 opacity: 0 !important;
               }
               #primaryProgress{
-                background: #474A52 !important;
-              }
+                background: #474A52 !important; 
+              }              
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -4054,26 +4125,26 @@ views:
             type: 'custom:mini-media-player'
 
 
-
-
+    
+   
     #############################################################################################################################################
     #                                                                                                                                           #
     #                                                            Now Playing Media View                                                         #
     #                                                                                                                                           #
     #############################################################################################################################################
-
+   
   - title: Media
     icon: 'mdi:play-circle'
     panel: true
     badges: []
     cards:
       - elements:
-
+      
             #########################    SPEAKER CONTROL BAR    #########################
             # controls an IR blaster to control my 'not connected' surround sound speakers
-
+            
           - action: none
-            entity: switch.power
+            entity: switch.speakers
             hold_action:
               action: none
             state_image:
@@ -4098,7 +4169,7 @@ views:
               action: none
             type: image
           - action: none
-            entity: switch.speakers_vol_up
+            entity: switch.speakers_up
             hold_action:
               action: none
             state_image:
@@ -4112,7 +4183,7 @@ views:
               action: toggle
             type: image
           - action: none
-            entity: switch.speakers_vol_down
+            entity: switch.speakers_down
             hold_action:
               action: none
             state_image:
@@ -4126,7 +4197,7 @@ views:
               action: toggle
             type: image
           - action: none
-            entity: switch.speakers_input
+            entity: switch.projector_audio
             hold_action:
               action: none
             state_image:
@@ -4139,7 +4210,7 @@ views:
             tap_action:
               action: toggle
             type: image
-
+            
             ###########################################################################
             #                                                                         #
             #                 IF PROJECTOR NOT ON, SHOW SPOTIFY:                      #
@@ -4148,7 +4219,7 @@ views:
 
             #  Mini Media Player Card:
             #  https://github.com/kalkih/mini-media-player
-
+            
           - conditions:
               - entity: device_tracker.projector
                 state: not_home
@@ -4173,30 +4244,53 @@ views:
                     height: 100%;
                   }
                   :host #primaryProgress{
-                    background: #474A52 !important;
+                    background: #474A52 !important; 
                   }
                 type: 'custom:mini-media-player'
             type: conditional
-
+            
             # Spotify Playlists Card:
-            # https://github.com/dnguyen800/spotify-playlist-card
-            # I like this one that uses a sensor, as you dont need to keep activating it
+            # https://github.com/custom-cards/spotify-card
           - type: conditional
             conditions:
             - entity: device_tracker.projector
               state: not_home
             elements:
                 - type: 'custom:spotify-card'
-                  client_id: !secret spotify_client_id
-                  limit: 8
-                  random_song: true
-                  style:
-                    left: 79.5%
-                    top: 39.8%
-                    width: 31%
-                    height: 62.3%
-
-
+                  limit: 10
+                  always_play_random_song: true   
+                  name:
+                  style: | 
+                    :host {
+                        left: 79.5%; 
+                        top: 39.8%;
+                        width: 31%;
+                        height: 62.3%;
+                        border-radius: 1vw;
+                    }
+                    #header{
+                        display:none !important;
+                    }
+                    #content{
+                        border:none !important;
+                    }
+                    .playback-controls{
+                        display:none !important;    
+                    }
+                    #header-track{
+                        display:none;
+                    }
+                    .list-item > p{
+                        white-space: nowrap; 
+                            overflow: hidden;
+                    }
+                    .list-item{
+                        border-radius: 0.2vw;
+                        overflow:hidden;
+                        border:none !important;
+                        margin-bottom:2px;
+                    }
+            
             ###########################################################################
             #                                                                         #
             #          IF PROJECTOR IS ON, SHOW PLEX & RECENTLY ADDED:                #
@@ -4204,8 +4298,8 @@ views:
             ###########################################################################
 
             # Mini Media Player Card:
-            # https://github.com/kalkih/mini-media-player
-
+            # https://github.com/kalkih/mini-media-player            
+            
           - conditions:
               - entity: device_tracker.projector
                 state_not: not_home
@@ -4239,14 +4333,14 @@ views:
                   }
                 type: 'custom:mini-media-player'
             type: conditional
-
-
+            
+            
             # Upcoming Media Card:
             # https://github.com/custom-cards/upcoming-media-card
 
             # Enabled by, Plex Recently Added Sensor:
             # https://github.com/custom-components/sensor.plex_recently_added
-
+            
           - conditions:
               - entity: device_tracker.projector
                 state_not: not_home
@@ -4275,13 +4369,13 @@ views:
                 title: Recently Added Movies
                 type: 'custom:upcoming-media-card'
             type: conditional
-
+            
             #################################################################
             #                                                               #
             #                             SIDEBAR                           #
             #                                                               #
-            #################################################################
-
+            #################################################################            
+            
           - action: none
             hold_action:
               action: none
@@ -4374,11 +4468,11 @@ views:
             tap_action:
               action: navigate
               navigation_path: /lovelace/5
-            type: image
-
+            type: image             
+            
             #########################    PEOPLE    #########################
-
-            # optional label for people (currently hidden, to show, change to opacity:1)
+            
+            # optional label for people (currently hidden, to show, change to opacity:1)            
           - style:
               color: white
               font-size: 1vw
@@ -4389,8 +4483,8 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
-
-
+            
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -4593,8 +4687,8 @@ views:
                 opacity: 0 !important;
               }
               #primaryProgress{
-                background: #474A52 !important;
-              }
+                background: #474A52 !important; 
+              }              
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -4716,9 +4810,9 @@ views:
                   padding: 0;
                 }
         type: picture-elements
+   
 
-
-
+    
     #############################################################################################################################################
     #                                                                                                                                           #
     #                                                               Weather View                                                                #
@@ -4895,11 +4989,11 @@ views:
             tap_action:
               action: navigate
               navigation_path: /lovelace/5
-            type: image
-
+            type: image             
+            
             #########################    PEOPLE    #########################
-
-            # optional label for people (currently hidden, to show, change to opacity:1)
+            
+            # optional label for people (currently hidden, to show, change to opacity:1)               
           - style:
               color: white
               font-size: 1vw
@@ -4910,8 +5004,8 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
-
-
+            
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -5113,8 +5207,8 @@ views:
                 opacity: 0 !important;
               }
               #primaryProgress{
-                background: #474A52 !important;
-              }
+                background: #474A52 !important; 
+              }              
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -5206,7 +5300,7 @@ views:
           }
         type: picture-elements
 
-
+    
 
     #############################################################################################################################################
     #                                                                                                                                           #
@@ -5222,7 +5316,7 @@ views:
       - elements:
           - type: 'custom:nightscout-card'
             url: 'https://lajv-ichor.herokuapp.com/'
-            style:
+            style: 
              left: 61.8%
              top:  50%
              width: 67.5%
@@ -5234,7 +5328,7 @@ views:
         #       - color: '#03B4FF'
         #         value: 5
         #       - color: '#03B4FF'
-        #         value: 8
+        #         value: 8                
         #       - color: '#B51BE4'
         #         value: 9
         #     line_width: 2
@@ -5247,14 +5341,14 @@ views:
         #       - entity: binary_sensor.night
         #         color: rgba(255,255,255,.25)
         #         y_axis: secondary
-        #         smoothing: false
+        #         smoothing: false 
         #         aggregate_func: min
         #         show_state: false
         #         show_line: false
         #         show_points: false
         #       - entity: input_number.range_high
         #         color: rgba(255,255,255,.1)
-        #         smoothing: false
+        #         smoothing: false 
         #         line_width: 1
         #         aggregate_func: max
         #         show_state: false
@@ -5262,7 +5356,7 @@ views:
         #         show_points: false
         #       - entity: input_number.range_low
         #         color: rgba(255,255,255,.1)
-        #         smoothing: false
+        #         smoothing: false 
         #         line_width: 1
         #         aggregate_func: max
         #         show_state: false
@@ -5297,7 +5391,7 @@ views:
         #         margin-right: 4%;
         #       }
         #       .state__value{
-        #         font-size:  3.5vw !important;
+        #         font-size:  3.5vw !important;  
         #       }
         #       .header{
         #           height:0px !important;
@@ -5333,7 +5427,7 @@ views:
 
 
 
-
+              
           - action: none
             hold_action:
               action: none
@@ -5425,11 +5519,11 @@ views:
             tap_action:
               action: navigate
               navigation_path: /lovelace/5
-            type: image
-
+            type: image             
+            
             #########################    PEOPLE    #########################
-
-            # optional label for people (currently hidden, to show, change to opacity:1)
+            
+            # optional label for people (currently hidden, to show, change to opacity:1)                
           - style:
               color: white
               font-size: 1vw
@@ -5440,8 +5534,8 @@ views:
               width: 10%
             text: 'People at home:'
             type: 'custom:text-element'
-
-
+            
+            
           - action: none
             entity: person.luke_vink
             state_image:
@@ -5643,8 +5737,8 @@ views:
                 opacity: 0 !important;
               }
               #primaryProgress{
-                background: #474A52 !important;
-              }
+                background: #474A52 !important; 
+              }              
               .entity__info{
                 height: 2.6vw;
                 width: 65% !important;
@@ -5735,3 +5829,116 @@ views:
             background: rgba(42, 46, 48, 1)
           }
         type: picture-elements
+        
+        
+  - title: Testing
+    icon: 'mdi:view-dashboard'
+    panel: false
+    badges: []
+    cards:
+
+      - type: 'custom:mini-graph-card'
+        entities:
+         - entity: binary_sensor.roof_motion
+           name: Stairs motion sensor
+           color: '#FF4FD6'         
+        name: STAIRS MOTION
+        hours_to_show: 0.16
+        points_per_hour: 1800
+        update_interval: 1
+        aggregate_func: max
+        line_width: 2
+        smoothing: false
+        state_map:
+            - value: "off"
+              label: Clear
+            - value: "on"
+              label: Detected
+      - type: 'custom:mini-graph-card'
+        entities:
+         - entity: binary_sensor.roof_motion
+           name: Roof motion sensor
+           color: '#FF4FD6'         
+        name: ROOF MOTION
+        hours_to_show: 0.16
+        points_per_hour: 1800
+        update_interval: 1
+        aggregate_func: max
+        line_width: 2
+        smoothing: false
+        state_map:
+            - value: "off"
+              label: Clear
+            - value: "on"
+              label: Detected  
+      - type: 'custom:mini-graph-card'
+        entities:
+         - entity: binary_sensor.toilet
+           name: Toilet motion sensor
+           color: '#12B6FA'          
+        name: TOILET MOTION
+        hours_to_show: 0.16
+        points_per_hour: 1800
+        update_interval: 1
+        aggregate_func: max
+        line_width: 2
+        smoothing: false
+        state_map:
+            - value: "off"
+              label: Clear
+            - value: "on"
+              label: Detected  
+      - type: 'custom:mini-graph-card'
+        entities:
+         - entity: binary_sensor.toilet_in_use
+           name: Toilet Distance Sensor
+           color: '#12B6FA' 
+         - entity: binary_sensor.toilet_motion
+           name: Toilet Motion Sensor
+           color: '#FF0000' 
+        name: TOILET OCCUPIED
+        hours_to_show: 0.16
+        points_per_hour: 1800
+        update_interval: 1
+        aggregate_func: max
+        line_width: 2
+        smoothing: false
+        state_map:
+            - value: "off"
+              label: Clear
+            - value: "on"
+              label: Detected 
+
+      - type: 'custom:mini-graph-card'
+        entities:
+         - entity: sensor.roof_door_ypos
+           name: Roof Door Pos
+           color: '#FF4FD6'         
+        name: ROOF DOOR Angle
+        hours_to_show: 0.16
+        points_per_hour: 1800
+        update_interval: 1
+        aggregate_func: max
+        line_width: 2
+        smoothing: false
+              
+      - type: glance
+        title: Roof
+        entities:
+          - counter.people_on_roof
+          - binary_sensor.roof_door_open     
+          - light.roof_garden  
+
+      - type: 'custom:spotify-card'
+        limit: 8
+        always_play_random_song: true    
+      - type: 'custom:mini-graph-card'
+        entities:
+         - entity: sensor.roof_illuminance
+           name: Toilet Distance Sensor.
+           color: '#FF4FD6'        
+        name: ROOF Luminence
+        hours_to_show: 24
+        points_per_hour: 50
+        update_interval: 1
+        

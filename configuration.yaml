@@ -39,57 +39,68 @@ browser_mod:
 
 frontend:
   themes: !include themes.yaml
-
+  
 homekit: !include homekit.yaml
 lovelace:
   mode: yaml
   resources:
-    ###### CUSTOM CARDS / COMPONENTS #####
   
+    ################
+    ##### LOCAL ####
+    ################
+    
   - type: module
-    url: /local/js/card-mod.js
-  - type: module
-    url: /local/js/custom-header.js?v=1.5.1
-  - type: js
-    url: /local/js/text-element.js?v=0.0.2
-  - type: module
-    url: /local/js/config-template-card.js?v=1.1.2
-  - type: module
-    url: /browser_mod.js
-  - type: js
-    url: /local/js/bar-card.js
+    url: /local/js/custom-header.js?v=1.8.3
   - type: module
     url: /local/js/button-entity-row.js
   - type: module
-    url: /local/js/circle-sensor-card.js
-  - type: js
-    url: /local/js/light-entity-card.js
-  - type: module
-    url: /local/js/layout-card.js
-  - type: module
-    url: /local/js/mini-graph-card-bundle.js?v=0.9.3
-  - type: module
-    url: /local/js/mini-media-player-bundle.js?v=1.7.0
-  - type: js
-    url: /local/js/vertical-stack-in-card.js
-  - type: module
-    url: /local/js/popup-backdrop-filter.js
-  - type: js
-    url: /local/js/upcoming-media-card.js
-  - type: module
-    url: /local/js/weather-card-chart.js
-  - type: module
-    url: /local/js/simple-weather-card-bundle.js?v=0.7.2
-  - type: module
-    url: /local/js/homekit-panel-card.js?v=0.4.7
-  - type: module
-    url: /local/js/weather-card.js
-  - type: module
-    url: /local/js/auto-entities.js
-  - type: module
     url: /local/js/now-playing-card.js
-  - type: module
-    url: /local/js/button-card.js  
+
+    #######################
+    ##### HACS CUSTOM #####
+    #######################
+    
+  - url: /hacsfiles/light-popup-card/light-popup-card.js
+    type: module
+  - url: /hacsfiles/Homekit-panel-card/homekit-panel-card.js
+    type: module   
+    
+    ########################
+    ##### HACS DEFAULT #####
+    ########################
+    
+  - url: /hacsfiles/lovelace-card-mod/card-mod.js
+    type: module
+  - url: /hacsfiles/popup-backdrop-filter/popup-backdrop-filter.js
+    type: module    
+  - url: /hacsfiles/text-element/text-element.js
+    type: module    
+  - url: /hacsfiles/config-template-card/config-template-card.js
+    type: module    
+  - url: /hacsfiles/bar-card/bar-card.js
+    type: module
+  - url: /hacsfiles/circle-sensor-card/circle-sensor-card.js
+    type: module    
+  - url: /hacsfiles/lovelace-layout-card/layout-card.js
+    type: module    
+  - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+    type: module    
+  - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
+    type: module    
+  - url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
+    type: module   
+  - url: /hacsfiles/upcoming-media-card/upcoming-media-card.js
+    type: module    
+  - url: /hacsfiles/simple-weather-card/simple-weather-card-bundle.js
+    type: module    
+  - url: /hacsfiles/weather-card/weather-card.js
+    type: module    
+  - url: /hacsfiles/button-card/button-card.js
+    type: module   
+  - url: /hacsfiles/spotify-card/spotify-card.js
+    type: module
+  - url: /hacsfiles/light-entity-card/light-entity-card.js   
+    type: module
     
     ###################################################
     ##### CARDS I CREATED OR MODIFIED FOR STYLING #####
@@ -98,8 +109,7 @@ lovelace:
     # completely custom. I cant confirm that CSS styles 
     # will look right in any other browser than my own.
     
-  - type: js
-    url: /local/js/spotify-card.js?v=1.24.15
+
   - type: module
     url: /local/js/buien-rain-card.js?v=0.0.60
   - type: js
@@ -135,16 +145,10 @@ spotify:
     client_id: !secret spotify_client_id
     client_secret: !secret spotify_secret
     
-# spotcast:
-#   username: !secret spotify_username
-#   password: !secret spotify_password
-
-#   - platform: spotify
-#     name: Spotify Santa
-#     client_id: !secret spotify_s_client_id
-#     client_secret: !secret spotify_s_secret
-#     cache_path: '.spotify_santa'
-
+spotcast:
+  sp_dc: !secret sp_dc
+  sp_key: !secret sp_key    
+  
 
 counter:
   people_on_roof:
@@ -192,8 +196,6 @@ weather:
     latitude: 52.365150
     longitude: 4.934230
     forecast: true
-
-
     
 
 input_number:
@@ -219,29 +221,24 @@ input_number:
 
 
 ## For IR Blaster / Speaker remote control through homekit
+
 switch:
   - platform: broadlink
-    host: 192.168.0.205
     mac: '78:0F:77:18:54:CB'
-    friendly_name: 'Speakers'
     switches:
-       power:
-         friendly_name: Speakers
-         command_on: 'JgBYAAABJ5UVEBUREhQUERUREhMVERI4FRAVEhEUFBEVNRI4FTUWEBITFRESExURFBISExU1FDYSOBQ2FDYSOBQ1FjUSExUREQAFpgABKkgSAAxVAAEnSxUADQU='
-         command_off: 'JgBYAAABKJMTExQRFRIRFBITExMTEhQ2ExMVEBUSERQTNxU1EjgTEhI4EjgVNRI4EzcWDxMTFTUWEBITFBISFBITEzcSOBUQFQAFogABKkgSAAxWAAEnSxUADQU='
-       speakers_vol_up:
-         friendly_name: Speakers Up
-         command_on: 'JgBQAAABJ5UTEhQSEhQUERMTEhMVERI4EhMVERIUFBETNxI4EzcUEhE4FTUVNRIUExITExM3EzcSFBMSFhASOBM2FjURFBMSEgAFpgABKkgSAA0FAAAAAAAAAAA='
-         command_off: 'JgBQAAABJ5UTEhQSEhQUERMTEhMVERI4EhMVERIUFBETNxI4EzcUEhE4FTUVNRIUExITExM3EzcSFBMSFhASOBM2FjURFBMSEgAFpgABKkgSAA0FAAAAAAAAAAA='
-       speakers_vol_down:
-         friendly_name: Speakers Down
-         command_on: 'JgBYAAABK5EUEhUQFhASFRQQFREUExM1FBIVEBYRERQVNBY1EzcVEBURExQTERU1FRAVERQ2FTUVNRQ2FTUVERM2FjQVERQTEwAFowABJ0sVAAxUAAEpSRMADQU==='
-         command_off: 'JgBYAAABK5EUEhUQFhASFRQQFREUExM1FBIVEBYRERQVNBY1EzcVEBURExQTERU1FRAVERQ2FTUVNRQ2FTUVERM2FjQVERQTEwAFowABJ0sVAAxUAAEpSRMADQU==='
-       speakers_input:
-         friendly_name: Projector Audio
-         command_on: 'JgBYAAABJ5UUERMTFRAVERIUFBETExI4FRATExURFBESOBU1FTUSFBMSFTUSFBM3EhQSExQ2EzcSOBQREzgSExM3EjgTEhMUEAAFpwABKEoTAAxVAAEnSxUADQU==='
-         command_off: 'JgBYAAABKpEVERIUFBETExUQFRIRFBQ2FBIRFBQRExMVNRU1EjgVEBUREjgVNRU1EhQUERU2ETgVNRUREhMVERI4EzcUERMTFAAFpAABKkgSAAxWAAEnSxMADQU==='
-
+      - name: Speakers
+        command_on: 'JgBYAAABJ5UVEBUREhQUERUREhMVERI4FRAVEhEUFBEVNRI4FTUWEBITFRESExURFBISExU1FDYSOBQ2FDYSOBQ1FjUSExUREQAFpgABKkgSAAxVAAEnSxUADQU='
+        command_off: 'JgBYAAABKJMTExQRFRIRFBITExMTEhQ2ExMVEBUSERQTNxU1EjgTEhI4EjgVNRI4EzcWDxMTFTUWEBITFBISFBITEzcSOBUQFQAFogABKkgSAAxWAAEnSxUADQU='
+      - name: Speakers Up
+        command_on: 'JgBQAAABJ5UTEhQSEhQUERMTEhMVERI4EhMVERIUFBETNxI4EzcUEhE4FTUVNRIUExITExM3EzcSFBMSFhASOBM2FjURFBMSEgAFpgABKkgSAA0FAAAAAAAAAAA='
+        command_off: 'JgBQAAABJ5UTEhQSEhQUERMTEhMVERI4EhMVERIUFBETNxI4EzcUEhE4FTUVNRIUExITExM3EzcSFBMSFhASOBM2FjURFBMSEgAFpgABKkgSAA0FAAAAAAAAAAA='
+      - name: Speakers Down
+        command_on: 'JgBYAAABK5EUEhUQFhASFRQQFREUExM1FBIVEBYRERQVNBY1EzcVEBURExQTERU1FRAVERQ2FTUVNRQ2FTUVERM2FjQVERQTEwAFowABJ0sVAAxUAAEpSRMADQU==='
+        command_off: 'JgBYAAABK5EUEhUQFhASFRQQFREUExM1FBIVEBYRERQVNBY1EzcVEBURExQTERU1FRAVERQ2FTUVNRQ2FTUVERM2FjQVERQTEwAFowABJ0sVAAxUAAEpSRMADQU==='
+      - name: Projector Audio
+        command_on: 'JgBYAAABJ5UUERMTFRAVERIUFBETExI4FRATExURFBESOBU1FTUSFBMSFTUSFBM3EhQSExQ2EzcSOBQREzgSExM3EjgTEhMUEAAFpwABKEoTAAxVAAEnSxUADQU==='
+        command_off: 'JgBYAAABKpEVERIUFBETExUQFRIRFBQ2FBIRFBQRExMVNRU1EjgVEBUREjgVNRU1EhQUERU2ETgVNRUREhMVERI4EzcUERMTFAAFpAABKkgSAAxWAAEnSxMADQU==='
+                    
 
 #################################################################
 ## Sensors
@@ -257,8 +254,8 @@ binary_sensor:
         device_class: door
         value_template: "{{ states('sensor.roof_door_ypos')|int > 30 }}"
         
-  - platform: workday
-    country: NL
+#   - platform: workday
+#     country: NL
     
   - platform: tod
     name: Night
@@ -442,9 +439,6 @@ sensor:
 
       ## Calculates daylight brightness out of 100%
       sunlight_pct:
-        entity_id:
-          - sun.sun
-          - sensor.dark_sky_cloud_coverage
         value_template: >-
           {%- set elevation = state_attr('sun.sun','elevation') | float %}
           {%- set cloud_coverage = states('sensor.dark_sky_cloud_coverage') | float %}
@@ -465,8 +459,6 @@ sensor:
 
       ## Daylight brightness converted to opacity for CSS
       sunlight_opacity:
-        entity_id:
-          - sensor.sunlight_pct
         value_template: >-
           {%- set sunpct = states('sensor.sunlight_pct') | float %}
           {%- set opacity = sunpct / 100 | float %}
@@ -475,9 +467,9 @@ sensor:
 
       ## Converts time and date into sentence for UI
       day:
-        entity_id: sensor.date
         value_template: >
           {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+          {{ strptime(states('sensor.date'), '%Y-%m-%d').day }}
           {{ days[now().weekday()] }}
 
       month:

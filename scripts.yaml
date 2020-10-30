@@ -7,8 +7,6 @@ navigate_to_lights:
       data:
         navigation_path: /lovelace/1
         deviceID:
-          - e3bcb892-264fae95
-          - 0290dd82-2a03ce63
           - tablet
 
 
@@ -19,8 +17,6 @@ navigate_to_cleanup:
       data:
         navigation_path: /lovelace/2
         deviceID:
-          - e3bcb892-264fae95
-          - 0290dd82-2a03ce63
           - tablet
 
 navigate_to_media:
@@ -30,8 +26,6 @@ navigate_to_media:
       data:
         navigation_path: /lovelace/3
         deviceID:
-          - e3bcb892-264fae95
-          - 0290dd82-2a03ce63
           - tablet
 
 navigate_to_weather:
@@ -41,8 +35,6 @@ navigate_to_weather:
       data:
         navigation_path: /lovelace/4
         deviceID:
-          - e3bcb892-264fae95
-          - 0290dd82-2a03ce63
           - tablet
 
 navigate_to_health:
@@ -52,8 +44,6 @@ navigate_to_health:
       data:
         navigation_path: /lovelace/5
         deviceID:
-          - e3bcb892-264fae95
-          - 0290dd82-2a03ce63
           - tablet
 
 ## Switch Audio when projector is turned on
@@ -106,14 +96,12 @@ slowly_turn_on_livingroom:
         entity_id: light.plant_table
         brightness: 150
         color_temp: 360
-        transition: 5
     - service: light.turn_on
       data:
         entity_id: light.table
         brightness: 150
         color_temp: 360
-        transition: 4
-        
+
         
 speak_sugar_level:
     alias: 'Ask Google for Sugar Level'

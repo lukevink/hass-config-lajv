@@ -10,12 +10,14 @@
   - alias: 'Toilet On Motion'
     # hide_entity: true
     trigger:
-      - entity_id: binary_sensor.toilet
+      - entity_id: binary_sensor.toilet_motion
         platform: state
         to: 'on'
     action:
       service: scene.turn_on
-      entity_id: scene.toilet_on
+      data:
+        entity_id: scene.toilet_on
+        transition: 0.5
 
   #Keeps lights on when distance sensor sees someone on the toilet
   - alias: 'Toilet On Occupied'
@@ -41,7 +43,7 @@
         to: 'on'
     condition:
         condition: state
-        entity_id: binary_sensor.toilet
+        entity_id: binary_sensor.toilet_motion
         state: 'on'
     action:
       service: scene.turn_on
@@ -51,7 +53,7 @@
   - alias: 'Toilet Off'
     # hide_entity: true
     trigger:
-      - entity_id: binary_sensor.toilet
+      - entity_id: binary_sensor.toilet_motion
         platform: state
         to: 'off'
     condition:
@@ -149,7 +151,6 @@
     trigger: 
       platform: state
       entity_id: binary_sensor.roof_door_open
-      from: "off"
       to: "on"
     condition:
       condition: state  
@@ -158,22 +159,24 @@
     action:
       service: homeassistant.turn_on
       entity_id:
-        - light.roof_plants
-        - light.roof_garden  
-
+            - light.roof_plants
+            - light.roof_garden
+            - light.roof
+            - light.roof_lights
 
   - alias: Turn Off Roof
     # hide_entity: true
     trigger: 
       platform: state
       entity_id: binary_sensor.roof_door_open
-      from: "on"
       to: "off"
     action:
       service: homeassistant.turn_off
       entity_id:
-        - light.roof_plants
-        - light.roof_garden          
+            - light.roof_plants
+            - light.roof_garden
+            - light.roof
+            - light.roof_lights         
 
   - alias: "Roof Off Morning"
     # hide_entity: true
@@ -186,6 +189,8 @@
           entity_id:
             - light.roof_plants
             - light.roof_garden
+            - light.roof
+            - light.roof_lights
            
 ## Set nighttime value for Health Graphs
 
@@ -234,11 +239,14 @@
         to: 'playing'
       - platform: state
         entity_id: media_player.spotify
-        to: 'playing'        
+        to: 'playing'  
+      - platform: state
+        entity_id: media_player.chrome_surround_speakers
+        to: 'playing'    
     action:
       service:  script.turn_on
       entity_id: script.navigate_to_media
-      
+
       
 ##############################################      
 ################# IR Blaster ################# 
@@ -251,39 +259,35 @@
     # hide_entity: true
     trigger:
       - platform: state
-        entity_id: switch.speakers_vol_up
+        entity_id: switch.speakers_up
         to: 'on'
     action:
       service:  switch.turn_off
-      entity_id: switch.speakers_vol_up
+      entity_id: switch.speakers_up
 
   - alias: Sound Down
     # hide_entity: true
     trigger:
       - platform: state
-        entity_id: switch.speakers_vol_down
+        entity_id: switch.speakers_down
         to: 'on'
     action:
       service: switch.turn_off
-      entity_id: switch.speakers_vol_down
-
+      entity_id: switch.speakers_down
+      
+      
+      
   - alias: Projector Off
-    # hide_entity: true
     trigger:
-      - platform: state
-        entity_id: device_tracker.projector
-        to: 'not_home'
-    condition:
-      condition: state
+      platform: state
       entity_id: device_tracker.projector
-      state: 'not_home'
-      # optional: trigger only if state was this for last 5 minutes.
+      to: 'not_home'
       for:
         minutes: 5
     action:
       service: switch.turn_off
-      entity_id: switch.speakers_input         
-
+      entity_id: switch.projector_audio   
+      
  
   - alias: Projector On
     # hide_entity: true
@@ -293,7 +297,7 @@
         to: 'home'
     action:
       service: switch.turn_on
-      entity_id: switch.speakers_input           
+      entity_id: switch.projector_audio           
 
 
 
@@ -304,6 +308,21 @@
 # Fun fact, im a type 1 diabetic. My house knows my sugar level (connected CgM)
 # If a low sugar is detected, the tablet displays a warning and turns lights red
 # Light colors also warn me if there is an issue with my insulin pump
+
+# - id: '1234567890123'
+#   alias: overnight_low_kitchen_lights
+#   description: Turn on the lights in the kitchen if my blood sugar drops low overnight
+#   trigger:
+#   - below: '65'
+#     entity_id: sensor.blood_glucose
+#     platform: numeric_state
+#   condition: time
+#     after: '22:00:00'
+#     before: '06:00:00'
+#   action:
+#   - service: light.turn_on
+#       data:
+#         entity_id: light.kitchen
 
   #### Sugar levels low ####  
   - alias: Issue with CGM!
@@ -630,7 +649,7 @@
       entity_id:
         ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.cabinet', 
         'light.table', 'light.couch', 'light.kitchen_4', 'light.kitchen_3', 'light.kitchen_2', 'light.kitchen_1', 'light.roof_plants',
-        'light.roof_garden', 'switch.speakers_vol_up', 'switch.speakers_vol_down', 'switch.power', 'switch.speakers_input',
+        'light.roof_garden', 'switch.speakers_up', 'switch.speakers_down', 'switch.speakers', 'switch.projector_audio',
         'light.balcony','light.study']
       from: 'off'
       to: 'on'
@@ -648,7 +667,7 @@
       entity_id:
         ['light.door', 'light.stairs_2', 'light.bed', 'light.bedroom_roof', 'light.toilet_2', 'light.toilet_1', 'light.cabinet', 
         'light.table', 'light.couch', 'light.kitchen_4', 'light.kitchen_3', 'light.kitchen_2', 'light.kitchen_1', 'light.roof_plants',
-        'light.roof_garden', 'switch.speakers_vol_up', 'switch.speakers_vol_down', 'switch.power', 'switch.speakers_input',
+        'light.roof_garden', 'switch.speakers_up', 'switch.speakers_down', 'switch.speakers', 'switch.projector_audio',
         'light.balcony','light.study']
       from: 'on'
       to: 'off'

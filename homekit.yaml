@@ -8,10 +8,15 @@
 
   filter:
     include_entities:
-      - switch.power
-      - switch.speakers_vol_up
-      - switch.speakers_vol_down
-      - switch.speakers_input
+      - switch.speakers
+      - switch.speakers_up
+      - switch.speakers_down
+      - switch.projector_audio
+      - binary_sensor.toilet_in_use
+      - binary_sensor.toilet
+      - binary_sensor.roof_door_open
+      - binary_sensor.toilet_occupancy
       - light.couch
       - light.roof_garden
       - light.roof_plants
+      - light.reading_lamp
