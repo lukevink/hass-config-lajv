@@ -1,7 +1,7 @@
 # Home Assistant Configuration
 
-Version: 0.111.3
-Operating System: 4.10
+Version: 0.117.1
+Operating System: 4.15
 
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
 
