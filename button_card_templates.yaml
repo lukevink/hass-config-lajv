@@ -2,6 +2,36 @@
 
   #################################################
   #                                               #
+  #                  MAIN CSS                     #
+  #                                               #
+  #################################################
+
+
+  icon_main:
+    styles:
+        icon:
+         - display: flex
+    extra_styles: |
+        .ha-card.button-card-main{
+           padding: 0 !important;
+        }
+        @media
+        only screen and (-webkit-min-device-pixel-ratio: 2),
+        only screen and (   min--moz-device-pixel-ratio: 2),
+        only screen and (     -o-min-device-pixel-ratio: 2/1),
+        only screen and (        min-device-pixel-ratio: 2),
+        only screen and (                min-resolution: 192dpi),
+        only screen and (                min-resolution: 2dppx) {
+
+          /* Retina-specific screens */
+          .ha-card.button-card-main{
+              padding: 0 !important;
+           }
+
+        }
+
+  #################################################
+  #                                               #
   #                    CIRCLE                     #
   #                                               #
   #################################################
@@ -34,7 +64,7 @@
         ]]]
     styles:
       custom_fields:
-        circle: &person
+        circle:
           - top: 0%
           - left: 0%
           - width: 4vw
@@ -51,6 +81,7 @@
 
   light:
     template:
+     - icon_main
      - circle
     show_state: false
     show_icon: true
@@ -210,6 +241,7 @@
   light_group:
     icon: mdi:google-circles-communities
     template:
+     - icon_main
      - circle
     show_state: false
     show_icon: true
@@ -285,6 +317,7 @@
 
   light_white:
     template:
+     - icon_main
      - circle
     show_state: false
     show_icon: true

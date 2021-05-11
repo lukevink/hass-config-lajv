@@ -1043,7 +1043,7 @@ views:
                 type: 'custom:button-card'
                 styles:
                   card:
-                    - transform: 'scaleX(-0.7) scaleY(0.7)'                
+                    - transform: 'scaleX(-1.8) scaleY(1.8)'                
                 style:
                   left: 65%
                   top: 17%
