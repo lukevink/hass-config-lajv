@@ -24,17 +24,12 @@ browser_mod:
       name: tablet
 
 
-
 ##############################################      
 ################ UI Libraries ################ 
 ##############################################
 
-# I chose to not use HACS as some libraries are custom (for styling) and I prefer manual control.
-
-# In addition, in HACS I have the following installed:
-# Browser Mod - https://github.com/thomasloven/hass-browser_mod
-# Plex Recently Added - https://github.com/custom-components/sensor.plex_recently_added
-# Spotcast - https://github.com/fondberg/spotcast 
+# I chose to not just use HACS, as some libraries are custom 
+# (for styling) and I prefer manual control.
 
 
 frontend:
@@ -43,6 +38,14 @@ frontend:
 homekit: !include homekit.yaml
 lovelace:
   mode: yaml
+  dashboards:
+    lovelace-mobile: 
+      mode: yaml
+      filename: ui-lovelace_mobile.yaml
+      title: Mobile
+      icon: mdi:cellphone
+      show_in_sidebar: true
+  
   resources:
   
     ################
@@ -101,6 +104,10 @@ lovelace:
     type: module
   - url: /hacsfiles/light-entity-card/light-entity-card.js   
     type: module
+  - url: /hacsfiles/lovelace-hui-element/hui-element.js   
+    type: module   
+  - url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js  
+    type: module      
     
     ###################################################
     ##### CARDS I CREATED OR MODIFIED FOR STYLING #####
@@ -109,7 +116,6 @@ lovelace:
     # completely custom. I cant confirm that CSS styles 
     # will look right in any other browser than my own.
     
-
   - type: module
     url: /local/js/buien-rain-card.js?v=0.0.60
   - type: js
@@ -145,10 +151,14 @@ spotify:
     client_id: !secret spotify_client_id
     client_secret: !secret spotify_secret
     
+ 
 spotcast:
   sp_dc: !secret sp_dc
-  sp_key: !secret sp_key    
-  
+  sp_key: !secret sp_key
+  accounts:
+    santa:
+      sp_dc: !secret sp_dc_santa
+      sp_key: !secret sp_key_santa 
 
 counter:
   people_on_roof:
@@ -158,10 +168,22 @@ counter:
 
       
 ## For robot vacuum & automation status
-vacuum:
-  - platform: xiaomi_miio
-    host: 192.168.0.204
-    token: !secret xiaomi_robot_token
+
+camera:
+  - platform: xiaomi_cloud_map_extractor
+    host: !secret xiaomi_vacuum_host
+    token: !secret xiaomi_vacuum_token
+    username: !secret xiaomi_cloud_username
+    password: !secret xiaomi_cloud_password
+    draw: ['all']
+    map_transformation:
+      trim:
+        top: 15
+        bottom: 15
+        left: 0
+        right: 0
+    attributes:
+      - calibration_points  
 
 input_text:
   room_cleaning:
@@ -174,7 +196,7 @@ device_tracker:
     track_new_devices: true
     interval_seconds: 5
     consider_home: 30
-#   - platform: upc_connect
+#   - platform: upc_connect 
 #     password: !secret wifi_admin_password
 #     track_new_devices: false
 #     host: 192.168.178.1
@@ -193,8 +215,8 @@ device_tracker:
 weather:
   - platform: buienradar
     name: 'buienWeather'
-    latitude: 52.365150
-    longitude: 4.934230
+    latitude: !secret latitude
+    longitude: !secret longitude
     forecast: true
     
 
@@ -254,29 +276,17 @@ binary_sensor:
         device_class: door
         value_template: "{{ states('sensor.roof_door_ypos')|int > 30 }}"
         
-#   - platform: workday
-#     country: NL
     
   - platform: tod
     name: Night
     after: sunset
     before: sunrise
-    
+
 sensor:
 
 
-#   - platform: spotify-playlist-sensor
-#     client_id: !secret spotify_client_id
-#     client_secret: !secret spotify_secret
-#     number_of_playlists: 12
-
-#   - platform: spotify-playlist-sensor
-#     client_id: !secret spotify_client_id
-#     client_secret: !secret spotify_secret
-#     number_of_playlists: 12
-#     name: SpotifyPlaylist_Santa
-
-
+  - platform: radarr
+    api_key: !secret radarr_token 
 
   - platform: plex_recently_added
     name: Recently Added Movies # will create sensor.recently_added_movies
@@ -293,7 +303,6 @@ sensor:
     port: 32400
     section_types:
     - show
-
 
   - platform: time_date
     display_options:
@@ -354,17 +363,17 @@ sensor:
       - moon_phase
       - alerts
 
-  - platform: rest
-    name: luke_cgm
-    resource: https://lajv-ichor.herokuapp.com/api/v1/entries/current.json
-    value_template: >
-      sgv:{{value_json[0].sgv}}, trend:{{value_json[0].trend}}, direction:{{value_json[0].direction}}, time:{{ ( (as_timestamp(now()) - as_timestamp(value_json[0].dateString) ) / 60) | round(0) }}
+#   - platform: rest
+#     name: luke_cgm
+#     resource: https://lajv-ichor.herokuapp.com/api/v1/entries/current.json
+#     value_template: >
+#       sgv:{{value_json[0].sgv}}, trend:{{value_json[0].trend}}, direction:{{value_json[0].direction}}, time:{{ ( (as_timestamp(now()) - as_timestamp(value_json[0].dateString) ) / 60) | round(0) }}
 
-  - platform: rest
-    name: luke_treatments
-    resource: https://lajv-ichor.herokuapp.com/api/v1/treatments.json
-    value_template: >
-      carbs:{{value_json[0].carbs}}, eventType:{{value_json[0].eventType}}, insulin:{{value_json[0].insulin}}, time:{{ (as_timestamp(value_json[0].created_at)) }}
+#   - platform: rest
+#     name: luke_treatments
+#     resource: https://lajv-ichor.herokuapp.com/api/v1/treatments.json
+#     value_template: >
+#       carbs:{{value_json[0].carbs}}, eventType:{{value_json[0].eventType}}, insulin:{{value_json[0].insulin}}, time:{{ (as_timestamp(value_json[0].created_at)) }}
 
 
 #######################################################################################
@@ -373,40 +382,6 @@ sensor:
 
   - platform: template
     sensors:
-      luke_cgm_sgv:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("sgv:(\d+)") }}
-        unit_of_measurement: "mmol"
-    #   luke_cgm_trend:
-    #     value_template: >
-    #       {{ states('sensor.luke_cgm') | regex_findall_index("trend:(\d+)") }}
-      luke_cgm_direction:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("direction:(\w+)") }}
-      luke_cgm_time:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("time:(\d+)") }}
-      luke_cgm_sgv_mmol:
-        value_template: >
-          {%- set mgdl = states('sensor.luke_cgm_sgv') | float %}
-          {%- set mmol = (mgdl / 18) %}
-          {{ mmol | float | round(1)}}
-        unit_of_measurement: "mmol/L"
-        device_class: temperature
-        friendly_name: "Sugar Level"
-        icon_template: >-
-          {%- set mgdl = states('sensor.luke_cgm_sgv') | float %}
-          {%- set mmol = (mgdl / 18) %}
-          {% if mmol < 4 %}
-            mdi:arrow-up-bold
-          {% else %}
-            {% if mmol > 8 %}
-              mdi:arrow-up-bold
-            {% else %}
-              mdi:water
-            {% endif %}
-          {% endif %}
-
 
       roof_door_ypos:
         value_template: >-
@@ -419,7 +394,40 @@ sensor:
           {% else %}
             mdi:door-open
           {% endif %}
-         
+ 
+     #   luke_cgm_sgv:
+    #     value_template: >
+    #       {{ states('sensor.luke_cgm') | regex_findall_index("sgv:(\d+)") }}
+    #     unit_of_measurement: "mmol"
+    # #   luke_cgm_trend:
+    # #     value_template: >
+    # #       {{ states('sensor.luke_cgm') | regex_findall_index("trend:(\d+)") }}
+    #   luke_cgm_direction:
+    #     value_template: >
+    #       {{ states('sensor.luke_cgm') | regex_findall_index("direction:(\w+)") }}
+    #   luke_cgm_time:
+    #     value_template: >
+    #       {{ states('sensor.luke_cgm') | regex_findall_index("time:(\d+)") }}
+    #   luke_cgm_sgv_mmol:
+    #     value_template: >
+    #       {%- set mgdl = states('sensor.luke_cgm_sgv') | float %}
+    #       {%- set mmol = (mgdl / 18) %}
+    #       {{ mmol | float | round(1)}}
+    #     unit_of_measurement: "mmol/L"
+    #     device_class: temperature
+    #     friendly_name: "Sugar Level"
+    #     icon_template: >-
+    #       {%- set mgdl = states('sensor.luke_cgm_sgv') | float %}
+    #       {%- set mmol = (mgdl / 18) %}
+    #       {% if mmol < 4 %}
+    #         mdi:arrow-up-bold
+    #       {% else %}
+    #         {% if mmol > 8 %}
+    #           mdi:arrow-up-bold
+    #         {% else %}
+    #           mdi:water
+    #         {% endif %}
+    #       {% endif %}        
          
     #   luke_inslulin:
     #     value_template: >

@@ -5,7 +5,7 @@ navigate_to_lights:
   sequence:
     - service: browser_mod.navigate
       data:
-        navigation_path: /lovelace/1
+        navigation_path: /lovelace/0
         deviceID:
           - tablet
 
@@ -15,7 +15,7 @@ navigate_to_cleanup:
   sequence:
     - service: browser_mod.navigate
       data:
-        navigation_path: /lovelace/2
+        navigation_path: /lovelace/1
         deviceID:
           - tablet
 
@@ -24,7 +24,7 @@ navigate_to_media:
   sequence:
     - service: browser_mod.navigate
       data:
-        navigation_path: /lovelace/3
+        navigation_path: /lovelace/2
         deviceID:
           - tablet
 
@@ -33,7 +33,7 @@ navigate_to_weather:
   sequence:
     - service: browser_mod.navigate
       data:
-        navigation_path: /lovelace/4
+        navigation_path: /lovelace/3
         deviceID:
           - tablet
 
@@ -42,7 +42,7 @@ navigate_to_health:
   sequence:
     - service: browser_mod.navigate
       data:
-        navigation_path: /lovelace/5
+        navigation_path: /lovelace/4
         deviceID:
           - tablet
 

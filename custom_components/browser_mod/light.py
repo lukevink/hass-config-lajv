@@ -11,6 +11,11 @@ PLATFORM = 'light'
 async def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     return setup_platform(hass, config, async_add_devices, PLATFORM, BrowserModLight)
 
+
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    await async_setup_platform(hass, {}, async_add_entities)
+
+
 class BrowserModLight(LightEntity, BrowserModEntity):
     domain = PLATFORM
 
@@ -47,6 +52,10 @@ class BrowserModLight(LightEntity, BrowserModEntity):
         if self.data.get('brightness', False):
             return SUPPORT_BRIGHTNESS
         return 0
+
+    @property
+    def brightness(self):
+        return self.data.get('brightness', None)
 
     def turn_on(self, **kwargs):
         self.connection.send("no-blackout", **kwargs)

@@ -32,7 +32,8 @@
           seconds: 7
     action:
       service: scene.turn_on
-      entity_id: scene.toilet_on
+      target:
+         entity_id: scene.toilet_on
 
   #Keeps lights on when distance sensor sees and motion is triggered
   - alias: 'Toilet On Occupied with Motion'
@@ -47,7 +48,8 @@
         state: 'on'
     action:
       service: scene.turn_on
-      entity_id: scene.toilet_on
+      target:
+        entity_id: scene.toilet_on
 
   #If no motion or proximity, turn off toilet lights
   - alias: 'Toilet Off'
@@ -62,7 +64,8 @@
         state: 'off'
     action:
       service: scene.turn_on
-      entity_id: scene.toilet_off
+      target:
+        entity_id: scene.toilet_off
 
   #Keep turning off toilet lights every 5 seconds 
   #if light has been turned on for more than 3 mins
@@ -78,7 +81,7 @@
         for:
           hours: 0
           minutes: 0
-          seconds: 120
+          seconds: 130
       - condition: state
         entity_id: binary_sensor.toilet_in_use
         state: 'off'
@@ -88,7 +91,8 @@
           seconds: 12
     action:
       service: scene.turn_on
-      entity_id: scene.toilet_off  
+      target:
+        entity_id: scene.toilet_off  
       
   #Make sure if someone is sitting on the toilet, 
   #The lights remain on
@@ -103,7 +107,8 @@
         state: 'on'
     action:
       service: scene.turn_on
-      entity_id: scene.toilet_on
+      target:
+        entity_id: scene.toilet_on
 
 
       
@@ -283,10 +288,12 @@
       entity_id: device_tracker.projector
       to: 'not_home'
       for:
-        minutes: 5
+        minutes: 3
     action:
-      service: switch.turn_off
-      entity_id: switch.projector_audio   
+      - service: switch.turn_off
+        entity_id: switch.projector_audio   
+      - service: script_turn_on
+        entity_id: script.navigate_to_lights
       
  
   - alias: Projector On
@@ -296,8 +303,10 @@
         entity_id: device_tracker.projector
         to: 'home'
     action:
-      service: switch.turn_on
-      entity_id: switch.projector_audio           
+      - service: switch.turn_on
+        entity_id: switch.projector_audio   
+      - service: script_turn_on
+        entity_id: script.navigate_to_media
 
 
 

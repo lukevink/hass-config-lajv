@@ -12,6 +12,11 @@ PLATFORM = 'camera'
 async def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     return setup_platform(hass, config, async_add_devices, PLATFORM, BrowserModCamera)
 
+
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    await async_setup_platform(hass, {}, async_add_entities)
+
+
 class BrowserModCamera(Camera, BrowserModEntity):
     domain = PLATFORM
 
@@ -21,7 +26,8 @@ class BrowserModCamera(Camera, BrowserModEntity):
         self.last_seen = None
 
     def updated(self):
-        self.last_seen = datetime.now()
+        if self.last_seen is None or (datetime.now() - self.last_seen).seconds > 15:
+            self.last_seen = datetime.now()
         self.schedule_update_ha_state()
 
     def camera_image(self):

@@ -114,26 +114,36 @@
       state: 'on'
       supported_features: 63
 - id: '1584628498818'
-  name: toiletOn
+  name: toilet_on
   entities:
     light.toilet_1:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
       brightness: 254
       friendly_name: Toilet 1
-      state: 'on'
       supported_features: 41
+      state: 'on'
     light.toilet_2:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
       brightness: 254
       friendly_name: Toilet 2
-      state: 'on'
       supported_features: 41
+      state: 'on'
 - id: '1584628536827'
-  name: toiletOff
+  name: toilet_off
   entities:
     light.toilet_1:
+      supported_color_modes:
+      - brightness
       friendly_name: Toilet 1
-      state: 'off'
       supported_features: 41
+      state: 'off'
     light.toilet_2:
+      supported_color_modes:
+      - brightness
       friendly_name: Toilet 2
-      state: 'off'
       supported_features: 41
+      state: 'off'

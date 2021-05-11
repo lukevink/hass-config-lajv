@@ -5,3 +5,7 @@ switch.speakers_vol_up:
   icon: mdi:volume-plus
 switch.speakers_vol_down:
   icon: mdi:volume-minus
+light.kitchen_fridge_lights:
+  icon: mdi:google-circles-communities
+light.kitchen_sink_lights:
+  icon: mdi:google-circles-communities

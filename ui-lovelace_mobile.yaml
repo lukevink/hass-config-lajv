@@ -1,0 +1,1156 @@
+button_card_templates: !include button_card_templates.yaml
+
+views:
+  - path: main
+    theme: slate
+    title: Lust & Freud
+    badges: []
+    cards:
+      - type: 'custom:mini-media-player'
+        entity: media_player.surround_speakers
+        volume_stateless: false
+        toggle_power: false
+      - type: 'custom:config-template-card'
+        entities:
+          - light.roof_garden
+          - light.roof_plants
+          - light.kitchen_1
+          - light.kitchen_2
+          - light.kitchen_3
+          - light.kitchen_4
+          - light.couch
+          - light.table
+          - light.cabinet
+          - light.toilet_1
+          - light.toilet_2
+          - light.study
+          - light.bedroom_roof
+          - light.bed
+          - light.stairs
+          - light.door
+          - light.balcony
+          - light.kitchen_sink_lights
+          - light.kitchen_fridge_lights
+          - light.kitchen_lights
+          - light.toilet_lights
+          
+        card:
+            type: picture-elements       
+            image: /local/ui/floorplan/floorplan_night.png
+            style: |
+              ha-card:first-child {
+                background: rgba(42, 46, 48, 1)
+              }
+            elements:
+              - action: none
+                entity: sun.sun
+                hold_action:
+                  action: none
+                state_image:
+                  above_horizon: /local/ui/floorplan/floorplan_day.png
+                  below_horizon: /local/transparent.png
+                style:
+                  height: 100%
+                  left: 50%
+                  mix-blend-mode: lighten
+                  opacity: '${ states[''sensor.sunlight_opacity''].state }'
+                  top: 50%
+                  width: 100%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: weather.buienweather
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/weather/rainstorm.gif
+                state_filter:
+                  pouring: opacity(100%)
+                style:
+                  left: 60%
+                  mix-blend-mode: color-dodge
+                  top: 50%
+                  width: 110%
+                  opacity: 0
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/main_night.png
+                style:
+                  height: 100%
+                  left: 50%
+                  top: 50%
+                  width: 100%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: sun.sun
+                hold_action:
+                  action: none
+                state_image:
+                  above_horizon: /local/ui/floorplan/main_day.png
+                  below_horizon: /local/transparent.png
+                style:
+                  height: 100%
+                  left: 50%
+                  mix-blend-mode: lighten
+                  opacity: '${ states[''sensor.sunlight_opacity''].state }'
+                  top: 50%
+                  width: 100%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.table
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/table.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" + (states['light.table'].attributes.hs_color ?
+                    states['light.table'].attributes.hs_color[0] : 0) + "deg)"}
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.table'].state === 'on' ?
+                    (states['light.table'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.cabinet
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/cabinet.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" + (states['light.cabinet'].attributes.hs_color
+                    ? states['light.cabinet'].attributes.hs_color[0] : 0) + "deg)"}
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.cabinet'].state === 'on' ?
+                    (states['light.cabinet'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.couch
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/couch.png
+                state_filter:
+                  'off': opacity(0%)
+                  'on': opacity(100%)
+                style:
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.roof_plants
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/roofplants.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" +
+                    (states['light.roof_plants'].attributes.hs_color  ?
+                    states['light.roof_plants'].attributes.hs_color[0] : 0) +
+                    "deg)"}
+                  left: 27.02%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.roof_plants'].state === 'on' ?
+                    (states['light.roof_plants'].attributes.brightness / 255) : '0'}
+                  top: 51.1%
+                  width: 45.0390625%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.roof_garden
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/roofgarden.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" +
+                    (states['light.roof_garden'].attributes.hs_color  ?
+                    states['light.roof_garden'].attributes.hs_color[0] : 0) +
+                    "deg)"}
+                  left: 27.02%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.roof_garden'].state === 'on' ?
+                    (states['light.roof_garden'].attributes.brightness / 255) : '0'}
+                  top: 51.1%
+                  width: 45.0390625%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.kitchen_1
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/kitchen1.png
+                style:
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.kitchen_1'].state === 'on' ?
+                    (states['light.kitchen_1'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.kitchen_2
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/kitchen2.png
+                style:
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.kitchen_2'].state === 'on' ?
+                    (states['light.kitchen_2'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.kitchen_3
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/kitchen3.png
+                style:
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.kitchen_3'].state === 'on' ?
+                    (states['light.kitchen_3'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.kitchen_4
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/kitchen4.png
+                style:
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.kitchen_4'].state === 'on' ?
+                    (states['light.kitchen_4'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.door
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/door.png
+                style:
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.door'].state === 'on' ?
+                    (states['light.door'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.stairs
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/stairs.png
+                style:
+                  left: 73.73%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.stairs'].state === 'on' ?
+                    (states['light.stairs'].attributes.brightness / 255) : '0'}
+                  top: 32.65%
+                  width: 39.296875%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.toilet_lights
+                image: /local/ui/floorplan/lights/toilet.png
+                state_filter:
+                  'off': opacity(0%)
+                  'on': opacity(100%)
+                  unknown: opacity(0%)
+                style:
+                  left: 73.73%
+                  top: 32.65%
+                  width: 39.296875%
+                  mix-blend-mode: lighten
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.bed
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/bed.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" + (states['light.bed'].attributes.hs_color  ?
+                    states['light.bed'].attributes.hs_color[0] : 0) + "deg)"}
+                  left: 76.85%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.bed'].state === 'on' ?
+                    (states['light.bed'].attributes.brightness / 255) : '0'}
+                  top: 78.2%
+                  width: 46.1328125%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.bedroom_roof
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/bedroof.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" +
+                    (states['light.bedroom_roof'].attributes.hs_color  ?
+                    states['light.bedroom_roof'].attributes.hs_color[0] : 0) +
+                    "deg)"}
+                  left: 76.85%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.bedroom_roof'].state === 'on' ?
+                    (states['light.bedroom_roof'].attributes.brightness / 255) :
+                    '0'}
+                  top: 78.2%
+                  width: 46.1328125%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.study
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/study.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" + (states['light.study'].attributes.hs_color ?
+                    states['light.study'].attributes.hs_color[0] : 0) + "deg)"}
+                  left: 76.85%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.study'].state === 'on' ?
+                    (states['light.study'].attributes.brightness / 255) : '0'}
+                  top: 78.2%
+                  width: 46.1328125%
+                tap_action:
+                  action: none
+                type: image
+              - action: none
+                entity: light.balcony
+                hold_action:
+                  action: none
+                image: /local/ui/floorplan/lights/balcony.png
+                style:
+                  filter: >-
+                    ${ "hue-rotate(" + (states['light.balcony'].attributes.hs_color
+                    ? states['light.balcony'].attributes.hs_color[0] : 0) + "deg)"}
+                  left: 76.85%
+                  mix-blend-mode: lighten
+                  opacity: >-
+                    ${states['light.balcony'].state === 'on' ?
+                    (states['light.balcony'].attributes.brightness / 255) : '0'}
+                  top: 78.2%
+                  width: 46.1328125%
+                tap_action:
+                  action: none
+                type: image
+              - entity: light.living_room_lights
+                hold_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.living_room_lights
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards:
+                                - brightness: false
+                                  color_picker: false
+                                  effects_list: false
+                                  entity: light.living_room_lights
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                                - brightness: false
+                                  color_temp: false
+                                  entity: light.living_room_lights
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.living_room_lights
+                                  hide_header: true
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 2
+                          layout: horizontal
+                          max_width:
+                            - 60%
+                            - 40%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Living Room
+                image: /local/transparent.png
+                style:
+                  height: 48%
+                  left: 76.8%
+                  top: 32.65%
+                  width: 32%
+                tap_action:
+                  action: call-service
+                  service: homeassistant.toggle
+                  service_data:
+                    entity_id: light.living_room_lights
+                type: image
+              - entity: light.stairs_lights
+                double_tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.stairs_lights
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards: null
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.stairs_lights
+                                  hide_header: true
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 1
+                          layout: horizontal
+                          max_width:
+                            - 100%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Stairs Lights
+                image: /local/transparent.png
+                style:
+                  height: 28%
+                  left: 61%
+                  top: 23%
+                  width: 12.7%
+                tap_action:
+                  action: call-service
+                  service: homeassistant.toggle
+                  service_data:
+                    entity_id: light.stairs_lights
+                type: image
+              - entity: group.kitchen
+                double_tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.kitchen_lights
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards: null
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.kitchen_lights
+                                  hide_header: true
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 1
+                          layout: horizontal
+                          max_width:
+                            - 100%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Kitchen Lights
+                image: /local/transparent.png
+                style:
+                  height: 29%
+                  left: 73%
+                  top: 24.5%
+                  width: 12%
+                tap_action:
+                  action: toggle
+                type: image
+              - entity: light.toilet_lights
+                double_tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.toilet_lights
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards: null
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.toilet_lights
+                                  hide_header: true
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 1
+                          layout: horizontal
+                          max_width:
+                            - 100%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Toilet Lights
+                image: /local/transparent.png
+                style:
+                  height: 13.5%
+                  left: 57.5%
+                  top: 50%
+                  width: 6%
+                tap_action:
+                  action: call-service
+                  service: homeassistant.toggle
+                  service_data:
+                    entity_id: light.toilet_lights
+                type: image
+              - entity: light.study
+                double_tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.study
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards:
+                                - brightness: false
+                                  color_picker: false
+                                  effects_list: false
+                                  entity: light.study
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                                - brightness: false
+                                  color_temp: false
+                                  entity: light.study
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.study
+                                  header: false
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 2
+                          layout: horizontal
+                          max_width:
+                            - 60%
+                            - 40%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Study Lights
+                image: /local/transparent.png
+                style:
+                  height: 27%
+                  left: 72.5%
+                  top: 70.8%
+                  width: 12.5%
+                tap_action:
+                  action: call-service
+                  service: homeassistant.toggle
+                  service_data:
+                    entity_id: light.study
+                type: image
+              - entity: light.bedroom_lights
+                double_tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.bedroom_lights
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards:
+                                - brightness: false
+                                  color_picker: false
+                                  effects_list: false
+                                  entity: light.bedroom_lights
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                                - brightness: false
+                                  color_temp: false
+                                  entity: light.bedroom_lights
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.bedroom_lights
+                                  hide_header: true
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 2
+                          layout: horizontal
+                          max_width:
+                            - 60%
+                            - 40%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Bedroom Lights
+                image: /local/transparent.png
+                style:
+                  height: 27%
+                  left: 86%
+                  top: 70.8%
+                  width: 13%
+                tap_action:
+                  action: call-service
+                  service: homeassistant.toggle
+                  service_data:
+                    entity_id: light.bedroom_lights
+                type: image
+              - entity: light.balcony
+                double_tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.balcony
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards:
+                                - brightness: false
+                                  color_picker: false
+                                  effects_list: false
+                                  entity: light.balcony
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                                - brightness: false
+                                  color_temp: false
+                                  entity: light.balcony
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.balcony
+                                  hide_header: true
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 2
+                          layout: horizontal
+                          max_width:
+                            - 60%
+                            - 40%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Balcony Lights
+                image: /local/transparent.png
+                style:
+                  height: 17%
+                  left: 74%
+                  top: 94%
+                  width: 38%
+                tap_action:
+                  action: call-service
+                  service: homeassistant.toggle
+                  service_data:
+                    entity_id: light.balcony
+                type: image
+              - entity: light.roof_lights
+                double_tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    card:
+                      cards:
+                        - entities:
+                            - entity: light.roof_lights
+                              secondary_info: last-changed
+                          style:
+                            z-index: 5
+                          type: entities
+                        - cards:
+                            - cards:
+                                - brightness: false
+                                  color_picker: false
+                                  effects_list: false
+                                  entity: light.roof_lights
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                                - brightness: false
+                                  color_temp: false
+                                  entity: light.roof_lights
+                                  full_width_sliders: true
+                                  hide_header: true
+                                  persist_features: true
+                                  show_slider_percent: false
+                                  smooth_color_wheel: true
+                                  type: 'custom:light-entity-card'
+                                  style: |
+                                    ha-card {
+                                      box-shadow: none !important;
+                                    }
+                              column_height: 1
+                              layout: vertical
+                              type: 'custom:layout-card'
+                            - entities:
+                                - color_temp: true
+                                  entity: light.roof_lights
+                                  hide_header: true
+                                  persist_features: true
+                                  type: 'custom:light-slider-card'
+                              show_header_toggle: false
+                              style: |
+                                :host{
+                                  height: 100%;
+                                  z-index: 0;
+                                }
+                                ha-card {
+                                  box-shadow: none !important;
+                                }
+                              type: entities
+                          column_num: 2
+                          layout: horizontal
+                          max_width:
+                            - 60%
+                            - 40%
+                          type: 'custom:layout-card'
+                      type: 'custom:vertical-stack-in-card'
+                    deviceID:
+                      - this
+                    style:
+                      '--ha-card-border-radius': 0vw 0vw 0.8vw 0.8vw
+                      border-radius: 0.8vw
+                      opacity: 0.9
+                    title: Roof Lights
+                image: /local/transparent.png
+                style:
+                  height: 80%
+                  left: 32%
+                  top: 49%
+                  width: 30%
+                tap_action:
+                  action: call-service
+                  service: homeassistant.toggle
+                  service_data:
+                    entity_id: light.roof_lights
+                type: image
+              - entity: light.cabinet
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 72.5%
+                  top: 54.5%
+                template:
+                  - light
+              - entity: light.kitchen_fridge_lights
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 73%
+                  top: 31%
+                template:
+                  - light_group
+              - entity: light.kitchen_sink_lights
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 74%
+                  top: 17%
+                template:
+                  - light_group
+              - entity: light.door
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'                
+                style:
+                  left: 58.5%
+                  top: 17%
+                template:
+                  - light
+              - entity: light.stairs
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scaleX(-0.7) scaleY(0.7)'                
+                style:
+                  left: 65%
+                  top: 17%
+                template:
+                  - light
+              - entity: light.toilet_lights
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 57.3%
+                  top: 50%
+                template:
+                  - light_group
+              - entity: light.reading_lamp
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 90%
+                  top: 37%
+                template:
+                  - light_white
+              - entity: light.couch
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 90%
+                  top: 53%
+                template:
+                  - light_white
+              - entity: light.bed
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 90%
+                  top: 79%
+                template:
+                  - light
+              - entity: light.bedroom_roof
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 85.5%
+                  top: 70.5%
+                template:
+                  - light
+              - type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                entity: light.study
+                style:
+                  left: 72.5%
+                  top: 70.5%
+                template:
+                  - light
+              - type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                entity: light.balcony
+                style:
+                  left: 79.2%
+                  top: 88.5%
+                template:
+                  - light
+              - entity: light.roof_plants
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 35%
+                  top: 50%
+                template:
+                  - light
+              - entity: light.roof_garden
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 20%
+                  top: 50%
+                template:
+                  - light
+              - entity: light.table
+                type: 'custom:button-card'
+                styles:
+                  card:
+                    - transform: 'scale(1.8)'
+                style:
+                  left: 84.3%
+                  top: 25.7%
+                template:
+                  - light
+                  
+      - type: 'custom:xiaomi-vacuum-map-card'
+        entity: vacuum.xiaomi_vacuum_cleaner
+        map_camera: camera.xiaomi_cloud_map_extractor
+        camera_calibration: true                  

@@ -1,9 +1,9 @@
 """Class for appdaemon apps in HACS."""
 from aiogithubapi import AIOGitHubAPIException
-from integrationhelper import Logger
 
-from .repository import HacsRepository
-from ..hacsbase.exceptions import HacsException
+from custom_components.hacs.enums import HacsCategory
+from custom_components.hacs.helpers.classes.exceptions import HacsException
+from custom_components.hacs.helpers.classes.repository import HacsRepository
 
 
 class HacsAppdaemon(HacsRepository):
@@ -13,15 +13,15 @@ class HacsAppdaemon(HacsRepository):
         """Initialize."""
         super().__init__()
         self.data.full_name = full_name
-        self.data.category = "appdaemon"
+        self.data.full_name_lower = full_name.lower()
+        self.data.category = HacsCategory.APPDAEMON
         self.content.path.local = self.localpath
         self.content.path.remote = "apps"
-        self.logger = Logger(f"hacs.repository.{self.data.category}.{full_name}")
 
     @property
     def localpath(self):
         """Return localpath."""
-        return f"{self.hacs.system.config_path}/appdaemon/apps/{self.data.name}"
+        return f"{self.hacs.core.config_path}/appdaemon/apps/{self.data.name}"
 
     async def validate_repository(self):
         """Validate."""
@@ -33,7 +33,7 @@ class HacsAppdaemon(HacsRepository):
         except AIOGitHubAPIException:
             raise HacsException(
                 f"Repostitory structure for {self.ref.replace('tags/','')} is not compliant"
-            )
+            ) from None
 
         if not isinstance(addir, list):
             self.validate.errors.append("Repostitory structure not compliant")
@@ -46,13 +46,14 @@ class HacsAppdaemon(HacsRepository):
         # Handle potential errors
         if self.validate.errors:
             for error in self.validate.errors:
-                if not self.hacs.system.status.startup:
-                    self.logger.error(error)
+                if not self.hacs.status.startup:
+                    self.logger.error("%s %s", self, error)
         return self.validate.success
 
-    async def update_repository(self, ignore_issues=False):
+    async def update_repository(self, ignore_issues=False, force=False):
         """Update."""
-        await self.common_update(ignore_issues)
+        if not await self.common_update(ignore_issues, force):
+            return
 
         # Get appdaemon objects.
         if self.repository_manifest:
