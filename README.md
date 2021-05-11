@@ -1,6 +1,7 @@
 # Home Assistant Configuration
 
 Version: 2021.5
+
 Operating System: 5.13
 
 [Hass.io](https://home-assistant.io/) installed on a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and running on a wall mounted tablet displaying Home Assistant in and on desktop [applicationize](https://applicationize.me/) (chrome).
